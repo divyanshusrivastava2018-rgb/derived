@@ -11,7 +11,11 @@
     "build:csir": "node server/scripts/build-csir-integrated.js",
     "sync:courses": "node server/scripts/sync-demo-courses-from-seed.js",
     "sync:courses:full": "node server/scripts/sync-demo-courses-from-seed.js --full",
-    "sync:chemistry": "node server/scripts/import-chemistry-playlist.js"
+    "sync:chemistry": "node server/scripts/import-demo-playlist.js chemistry",
+    "sync:demos": "node server/scripts/import-demo-playlist.js --all",
+    "sync:biology": "node server/scripts/import-demo-playlist.js biology",
+    "sync:physics": "node server/scripts/import-demo-playlist.js physics",
+    "sync:mathematics": "node server/scripts/import-demo-playlist.js mathematics"
   },
   "dependencies": {
     "compression": "^1.8.1",
