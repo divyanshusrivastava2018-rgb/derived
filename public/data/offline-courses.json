@@ -10,14 +10,97 @@
     "instructor": "Researchium",
     "lang": "Hindi",
     "price": 0,
-    "duration": "Playlist",
-    "desc": "Chemistry demo video series — watch the full YouTube playlist in order.",
+    "duration": "Playlist · 16 videos",
+    "desc": "Class-10 Chemistry — 16 lectures. Watch in order below or on YouTube.",
     "rating": 4.8,
     "students": 12400,
     "thumbUrl": null,
     "fileUrl": null,
     "extUrl": null,
-    "createdAt": 0
+    "createdAt": 0,
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN",
+    "playlistVideos": [
+      {
+        "id": "9jhxdr_qmaM",
+        "seq": 1,
+        "title": "Class 10 Science | Chemical Reactions and Equations | Full Chapter Explanation by Divyanshu Sir"
+      },
+      {
+        "id": "R5YDa-xupr8",
+        "seq": 2,
+        "title": "🔥 New Course Launch for Class 10 & 12 | PCM & PCB Group | Gene Tutorial | Board Exam 2025"
+      },
+      {
+        "id": "quK3jq65Mi4",
+        "seq": 3,
+        "title": "Chemical Reactions & Equations | Class 10 Science | Balancing Equations & PYQs Explained (2025 - 26)"
+      },
+      {
+        "id": "RPMa145Nskw",
+        "seq": 4,
+        "title": " Types of Chemical Reactions | Class 10 Science Chapter 1 | CBSE NCERT | Board Exam 2025 Preparation"
+      },
+      {
+        "id": "37ZmqYlH5jw",
+        "seq": 5,
+        "title": "Types of Chemical Reactions | Class 10 Science Lecture 3 | BOARD EXAM TOPIC  | CBSE 2025-26"
+      },
+      {
+        "id": "SYs0rkr3_bE",
+        "seq": 6,
+        "title": "Rusting, Rancidity, Physical & Chemical Changes in Depth | Class 10 Science | Chemical Reactions  "
+      },
+      {
+        "id": "XaZ9iWc7C7Q",
+        "seq": 7,
+        "title": "Chemical Reactions & Equations MCQ PYQ 2025-26 | Class 10 Science Chapter 1 MCQs"
+      },
+      {
+        "id": "uEq5NsOF3o4",
+        "seq": 8,
+        "title": "Acids, Bases & Salts Class 10 | Lecture 1 | Introduction, Concepts & Daily Life Examples | NCERT "
+      },
+      {
+        "id": "6_NSeWsXV_E",
+        "seq": 9,
+        "title": "​Acids, Bases, & Salts Mechanism Explained | Class 10 Chemistry (H+/OH- Ions) LECTURE -2 NCERT BOARD"
+      },
+      {
+        "id": "PjNFFYGTn58",
+        "seq": 10,
+        "title": "Salts and Types of Salts | pH Scale Explained in Detail | Class 10 Chemistry Lecture 03 | NCERT "
+      },
+      {
+        "id": "r5p78FstLJQ",
+        "seq": 11,
+        "title": " Salts  LECTURE - 4  Preparation, Hydrolysis & Qualitative Analysis | CBSE NCERT "
+      },
+      {
+        "id": "BAmjO1fE6EQ",
+        "seq": 12,
+        "title": "Metals and Non-Metals | Class 10 Chemistry Chapter 3 | NCERT Explanation, Reactions & Properties"
+      },
+      {
+        "id": "-MOiAZSjHBs",
+        "seq": 13,
+        "title": "Metal and Non-Metal Class 10 | LIVE Lecture -02 | Important Concepts, Reactions  | CBSE 2025-26"
+      },
+      {
+        "id": "oJOuuNVC96o",
+        "seq": 14,
+        "title": "Minerals and Ores | Complete Explanation | Class 10 Science | By Divyanshu Sir | CBSE BoardExam 2025"
+      },
+      {
+        "id": "79poTPk89FQ",
+        "seq": 15,
+        "title": "Carbon and Its Compounds | Class 10 Chemistry | Complete Chapter Explanation with Reactions ."
+      },
+      {
+        "id": "82I46MlowyA",
+        "seq": 16,
+        "title": "Carbon and Its Compounds – Lecture 2 | NCERT Class 10 Chemistry | Important Concepts & Reactions "
+      }
+    ]
   },
   {
     "id": "d7",

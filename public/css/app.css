@@ -2530,6 +2530,47 @@ body[data-page="courses"] .admin-catalog-hint a {
   color: var(--muted);
   padding: 12px;
 }
+.watch-pl-yt-link {
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+.watch-pl-yt-link a {
+  color: var(--ac-primary);
+  font-weight: 600;
+}
+.watch-pl-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.watch-pl-seq {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--surface-2, #f0f4f8);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.watch-pl-item.is-active .watch-pl-seq {
+  background: var(--ac-primary);
+  color: #fff;
+}
+.watch-pl-item .watch-list-title {
+  flex: 1;
+  white-space: normal;
+  line-height: 1.35;
+}
 .pricing-demo-note {
   font-size: 11px;
   color: var(--muted);

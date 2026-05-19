@@ -1,6 +1,13 @@
 (function () {
   var API = "/api/courses";
   var REFRESH_MS = 60 * 1000;
+  var CHEMISTRY_PLAYLIST_ID = "PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN";
+
+  var currentId = null;
+  var currentCourse = null;
+  var allCourses = [];
+  var playlistVideos = [];
+  var activeVideoId = null;
 
   function qs(name) {
     return new URLSearchParams(window.location.search).get(name);
@@ -23,39 +30,23 @@
     return isFreeCourse(c);
   }
 
-  function renderPlayer(c, host) {
-    host.innerHTML = "";
-    if (c.type === "youtube" && c.ytId) {
-      var embedSrc =
-        "https://www.youtube.com/embed/" +
-        escapeHtml(c.ytId) +
-        "?rel=0";
-      if (c.ytListId) {
-        embedSrc += "&list=" + encodeURIComponent(c.ytListId);
-      }
-      host.innerHTML =
-        '<iframe src="' +
-        embedSrc +
-        '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
-    } else if (c.type === "upload" && c.fileUrl) {
-      var mime = c.mimeType || "";
-      if (mime.startsWith("video/")) {
-        host.innerHTML =
-          '<video src="' + escapeHtml(c.fileUrl) + '" controls autoplay playsinline></video>';
-      } else {
-        host.innerHTML = '<iframe src="' + escapeHtml(c.fileUrl) + '"></iframe>';
-      }
-    } else if (c.type === "external" && c.extUrl) {
-      host.innerHTML =
-        '<iframe src="' + escapeHtml(c.extUrl) + '" allowfullscreen></iframe>';
-    } else {
-      host.innerHTML =
-        '<div class="watch-no-preview">Preview not available for this item.</div>';
-    }
+  function embedSrc(ytId, ytListId) {
+    var src = "https://www.youtube.com/embed/" + encodeURIComponent(ytId) + "?rel=0";
+    if (ytListId) src += "&list=" + encodeURIComponent(ytListId);
+    return src;
   }
 
-  var currentId = null;
-  var allCourses = [];
+  function renderPlayer(ytId, ytListId, host) {
+    host.innerHTML = "";
+    if (!ytId) {
+      host.innerHTML = '<div class="watch-no-preview">Preview not available.</div>';
+      return;
+    }
+    host.innerHTML =
+      '<iframe src="' +
+      embedSrc(ytId, ytListId) +
+      '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+  }
 
   function buildPricingReturnUrl() {
     return "/pricing.html?return=" + encodeURIComponent(window.location.pathname + window.location.search);
@@ -81,7 +72,95 @@
     }
   }
 
+  function setSidebarTitle(text, hint) {
+    var h2 = document.getElementById("watch-sidebar-title");
+    var hintEl = document.querySelector(".watch-sidebar-hint");
+    if (h2) h2.textContent = text;
+    if (hintEl && hint != null) hintEl.textContent = hint;
+  }
+
+  async function loadPlaylistVideos(c) {
+    if (Array.isArray(c.playlistVideos) && c.playlistVideos.length) {
+      return c.playlistVideos.slice();
+    }
+    if (c.ytListId === CHEMISTRY_PLAYLIST_ID || c.id === "d1") {
+      try {
+        var r = await fetch("/data/chemistry-playlist.json");
+        if (r.ok) {
+          var data = await r.json();
+          if (Array.isArray(data.videos) && data.videos.length) return data.videos;
+        }
+      } catch (_) {
+        /* ignore */
+      }
+    }
+    return [];
+  }
+
+  function playVideo(ytId) {
+    if (!currentCourse || !ytId) return;
+    activeVideoId = ytId;
+    var host = document.getElementById("watchFrame");
+    if (host && canWatchCourse(currentCourse)) {
+      renderPlayer(ytId, currentCourse.ytListId || null, host);
+    }
+    renderPlaylistSidebar();
+    var params = new URLSearchParams(window.location.search);
+    params.set("id", currentId);
+    params.set("v", ytId);
+    var next = window.location.pathname + "?" + params.toString();
+    window.history.replaceState(null, "", next);
+  }
+
+  function renderPlaylistSidebar() {
+    var list = document.getElementById("watchList");
+    if (!list || !playlistVideos.length) return;
+
+    setSidebarTitle(
+      "Playlist · " + playlistVideos.length + " videos",
+      currentCourse && currentCourse.playlistUrl
+        ? "Tap a lecture to play. Full series on YouTube linked below."
+        : "Tap a lecture to play in order."
+    );
+
+    var linkHtml = "";
+    if (currentCourse && currentCourse.playlistUrl) {
+      linkHtml =
+        '<p class="watch-pl-yt-link"><a href="' +
+        escapeHtml(currentCourse.playlistUrl) +
+        '" target="_blank" rel="noopener noreferrer">Open full playlist on YouTube ↗</a></p>';
+    }
+
+    list.innerHTML =
+      linkHtml +
+      playlistVideos
+        .map(function (v) {
+          var active = v.id === activeVideoId;
+          return (
+            '<button type="button" class="watch-list-item watch-pl-item' +
+            (active ? " is-active" : "") +
+            '" data-vid="' +
+            escapeHtml(v.id) +
+            '">' +
+            '<span class="watch-pl-seq">' +
+            (v.seq || "") +
+            "</span>" +
+            '<span class="watch-list-title">' +
+            escapeHtml(v.title || "Lecture") +
+            "</span></button>"
+          );
+        })
+        .join("");
+
+    list.querySelectorAll(".watch-pl-item").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        playVideo(btn.getAttribute("data-vid"));
+      });
+    });
+  }
+
   function renderDetail(c) {
+    currentCourse = c;
     document.getElementById("watchCategory").textContent = c.category || "";
     document.getElementById("watchTitle").textContent = c.title || "";
     document.getElementById("watchInstructor").textContent =
@@ -89,11 +168,15 @@
     document.getElementById("watchDesc").textContent = c.desc || "";
     document.title = (c.title ? c.title + " · " : "") + "Watch – Researchium";
 
-    var host = document.getElementById("watchFrame");
     var allowed = canWatchCourse(c);
     setPaywallVisible(!allowed);
+
+    var startId = qs("v") || c.ytId;
+    activeVideoId = startId;
+
+    var host = document.getElementById("watchFrame");
     if (allowed) {
-      renderPlayer(c, host);
+      renderPlayer(startId, c.ytListId || null, host);
     } else if (host) {
       host.innerHTML = "";
     }
@@ -102,6 +185,11 @@
   function renderSidebarList() {
     var list = document.getElementById("watchList");
     if (!list) return;
+
+    setSidebarTitle(
+      "All videos",
+      "List refreshes from the server every minute so new uploads appear automatically."
+    );
 
     var sorted = allCourses.slice().sort(function (a, b) {
       return (b.createdAt || 0) - (a.createdAt || 0);
@@ -155,10 +243,23 @@
     return r.json();
   }
 
+  async function refreshSidebarForCourse(c) {
+    playlistVideos = await loadPlaylistVideos(c);
+    if (playlistVideos.length) {
+      renderPlaylistSidebar();
+    } else {
+      renderSidebarList();
+    }
+  }
+
   async function loadAllCourses(silent) {
     try {
       allCourses = await apiGet(API);
-      renderSidebarList();
+      if (currentCourse) {
+        await refreshSidebarForCourse(currentCourse);
+      } else {
+        renderSidebarList();
+      }
       var note = document.getElementById("watchRefreshNote");
       if (note && !silent) {
         note.textContent = "Updated " + new Date().toLocaleTimeString();
@@ -191,19 +292,23 @@
       var c = await apiGet(API + "/" + encodeURIComponent(id));
       setError("");
       renderDetail(c);
+      await refreshSidebarForCourse(c);
     } catch (e) {
       setError(e && e.status === 404 ? "Course not found." : "Could not load this course.");
       document.getElementById("watchPlayerSection").hidden = true;
       setPaywallVisible(false);
     }
 
-    await loadAllCourses(false);
+    await loadAllCourses(true);
     setInterval(function () {
       loadAllCourses(true);
       if (currentId) {
         apiGet(API + "/" + encodeURIComponent(currentId))
           .then(function (c) {
-            if (c) renderDetail(c);
+            if (!c) return;
+            currentCourse = c;
+            renderDetail(c);
+            return refreshSidebarForCourse(c);
           })
           .catch(function () {});
       }

@@ -8,7 +8,10 @@
     "start:clean": "powershell -NoProfile -ExecutionPolicy Bypass -File server/scripts/start-clean.ps1",
     "dev": "nodemon server/index.js",
     "test": "node server/scripts/smoke-test.js",
-    "build:csir": "node server/scripts/build-csir-integrated.js"
+    "build:csir": "node server/scripts/build-csir-integrated.js",
+    "sync:courses": "node server/scripts/sync-demo-courses-from-seed.js",
+    "sync:courses:full": "node server/scripts/sync-demo-courses-from-seed.js --full",
+    "sync:chemistry": "node server/scripts/import-chemistry-playlist.js"
   },
   "dependencies": {
     "compression": "^1.8.1",

@@ -38,6 +38,10 @@ function publicCourseView(course, req) {
   if (course.type === 'youtube' && course.ytId) {
     base.ytId = course.ytId;
     if (course.ytListId) base.ytListId = course.ytListId;
+    if (course.playlistUrl) base.playlistUrl = course.playlistUrl;
+    if (Array.isArray(course.playlistVideos) && course.playlistVideos.length) {
+      base.playlistVideos = course.playlistVideos;
+    }
   }
   if (course.type === 'external' && course.extUrl) base.extUrl = course.extUrl;
   if (course.type === 'upload') {
