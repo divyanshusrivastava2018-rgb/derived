@@ -8,32 +8,6 @@ body.site-page {
   padding-top: 76px;
 }
 
-.api-offline-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: #c53030;
-  color: #fff;
-  padding: 0.65rem 1rem;
-  font-size: 14px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.api-offline-banner a {
-  color: #fff;
-  text-decoration: underline;
-  font-weight: 600;
-}
-
-.api-offline-banner code {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
-}
-
 .et-container {
   width: 100%;
   max-width: 1280px;
