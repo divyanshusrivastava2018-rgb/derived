@@ -894,7 +894,9 @@
                   "</td><td>" +
                   esc(l.email) +
                   "</td><td>" +
-                  esc(l.plan) +
+                  esc(l.subject || l.plan || "—") +
+                  "</td><td>" +
+                  esc(l.message ? String(l.message).slice(0, 80) + (l.message.length > 80 ? "…" : "") : "—") +
                   "</td><td>" +
                   esc(l.createdAt) +
                   "</td></tr>"
@@ -902,7 +904,7 @@
               })
               .join("");
             csirWrap.innerHTML =
-              '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Created</th></tr></thead><tbody>' +
+              '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Created</th></tr></thead><tbody>' +
               rows1 +
               "</tbody></table>";
           }

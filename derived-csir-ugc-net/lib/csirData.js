@@ -159,9 +159,10 @@ const faqs = [
 
 function goalStats() {
   return {
-    learners: '50K+',
+    learners: '15K+',
     educators: 500,
     successRate: '98%',
+    rating: '4.9★',
     subjects: subjects.length
   };
 }

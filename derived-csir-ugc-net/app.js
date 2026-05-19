@@ -6,23 +6,19 @@
     if (!standalone) return path;
     if (path.indexOf("/") === 0 && path.indexOf(".html") !== -1) {
       var hash = {
-        "/signin.html": "#register",
+        "/signin.html": "/signin.html",
+        "#contact": "#contact",
         "/pricing.html": "#plans",
-        "/courses.html": "#subjects",
-        "/live-classes.html": "#educators",
+        "/courses.html": "#courses",
+        "/live-classes.html": "/live-classes.html",
         "/mcq-test.html": "#features",
         "/about.html": "#faq",
-        "/blog.html": "#faq"
+        "/blog.html": "#faq",
+        "/contact-thanks.html": "/contact-thanks.html"
       };
       return hash[path] || path;
     }
     return path;
-  }
-
-  function planCta(plan) {
-    if (standalone) return plan.id === "free" ? "#register" : "#plans";
-    if (plan.id === "free") return "/signin.html";
-    return "/pricing.html?plan=" + encodeURIComponent(plan.id);
   }
 
   function esc(s) {
@@ -90,18 +86,12 @@
         return r.json();
       })
       .then(function (s) {
-        var row = document.getElementById("heroStats");
-        if (!row || !s) return;
-        row.innerHTML =
-          '<div class="hero-stat"><strong>' +
-          esc(s.learners) +
-          '</strong><span>Learners trust us</span></div>' +
-          '<div class="hero-stat"><strong>' +
-          esc(s.educators) +
-          '+</strong><span>Expert educators</span></div>' +
-          '<div class="hero-stat"><strong>' +
-          esc(s.successRate) +
-          '</strong><span>Success rate</span></div>';
+        var learners = document.getElementById("heroStatLearners");
+                var success = document.getElementById("heroStatSuccess");
+                var rating = document.getElementById("heroStatRating");
+                if (learners && s.learners) learners.textContent = String(s.learners);
+                if (success && s.successRate) success.textContent = String(s.successRate);
+                if (rating && s.rating) rating.textContent = String(s.rating);
       })
       .catch(function () {});
   }
@@ -139,154 +129,6 @@
       .catch(function () {});
   }
 
-  function loadEducators() {
-    return fetch(API + "/educators")
-      .then(function (r) {
-        if (!r.ok) throw new Error("educators");
-        return r.json();
-      })
-      .then(function (list) {
-        var row = document.getElementById("educatorsRow");
-        if (!row || !Array.isArray(list)) return;
-        row.innerHTML = list
-          .map(function (e, i) {
-            var ini = e.initials || initials(e.name);
-            var grad = avatarGradients[i % avatarGradients.length];
-            return (
-              '<a class="educator-card reveal" href="' +
-              esc(link("/live-classes.html")) +
-              '">' +
-              '<div class="edu-head">' +
-              '<div class="edu-avatar" style="background:' +
-              grad +
-              '">' +
-              esc(ini) +
-              "</div>" +
-              "<div>" +
-              '<div class="edu-name">' +
-              esc(e.name) +
-              "</div>" +
-              '<div class="edu-sub">' +
-              esc(e.subject) +
-              "</div>" +
-              '<div class="edu-tag">' +
-              esc(e.institution) +
-              " · " +
-              esc(e.experience) +
-              " yrs exp</div>" +
-              "</div></div>" +
-              '<div class="edu-stats">' +
-              '<div class="edu-stat"><strong>' +
-              formatCount(e.learners) +
-              '</strong><span>Learners</span></div>' +
-              '<div class="edu-stat"><strong>' +
-              esc(e.rating) +
-              ' ★</strong><span>Rating</span></div>' +
-              '<div class="edu-stat"><strong>' +
-              esc(e.lessonCount) +
-              '+</strong><span>Lessons</span></div>' +
-              "</div></a>"
-            );
-          })
-          .join("");
-        observeReveal();
-      })
-      .catch(function () {});
-  }
-
-  function loadPlans() {
-    return fetch(API + "/plans")
-      .then(function (r) {
-        if (!r.ok) throw new Error("plans");
-        return r.json();
-      })
-      .then(function (list) {
-        var grid = document.getElementById("plansGrid");
-        if (!grid || !Array.isArray(list)) return;
-        grid.innerHTML = list
-          .map(function (p) {
-            var featured = p.popular ? " featured" : "";
-            var badge = p.popular ? '<div class="plan-badge">Most popular</div>' : "";
-            var perks = (p.perks || [])
-              .map(function (perk) {
-                return "<li>" + esc(perk) + "</li>";
-              })
-              .join("");
-            var periodLabel = p.period === "forever" ? " forever" : " /" + esc(p.period);
-            return (
-              '<div class="plan-card' +
-              featured +
-              ' reveal">' +
-              badge +
-              '<div class="plan-name">' +
-              esc(p.name) +
-              "</div>" +
-              '<div class="plan-price"><strong>₹' +
-              esc(p.price) +
-              "</strong><span>" +
-              periodLabel +
-              "</span></div>" +
-              '<ul class="plan-perks">' +
-              perks +
-              "</ul>" +
-              '<a class="plan-btn" href="' +
-              esc(planCta(p)) +
-              '" data-plan-id="' +
-              esc(p.id) +
-              '">Choose ' +
-              esc(p.name) +
-              "</a></div>"
-            );
-          })
-          .join("");
-        observeReveal();
-      })
-      .catch(function () {});
-  }
-
-  function loadTestimonials() {
-    return fetch(API + "/testimonials")
-      .then(function (r) {
-        if (!r.ok) throw new Error("testimonials");
-        return r.json();
-      })
-      .then(function (list) {
-        var grid = document.getElementById("testGrid");
-        if (!grid || !Array.isArray(list)) return;
-        grid.innerHTML = list
-          .map(function (t) {
-            var ini = initials(t.name);
-            var stars = "★".repeat(Math.min(5, Number(t.rating) || 5));
-            return (
-              '<div class="test-card reveal">' +
-              '<div class="test-stars">' +
-              stars +
-              "</div>" +
-              '<p class="test-quote">"' +
-              esc(t.quote) +
-              '"</p>' +
-              '<div class="test-author">' +
-              '<div class="test-avatar">' +
-              esc(ini) +
-              "</div>" +
-              "<div><div class=\"test-name\">" +
-              esc(t.name) +
-              "</div>" +
-              '<div class="test-meta">' +
-              esc(t.subject) +
-              " · " +
-              esc(t.rank) +
-              " · " +
-              esc(t.session) +
-              "</div></div></div></div>"
-            );
-          })
-          .join("");
-        observeReveal();
-      })
-      .catch(function () {});
-  }
-
   function loadFaqs() {
     return fetch(API + "/faqs")
       .then(function (r) {
@@ -314,20 +156,73 @@
       .catch(function () {});
   }
 
-  function bindLeadForm() {
-    var form = document.getElementById("csirLeadForm");
+  var hcaptchaWidgetId = null;
+
+  function initHcaptcha() {
+    var mount = document.getElementById("csirHcaptchaMount");
+    if (!mount) return;
+    fetch(API + "/site/public")
+      .then(function (r) {
+        return r.ok ? r.json() : {};
+      })
+      .then(function (cfg) {
+        if (!cfg || !cfg.hcaptchaSiteKey) return;
+        mount.hidden = false;
+        function render() {
+          if (!window.hcaptcha) return;
+          hcaptchaWidgetId = window.hcaptcha.render(mount, {
+            sitekey: cfg.hcaptchaSiteKey
+          });
+        }
+        if (window.hcaptcha) {
+          render();
+          return;
+        }
+        var script = document.createElement("script");
+        script.src = "https://js.hcaptcha.com/1/api.js?render=explicit";
+        script.async = true;
+        script.onload = render;
+        document.head.appendChild(script);
+      })
+      .catch(function () {});
+  }
+
+  function bindContactForm() {
+    var form = document.getElementById("csirContactForm");
     if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var msg = document.getElementById("csirLeadMsg");
+      var msg = document.getElementById("csirContactMsg");
+      var submitBtn = document.getElementById("csirContactSubmit");
+      var privacy = document.getElementById("contactPrivacy");
+      if (privacy && !privacy.checked) {
+        if (msg) {
+          msg.textContent = "Please accept the Privacy Policy to continue.";
+          msg.className = "csir-contact-msg csir-contact-msg--err";
+        }
+        return;
+      }
       var payload = {
-        name: document.getElementById("leadName").value.trim(),
-        email: document.getElementById("leadEmail").value.trim(),
-        phone: document.getElementById("leadPhone").value.trim(),
-        subject: document.getElementById("leadSubject").value,
-        plan: document.getElementById("leadPlan").value
+        name: document.getElementById("contactName").value.trim(),
+        email: document.getElementById("contactEmail").value.trim(),
+        phone: document.getElementById("contactPhone").value.trim(),
+        subject: document.getElementById("contactSubject").value.trim(),
+        message: document.getElementById("contactMessage").value.trim(),
+        privacyAccepted: true
       };
-      fetch(API + "/leads", {
+      if (window.hcaptcha && hcaptchaWidgetId != null) {
+        payload.hcaptchaToken = window.hcaptcha.getResponse(hcaptchaWidgetId);
+      }
+      if (msg) {
+        msg.textContent = "Sending…";
+        msg.className = "csir-contact-msg";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      var willRedirect = false;
+      fetch(API + "/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -340,18 +235,40 @@
         .then(function (res) {
           if (msg) {
             msg.textContent = res.ok
-              ? res.body.message || "Registered!"
-              : res.body.error || "Could not register.";
-            msg.style.color = res.ok ? "var(--accent)" : "var(--accent3)";
+              ? res.body.message || "Message sent. Thank you!"
+              : res.body.error || "Could not send message.";
+            msg.className =
+              "csir-contact-msg " +
+              (res.ok ? "csir-contact-msg--ok" : "csir-contact-msg--err");
           }
-          if (res.ok) form.reset();
+          if (res.ok) {
+            willRedirect = true;
+            var redirect =
+              (res.body && res.body.redirectUrl) || "/contact-thanks.html";
+            redirect = link(redirect);
+            if (submitBtn) submitBtn.textContent = "Message sent";
+            if (msg) {
+              msg.textContent = "Redirecting…";
+              msg.className = "csir-contact-msg csir-contact-msg--ok";
+            }
+            setTimeout(function () {
+              window.location.href = redirect + "?sent=1";
+            }, 600);
+            return;
+          }
         })
         .catch(function () {
           if (msg) {
             msg.textContent = standalone
-              ? "Server unavailable. Run npm start in derived-csir-ugc-net."
+              ? "Server unavailable. Run npm start from the project root."
               : "Server unavailable. Run npm start and open http://localhost:3000";
-            msg.style.color = "var(--accent3)";
+            msg.className = "csir-contact-msg csir-contact-msg--err";
+          }
+        })
+        .finally(function () {
+          if (submitBtn && !willRedirect) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send Message";
           }
         });
     });
@@ -363,68 +280,69 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var out = document.getElementById("csirDoubtAnswer");
+      var btn = document.getElementById("csirDoubtSubmit");
+      var questionEl = document.getElementById("doubtQuestion");
       var payload = {
-        question: document.getElementById("doubtQuestion").value.trim(),
+        question: questionEl && questionEl.value.trim(),
         subject: document.getElementById("doubtSubject").value
       };
-      if (out) out.textContent = "Thinking…";
+      if (!payload.question || payload.question.length < 3) {
+        if (out) {
+          out.textContent = "Please type a question (at least 3 characters).";
+          out.className = "doubt-answer doubt-answer--error";
+        }
+        return;
+      }
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Finding answer…";
+      }
+      if (out) {
+        out.textContent = "Preparing your explanation…";
+        out.className = "doubt-answer doubt-answer--loading";
+      }
       fetch(API + "/doubts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       })
         .then(function (r) {
-          if (!r.ok) throw new Error("doubts");
-          return r.json();
+          return r.json().then(function (j) {
+            return { ok: r.ok, body: j };
+          });
         })
-        .then(function (j) {
-          if (out) out.textContent = j.answer || "No answer returned.";
+        .then(function (res) {
+          if (out) {
+            if (res.ok && res.body.answer) {
+              out.textContent = res.body.answer;
+              out.className = "doubt-answer doubt-answer--ready";
+            } else {
+              out.textContent = res.body.error || "Could not get an answer. Please try again.";
+              out.className = "doubt-answer doubt-answer--error";
+            }
+          }
         })
         .catch(function () {
-          if (out) out.textContent = "Could not reach the doubt API.";
+          if (out) {
+            out.textContent =
+              "Our study assistant is busy. Please try again in a moment.";
+            out.className = "doubt-answer doubt-answer--error";
+          }
+        })
+        .finally(function () {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Get answer";
+          }
         });
     });
   }
 
-  function bindPlanSubscribe() {
-    document.querySelectorAll(".plan-btn[data-plan-id]").forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        if (standalone || btn.getAttribute("href").charAt(0) !== "#") return;
-        var planId = btn.getAttribute("data-plan-id");
-        if (!planId || planId === "free") return;
-        e.preventDefault();
-        var email = window.prompt("Enter your email to continue:");
-        if (!email) return;
-        fetch(API + "/subscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email.trim(), planId: planId })
-        })
-          .then(function (r) {
-            return r.json();
-          })
-          .then(function (j) {
-            if (j.checkoutUrl) window.location.href = j.checkoutUrl;
-            else alert(j.message || "Order created.");
-          })
-          .catch(function () {
-            alert("Could not start checkout.");
-          });
-      });
-    });
-  }
-
-  bindLeadForm();
+  initHcaptcha();
+  bindContactForm();
   bindDoubtForm();
   bindFaq();
   observeReveal();
 
-  Promise.all([
-    loadStats(),
-    loadSubjects(),
-    loadEducators(),
-    loadPlans(),
-    loadTestimonials(),
-    loadFaqs()
-  ]).then(bindPlanSubscribe);
+  Promise.all([loadStats(), loadSubjects(), loadFaqs()]);
 })();

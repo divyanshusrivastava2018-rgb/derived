@@ -291,11 +291,17 @@ async function main() {
       fail(`/api/plans should include plus plan`);
     }
 
-    res = await req('POST', '/api/leads', {
-      body: { name: 'Smoke Test', email: `smoke-${Date.now()}@example.com`, plan: 'free' }
+    res = await req('POST', '/api/contact', {
+      body: {
+        name: 'Smoke Test',
+        email: `smoke-${Date.now()}@example.com`,
+        subject: 'General inquiry',
+        message: 'Smoke test contact message for Researchium.',
+        privacyAccepted: true
+      }
     });
-    if (res.status !== 201 || !res.json.lead) {
-      fail(`POST /api/leads should create a lead`);
+    if (res.status !== 201 || !res.json.contact) {
+      fail(`POST /api/contact should create a contact entry`);
     }
 
     res = await req('GET', '/api/admin/csir-leads', {

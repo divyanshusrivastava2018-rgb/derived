@@ -2,6 +2,8 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const csirData = require('../lib/csirData');
 const csirLeadsStore = require('../lib/csirLeadsStore');
+const contactMail = require('../lib/contactMail');
+const doubtAssistant = require('../lib/doubtAssistant');
 
 const router = express.Router();
 const jsonParser = express.json({ limit: '64kb' });
@@ -24,6 +26,13 @@ function siteOrigin() {
 
 router.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'derived-csir', timestamp: new Date().toISOString() });
+});
+
+router.get('/site/public', (_req, res) => {
+  const siteKey = (process.env.HCAPTCHA_SITE_KEY || '').trim();
+  res.json({
+    hcaptchaSiteKey: siteKey || null
+  });
 });
 
 router.get('/goal/stats', (_req, res) => {
@@ -74,43 +83,103 @@ router.get('/faqs', (_req, res) => {
   res.json(csirData.faqs);
 });
 
-router.post('/leads', postLimiter, jsonParser, (req, res) => {
+async function verifyHcaptcha(token) {
+  const secret = (process.env.HCAPTCHA_SECRET_KEY || '').trim();
+  if (!secret) return true;
+  if (!token) return false;
+  const params = new URLSearchParams({ secret, response: String(token) });
+  const res = await fetch('https://hcaptcha.com/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  });
+  const data = await res.json();
+  return Boolean(data && data.success);
+}
+
+async function handleContactSubmit(req, res) {
   const body = req.body || {};
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim().toLowerCase();
-  const phone = body.phone != null ? String(body.phone).trim() : null;
-  const subject = body.subject != null ? String(body.subject).trim() : null;
-  const plan = body.plan != null ? String(body.plan).trim() : 'free';
+  const phone = body.phone != null ? String(body.phone).trim() : '';
+  const subject = body.subject != null ? String(body.subject).trim() : 'General inquiry';
+  const message = String(body.message || '').trim();
+  const privacyAccepted =
+    body.privacyAccepted === true || body.privacy === true || body.privacy === 'on';
+
+  if (!privacyAccepted) {
+    return res.status(400).json({ error: 'Please accept the Privacy Policy to continue.' });
+  }
+
+  if ((process.env.HCAPTCHA_SECRET_KEY || '').trim()) {
+    const captchaOk = await verifyHcaptcha(body.hcaptchaToken || body['h-captcha-response']);
+    if (!captchaOk) {
+      return res.status(400).json({ error: 'Please complete the captcha verification.' });
+    }
+  }
 
   if (!name || !email) {
-    return res.status(400).json({ error: 'name and email are required' });
+    return res.status(400).json({ error: 'Name and email are required.' });
   }
   if (!EMAIL_RE.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address' });
+    return res.status(400).json({ error: 'Invalid email address.' });
+  }
+  if (!message || message.length < 10) {
+    return res.status(400).json({ error: 'Message is required (at least 10 characters).' });
+  }
+  if (message.length > 5000) {
+    return res.status(400).json({ error: 'Message is too long (max 5000 characters).' });
   }
 
   const leads = csirLeadsStore.readLeads();
-  const exists = leads.find((l) => l.email === email);
-  if (exists) {
-    return res.status(409).json({ error: 'Email already registered' });
-  }
-
-  const lead = {
+  const entry = {
     id: leads.length ? Math.max(...leads.map((l) => l.id)) + 1 : 1,
+    type: 'contact',
     name,
     email,
     phone: phone || null,
-    subject: subject || null,
-    plan: plan || 'free',
+    subject: subject || 'General inquiry',
+    message,
     createdAt: new Date().toISOString()
   };
 
-  leads.push(lead);
+  leads.push(entry);
   csirLeadsStore.writeLeads(leads);
 
+  let emailResult = { sent: false };
+  try {
+    emailResult = await contactMail.sendContactEmail(entry);
+  } catch (err) {
+    console.error('[contact] Email send failed:', err.message);
+    emailResult = { sent: false, reason: 'send_failed' };
+  }
+
+  const storedNote = emailResult.sent
+    ? 'We emailed your message to our team.'
+    : contactMail.smtpConfigured()
+      ? 'Message saved; email could not be sent right now.'
+      : 'Message saved. Configure SMTP in .env to receive emails in Gmail.';
+
   res.status(201).json({
-    message: 'Registered successfully! Welcome to Derived.',
-    lead: { id: lead.id, plan: lead.plan }
+    message: 'Thank you! Your message was sent successfully.',
+    contact: { id: entry.id },
+    emailSent: Boolean(emailResult.sent),
+    redirectUrl: '/contact-thanks.html',
+    notifyEmail: contactMail.contactToAddress()
+  });
+}
+
+router.post('/contact', postLimiter, jsonParser, (req, res) => {
+  handleContactSubmit(req, res).catch((err) => {
+    console.error(err);
+    res.status(500).json({ error: 'Could not submit contact form.' });
+  });
+});
+
+router.post('/leads', postLimiter, jsonParser, (req, res) => {
+  handleContactSubmit(req, res).catch((err) => {
+    console.error(err);
+    res.status(500).json({ error: 'Could not submit contact form.' });
   });
 });
 
@@ -147,17 +216,27 @@ router.post('/doubts', postLimiter, jsonParser, (req, res) => {
   const question = String((req.body || {}).question || '').trim();
   const subject = String((req.body || {}).subject || 'General').trim();
 
-  if (!question || question.length > 2000) {
-    return res.status(400).json({ error: 'question is required (max 2000 characters)' });
+  if (!question || question.length < 3) {
+    return res.status(400).json({ error: 'Please enter a question (at least 3 characters).' });
+  }
+  if (question.length > 2000) {
+    return res.status(400).json({ error: 'Question is too long (max 2000 characters).' });
   }
 
-  res.json({
-    question,
-    subject: subject || 'General',
-    answer: `This is a placeholder AI answer for: "${question}". In production, connect this endpoint to your LLM provider for detailed explanations.`,
-    sources: [],
-    responseTime: '< 1s'
-  });
+  doubtAssistant
+    .answerDoubt({ question, subject })
+    .then((result) => {
+      res.json({
+        question,
+        subject: subject || 'General',
+        answer: result.answer,
+        responseTime: result.responseTime
+      });
+    })
+    .catch((err) => {
+      console.error('[doubts]', err);
+      res.status(500).json({ error: 'Could not get an answer right now. Please try again.' });
+    });
 });
 
 module.exports = router;
