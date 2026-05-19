@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Materials - Researchium</title>
+    <meta name="description" content="Download Researchium study guides and handwritten PDF notes." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <style>
+      .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      .material-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .material-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+      .material-card a {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: var(--gold, #d4af37);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .material-card a:hover {
+        background: #b5952f;
+      }
+    </style>
+  </head>
+  <body class="site-page" data-page="study">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="container" style="padding: 4rem 1rem; min-height: 70vh">
+      <h1>Study Materials (PDFs)</h1>
+      <p>Download our exclusive handwritten notes and study guides.</p>
+
+      <div class="materials-grid"></div>
+    </main>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/materials-page.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "researchium",
+  "version": "1.0.0",
+  "description": "Researchium static site + Express API",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "start:clean": "powershell -NoProfile -ExecutionPolicy Bypass -File server/scripts/start-clean.ps1",
+    "dev": "nodemon server/index.js",
+    "test": "node server/scripts/smoke-test.js"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "file-type": "^19.6.0",
+    "helmet": "^7.1.0",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^3.3.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

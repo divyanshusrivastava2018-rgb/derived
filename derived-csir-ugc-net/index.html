@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSIR UGC NET 2026 Coaching | Live Classes – Derived</title>
+  <meta name="description" content="Crack CSIR UGC NET 2026 with Derived. Live classes, full syllabus, mock tests & expert educators – India's most focused NET coaching platform." />
+  <link rel="canonical" href="https://www.derived.co.in/" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --bg2: #0e1528;
+      --bg3: #131c35;
+      --accent: #4fffb0;
+      --accent2: #00c2ff;
+      --accent3: #ff6b6b;
+      --text: #e8edf7;
+      --muted: #8892aa;
+      --card: #141d36;
+      --border: #1e2d52;
+      --white: #ffffff;
+      --grad: linear-gradient(135deg, #4fffb0 0%, #00c2ff 100%);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,15,30,.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.55rem;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: .9rem;
+      letter-spacing: .03em; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { display: flex; gap: .8rem; align-items: center; }
+    .btn-ghost {
+      background: none; border: 1px solid var(--border);
+      color: var(--text); padding: .45rem 1.1rem; border-radius: 6px;
+      font-size: .88rem; cursor: pointer; transition: border-color .2s, color .2s;
+      font-family: 'DM Sans', sans-serif; text-decoration: none; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-primary {
+      background: var(--grad); border: none;
+      color: #000; padding: .48rem 1.3rem; border-radius: 6px;
+      font-weight: 600; font-size: .88rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity .2s, transform .2s; text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+
+    .call-bar {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .83rem; color: var(--muted);
+    }
+    .call-bar a { color: var(--accent); text-decoration: none; font-weight: 500; }
+
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex; align-items: center;
+      padding: 5% 5% 4%;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 70% 40%, rgba(0,194,255,.12) 0%, transparent 65%),
+                  radial-gradient(ellipse 50% 50% at 20% 70%, rgba(79,255,176,.08) 0%, transparent 60%),
+                  var(--bg);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: .04;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 580px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(79,255,176,.1); border: 1px solid rgba(79,255,176,.25);
+      color: var(--accent); font-size: .78rem; letter-spacing: .08em;
+      text-transform: uppercase; padding: .35rem .9rem; border-radius: 99px;
+      margin-bottom: 1.6rem;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    .hero-sub {
+      color: var(--muted); font-size: 1.05rem; max-width: 440px; margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.8rem; }
+    .btn-lg {
+      padding: .75rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-lg.primary { background: var(--grad); border: none; color: #000; }
+    .btn-lg.primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,255,176,.25); }
+    .btn-lg.outline { background: none; border: 1px solid var(--border); color: var(--text); }
+    .btn-lg.outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    .hero-stat-row { display: flex; gap: 2.4rem; flex-wrap: wrap; }
+    .hero-stat strong { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; display: block; }
+    .hero-stat span { color: var(--muted); font-size: .82rem; }
+
+    .hero-visual {
+      position: absolute; right: 4%; top: 50%; transform: translateY(-50%);
+      width: min(44%, 500px);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      z-index: 2;
+    }
+    .hero-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.2rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      transition: transform .3s, box-shadow .3s;
+      text-decoration: none; color: inherit;
+    }
+    .hero-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.4); border-color: var(--accent2); }
+    .hero-card:nth-child(2) { margin-top: 1.5rem; }
+    .hero-card:nth-child(4) { margin-top: -1.5rem; }
+    .hero-card-icon { font-size: 1.6rem; }
+    .hero-card h4 { font-family: 'Syne', sans-serif; font-size: .92rem; font-weight: 700; }
+    .hero-card p { font-size: .78rem; color: var(--muted); }
+
+    .section { padding: 5rem 5%; }
+    .section-label {
+      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .7rem;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700; line-height: 1.15; margin-bottom: 1rem;
+    }
+    h2 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-sub { color: var(--muted); max-width: 480px; margin-bottom: 3rem; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.8rem 1.5rem;
+      transition: border-color .3s, transform .3s;
+      text-decoration: none; color: inherit; display: block;
+    }
+    .feat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(79,255,176,.1); display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .feat-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .feat-card p { font-size: .83rem; color: var(--muted); }
+
+    .subjects-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .subject-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.4rem;
+      text-align: center; cursor: pointer;
+      transition: all .25s; text-decoration: none; color: inherit; display: block;
+    }
+    .subject-card:hover { background: var(--card); border-color: var(--accent2); transform: translateY(-3px); }
+    .subject-card .s-icon { font-size: 2rem; margin-bottom: .6rem; }
+    .subject-card h4 { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700; margin-bottom: .3rem; }
+    .subject-card span { font-size: .75rem; color: var(--muted); }
+
+    .educators-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.4rem;
+    }
+    .educator-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.6rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: transform .25s, box-shadow .25s;
+      text-decoration: none; color: inherit;
+    }
+    .educator-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.35); border-color: var(--accent); }
+    .edu-head { display: flex; gap: 1rem; align-items: center; }
+    .edu-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--grad); display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: #000;
+      flex-shrink: 0;
+    }
+    .edu-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .edu-sub { font-size: .8rem; color: var(--accent); }
+    .edu-tag { font-size: .75rem; color: var(--muted); }
+    .edu-stats { display: flex; gap: 1.5rem; }
+    .edu-stat { font-size: .8rem; }
+    .edu-stat strong { display: block; font-size: 1.05rem; font-family: 'Syne', sans-serif; }
+    .edu-stat span { color: var(--muted); }
+
+    .plans-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; align-items: start;
+    }
+    .plan-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      position: relative; transition: transform .25s;
+    }
+    .plan-card:hover { transform: translateY(-4px); }
+    .plan-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(160deg, rgba(79,255,176,.05) 0%, var(--card) 60%);
+    }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--grad); color: #000; font-size: .7rem; font-weight: 700;
+      padding: .25rem .9rem; border-radius: 99px; white-space: nowrap;
+      font-family: 'Syne', sans-serif;
+    }
+    .plan-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .plan-price { margin: 1rem 0; }
+    .plan-price strong { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; }
+    .plan-price span { color: var(--muted); font-size: .88rem; }
+    .plan-perks { list-style: none; display: flex; flex-direction: column; gap: .6rem; margin: 1.4rem 0; }
+    .plan-perks li { font-size: .85rem; display: flex; gap: .6rem; align-items: flex-start; }
+    .plan-perks li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+    .plan-btn {
+      width: 100%; padding: .75rem; border-radius: 8px; font-size: .95rem;
+      font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s;
+      text-decoration: none; display: inline-block; text-align: center;
+    }
+    .plan-card.featured .plan-btn { background: var(--grad); border: none; color: #000; }
+    .plan-card:not(.featured) .plan-btn { background: none; border: 1px solid var(--border); color: var(--text); }
+    .plan-card:not(.featured) .plan-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+    .test-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.6rem;
+      transition: transform .25s;
+    }
+    .test-card:hover { transform: translateY(-3px); }
+    .test-stars { color: #ffd166; font-size: .9rem; margin-bottom: .8rem; }
+    .test-quote { font-size: .88rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.2rem; font-style: italic; }
+    .test-author { display: flex; align-items: center; gap: .8rem; }
+    .test-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, #00c2ff, #4fffb0);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .9rem; color: #000;
+    }
+    .test-name { font-size: .88rem; font-weight: 600; }
+    .test-meta { font-size: .75rem; color: var(--muted); }
+
+    .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: .8rem; }
+    .faq-item {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 500;
+      text-align: left; padding: 1.2rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; gap: 1rem;
+    }
+    .faq-q span.arrow { font-size: .8rem; transition: transform .25s; color: var(--muted); flex-shrink: 0; }
+    .faq-item.open .faq-q span.arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease, padding .3s;
+      font-size: .88rem; color: var(--muted); line-height: 1.7;
+      padding: 0 1.5rem;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 1.5rem 1.2rem; }
+
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(79,255,176,.12) 0%, rgba(0,194,255,.08) 100%);
+      border: 1px solid rgba(79,255,176,.2);
+      border-radius: 20px; padding: 3.5rem 3rem;
+      text-align: center; margin: 0 5% 5%;
+    }
+    .cta-banner h2 { margin-bottom: .8rem; }
+    .cta-banner p { color: var(--muted); max-width: 420px; margin: 0 auto 2rem; }
+
+    footer {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 4rem 5% 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand p { color: var(--muted); font-size: .85rem; max-width: 260px; margin: .8rem 0 1.5rem; }
+    .footer-brand .socials { display: flex; gap: .8rem; }
+    .social-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--border); background: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: .85rem; cursor: pointer; text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .footer-col h5 { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+    .footer-col ul li a { color: var(--muted); text-decoration: none; font-size: .83rem; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--accent); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .78rem; color: var(--muted); flex-wrap: wrap; gap: .5rem;
+    }
+    .footer-bottom a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .hero-visual { display: none; }
+      .hero-content { max-width: 100%; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 4%; }
+      .hero { padding: 10% 4% 6%; }
+      .section { padding: 3.5rem 4%; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .call-bar { display: none; }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .goal-tabs {
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      padding: 0 5%; display: flex; gap: 0; overflow-x: auto;
+    }
+    .goal-tab {
+      background: none; border: none; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: .88rem;
+      padding: 1rem 1.4rem; cursor: pointer;
+      border-bottom: 2px solid transparent; white-space: nowrap;
+      transition: color .2s, border-color .2s; text-decoration: none;
+    }
+    .goal-tab:hover { color: var(--text); }
+    .goal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .csir-form-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      max-width: 520px;
+      margin: 2rem auto 0;
+    }
+    .csir-form-panel label {
+      display: block;
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+    .csir-form-panel input,
+    .csir-form-panel select,
+    .csir-form-panel textarea {
+      width: 100%;
+      margin-bottom: .9rem;
+      padding: .6rem .75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      color: var(--text);
+      font-family: inherit;
+    }
+    .csir-form-panel textarea { min-height: 88px; resize: vertical; }
+    .csir-form-msg { font-size: .88rem; margin-top: .5rem; min-height: 1.2em; }
+    .doubt-answer {
+      margin-top: .75rem;
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body data-csir-standalone="true">
+
+<nav>
+  <a class="nav-logo" href="/">derived</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#subjects">Subjects</a></li>
+    <li><a href="#educators">Educators</a></li>
+    <li><a href="#plans">Plans</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#subjects">All courses</a></li>
+  </ul>
+  <div class="nav-cta">
+    <div class="call-bar">📞 <a href="tel:+918585858585">+91-8585858585</a></div>
+    <a class="btn-ghost" href="#register">Log in</a>
+    <a class="btn-primary" href="#register">Join free</a>
+  </div>
+</nav>
+
+<div class="goal-tabs">
+  <a class="goal-tab active" href="#register">Get started</a>
+  <a class="goal-tab" href="#educators">Educators</a>
+  <a class="goal-tab" href="#subjects">Batches</a>
+  <a class="goal-tab" href="/study-materials.html">Store</a>
+  <a class="goal-tab" href="#plans">Subscription</a>
+  <a class="goal-tab" href="#success">Success stories</a>
+</div>
+
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content reveal">
+    <div class="hero-badge"><span></span> CSIR UGC NET 2026</div>
+    <h1>Crack <em>CSIR-UGC NET</em><br/>with Derived</h1>
+    <p class="hero-sub">India's most focused NET coaching — live classes, full-syllabus coverage, adaptive mock tests, and expert educators guiding you to the top.</p>
+    <div class="hero-actions">
+      <a class="btn-lg primary" href="#register">Try for free</a>
+      <a class="btn-lg outline" href="#plans">View subscription plans</a>
+    </div>
+    <div class="hero-stat-row" id="heroStats">
+      <div class="hero-stat"><strong>…</strong><span>Loading stats…</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <a class="hero-card reveal" href="#educators">
+      <div class="hero-card-icon">🎥</div>
+      <h4>Live Classes</h4>
+      <p>Daily live sessions by top educators with Q&A</p>
+    </a>
+    <a class="hero-card reveal" href="#features">
+      <div class="hero-card-icon">📝</div>
+      <h4>Mock Tests</h4>
+      <p>Full-length exam-pattern tests with analytics</p>
+    </a>
+    <a class="hero-card reveal" href="#features">
+      <div class="hero-card-icon">🤖</div>
+      <h4>AI Doubts</h4>
+      <p>Instant AI-powered doubt resolution 24/7</p>
+    </a>
+    <a class="hero-card reveal" href="#subjects">
+      <div class="hero-card-icon">📚</div>
+      <h4>Full Syllabus</h4>
+      <p>Complete coverage: Life, Chemical, Math & more</p>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">What we offer</div>
+  <h2>Everything you need to <em>qualify</em></h2>
+  <p class="section-sub">A complete ecosystem built for CSIR NET aspirants — from first lesson to final rank.</p>
+
+  <div class="features-grid">
+    <a class="feat-card reveal" href="#educators">
+      <div class="feat-icon">🔴</div>
+      <h3>Live Classes</h3>
+      <p>Watch real-time online coaching by India's best educators. Ask doubts live.</p>
+    </a>
+    <a class="feat-card reveal" href="#educators">
+      <div class="feat-icon">👨‍🏫</div>
+      <h3>Top Educators</h3>
+      <p>Learn from educators with decades of experience and proven NET selections.</p>
+    </a>
+    <a class="feat-card reveal" href="#subjects">
+      <div class="feat-icon">🗂️</div>
+      <h3>Curated Batches</h3>
+      <p>Structured batches to simplify your learning journey for every subject.</p>
+    </a>
+    <a class="feat-card reveal" href="#features">
+      <div class="feat-icon">🧪</div>
+      <h3>Practice Tests</h3>
+      <p>Adaptive practice that identifies weak areas and strengthens your exam prep.</p>
+    </a>
+    <a class="feat-card reveal" href="#features">
+      <div class="feat-icon">📋</div>
+      <h3>Test Series</h3>
+      <p>Evaluate your readiness with full-length CSIR NET pattern mock tests.</p>
+    </a>
+    <a class="feat-card reveal" href="#educators">
+      <div class="feat-icon">💬</div>
+      <h3>Doubts & Solutions</h3>
+      <p>Get quick, detailed solutions from educators and AI — never stay stuck.</p>
+    </a>
+    <a class="feat-card reveal" href="#subjects">
+      <div class="feat-icon">🎞️</div>
+      <h3>Recorded Playlists</h3>
+      <p>High-quality lecture videos for the entire syllabus — watch at your pace.</p>
+    </a>
+    <a class="feat-card reveal" href="#subjects">
+      <div class="feat-icon">📊</div>
+      <h3>Performance Analytics</h3>
+      <p>Track your progress with detailed insights and percentile comparisons.</p>
+    </a>
+  </div>
+</section>
+
+<section class="section subjects-section" id="subjects">
+  <div class="section-label">Subjects covered</div>
+  <h2>Choose your <em>stream</em></h2>
+  <p class="section-sub">Comprehensive preparation for all five CSIR NET science subjects.</p>
+
+  <div class="subjects-grid" id="subjectsGrid">
+    <a class="subject-card reveal" href="#subjects">
+      <div class="s-icon">🔬</div>
+      <h4>Life Science</h4>
+      <span>1,200+ lessons</span>
+    </a>
+    <a class="subject-card reveal" href="#subjects">
+      <div class="s-icon">⚗️</div>
+      <h4>Chemical Science</h4>
+      <span>980+ lessons</span>
+    </a>
+    <a class="subject-card reveal" href="#subjects">
+      <div class="s-icon">📐</div>
+      <h4>Mathematical Science</h4>
+      <span>850+ lessons</span>
+    </a>
+    <a class="subject-card reveal" href="#subjects">
+      <div class="s-icon">🌍</div>
+      <h4>Earth Science</h4>
+      <span>740+ lessons</span>
+    </a>
+    <a class="subject-card reveal" href="#subjects">
+      <div class="s-icon">⚡</div>
+      <h4>Physical Science</h4>
+      <span>1,100+ lessons</span>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="educators">
+  <div class="section-label">Our educators</div>
+  <h2>Learn from the <em>best</em></h2>
+  <p class="section-sub">Handpicked educators with a track record of producing CSIR NET qualifiers.</p>
+
+  <div class="educators-row" id="educatorsRow">
+    <a class="educator-card reveal" href="#educators">
+      <div class="edu-head">
+        <div class="edu-avatar">AK</div>
+        <div>
+          <div class="edu-name">Dr. Arjun Kumar</div>
+          <div class="edu-sub">Life Science</div>
+          <div class="edu-tag">IIT Delhi · 12 yrs exp</div>
+        </div>
+      </div>
+      <div class="edu-stats">
+        <div class="edu-stat"><strong>42K</strong><span>Learners</span></div>
+        <div class="edu-stat"><strong>4.9 ★</strong><span>Rating</span></div>
+        <div class="edu-stat"><strong>380+</strong><span>Lessons</span></div>
+      </div>
+    </a>
+    <a class="educator-card reveal" href="#educators">
+      <div class="edu-head">
+        <div class="edu-avatar" style="background: linear-gradient(135deg,#00c2ff,#6a00ff)">PS</div>
+        <div>
+          <div class="edu-name">Prof. Priya Sharma</div>
+          <div class="edu-sub">Chemical Science</div>
+          <div class="edu-tag">IISc Bangalore · 9 yrs exp</div>
+        </div>
+      </div>
+      <div class="edu-stats">
+        <div class="edu-stat"><strong>38K</strong><span>Learners</span></div>
+        <div class="edu-stat"><strong>4.8 ★</strong><span>Rating</span></div>
+        <div class="edu-stat"><strong>290+</strong><span>Lessons</span></div>
+      </div>
+    </a>
+    <a class="educator-card reveal" href="#educators">
+      <div class="edu-head">
+        <div class="edu-avatar" style="background: linear-gradient(135deg,#ff6b6b,#ffd166)">RV</div>
+        <div>
+          <div class="edu-name">Dr. Rahul Verma</div>
+          <div class="edu-sub">Mathematical Science</div>
+          <div class="edu-tag">TIFR Mumbai · 14 yrs exp</div>
+        </div>
+      </div>
+      <div class="edu-stats">
+        <div class="edu-stat"><strong>51K</strong><span>Learners</span></div>
+        <div class="edu-stat"><strong>4.9 ★</strong><span>Rating</span></div>
+        <div class="edu-stat"><strong>450+</strong><span>Lessons</span></div>
+      </div>
+    </a>
+    <a class="educator-card reveal" href="#educators">
+      <div class="edu-head">
+        <div class="edu-avatar" style="background: linear-gradient(135deg,#a8ff78,#78ffd6)">SN</div>
+        <div>
+          <div class="edu-name">Dr. Sneha Nair</div>
+          <div class="edu-sub">Physical Science</div>
+          <div class="edu-tag">IIT Madras · 10 yrs exp</div>
+        </div>
+      </div>
+      <div class="edu-stats">
+        <div class="edu-stat"><strong>29K</strong><span>Learners</span></div>
+        <div class="edu-stat"><strong>4.7 ★</strong><span>Rating</span></div>
+        <div class="edu-stat"><strong>310+</strong><span>Lessons</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="section plans-section" id="plans">
+  <div class="section-label">Subscription plans</div>
+  <h2>Pick your <em>plan</em></h2>
+  <p class="section-sub">Flexible pricing — start free and upgrade when you're ready to go all-in.</p>
+
+  <div class="plans-grid" id="plansGrid">
+    <div class="plan-card reveal">
+      <div class="plan-name">Free</div>
+      <p style="font-size:.82rem;color:var(--muted)">Begin your CSIR NET journey at no cost.</p>
+      <div class="plan-price"><strong>₹0</strong><span> forever</span></div>
+      <ul class="plan-perks">
+        <li>Access to select free lessons</li>
+        <li>Limited practice tests</li>
+        <li>Community forums</li>
+        <li>AI doubts (5/day)</li>
+      </ul>
+      <a class="plan-btn" href="#register">Get started free</a>
+    </div>
+
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">Most popular</div>
+      <div class="plan-name">Plus</div>
+      <p style="font-size:.82rem;color:var(--muted)">Full access for serious aspirants.</p>
+      <div class="plan-price"><strong>₹999</strong><span> /month</span></div>
+      <ul class="plan-perks">
+        <li>All live & recorded classes</li>
+        <li>Unlimited mock tests & analytics</li>
+        <li>Curated batches for all subjects</li>
+        <li>Unlimited AI doubts 24/7</li>
+        <li>Downloadable notes & PDFs</li>
+        <li>Priority educator support</li>
+      </ul>
+      <a class="plan-btn" href="#plans">Start Plus plan</a>
+    </div>
+
+    <div class="plan-card reveal">
+      <div class="plan-name">Pro Annual</div>
+      <p style="font-size:.82rem;color:var(--muted)">Best value — commit for the year.</p>
+      <div class="plan-price"><strong>₹6,999</strong><span> /year</span></div>
+      <ul class="plan-perks">
+        <li>Everything in Plus</li>
+        <li>1-on-1 mentorship sessions</li>
+        <li>Exclusive crash courses</li>
+        <li>Interview preparation module</li>
+        <li>Physical study material kit</li>
+      </ul>
+      <a class="plan-btn" href="#plans">Start Pro plan</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="success">
+  <div class="section-label">Success stories</div>
+  <h2>Toppers who trusted <em>Derived</em></h2>
+  <p class="section-sub">Real stories from students who cracked CSIR NET with our platform.</p>
+
+  <div class="test-grid" id="testGrid">
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-quote">"Derived's live classes helped me understand concepts I had been struggling with for months. The mock tests were exam-perfect. Qualified with AIR 12!"</p>
+      <div class="test-author">
+        <div class="test-avatar">AM</div>
+        <div>
+          <div class="test-name">Ananya Mishra</div>
+          <div class="test-meta">Life Science · AIR 12 · June 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-quote">"Dr. Verma's mathematical science classes are world-class. The AI doubt system is a game changer — got answers instantly at midnight before my exam."</p>
+      <div class="test-author">
+        <div class="test-avatar">KR</div>
+        <div>
+          <div class="test-name">Karthik Reddy</div>
+          <div class="test-meta">Math Science · AIR 4 · Dec 2024</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-quote">"Coming from a small town with no coaching nearby, Derived was my only hope. The full syllabus playlist and test series got me to my dream score."</p>
+      <div class="test-author">
+        <div class="test-avatar">PD</div>
+        <div>
+          <div class="test-name">Pooja Desai</div>
+          <div class="test-meta">Chemical Science · AIR 22 · June 2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="section-label">FAQ</div>
+  <h2>Frequently asked <em>questions</em></h2>
+  <br />
+  <div class="faq-list" id="faqList">
+    <div class="faq-item">
+      <button class="faq-q" type="button">What is CSIR UGC NET? <span class="arrow">▼</span></button>
+      <div class="faq-a">CSIR UGC NET (National Eligibility Test) is a national exam conducted by NTA on behalf of CSIR for determining eligibility for Junior Research Fellowship (JRF) and Lectureship/Assistant Professor positions in Indian universities and colleges.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">Can I access content for free? <span class="arrow">▼</span></button>
+      <div class="faq-a">Yes! Derived offers a free tier with access to select lessons, limited practice tests, and community forums. You can upgrade to Plus or Pro on our <a href="#plans" style="color:var(--accent)">pricing page</a> anytime.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">Are the live classes recorded? <span class="arrow">▼</span></button>
+      <div class="faq-a">Absolutely. All live classes are recorded and available within 24 hours in your dashboard. Browse <a href="#educators" style="color:var(--accent)">live classes</a> and <a href="#subjects" style="color:var(--accent)">recorded courses</a>.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">How many subjects are covered? <span class="arrow">▼</span></button>
+      <div class="faq-a">Derived covers all five CSIR NET subjects: Life Science, Chemical Science, Mathematical Science, Physical Science, and Earth Science — with Part A (General Aptitude) built into every batch.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">Is there a refund policy? <span class="arrow">▼</span></button>
+      <div class="faq-a">Yes. We offer a 7-day full refund on all paid plans if you are not satisfied with the platform. Contact our support team at <a href="tel:+918585858585" style="color:var(--accent)">+91-8585858585</a> within 7 days of purchase.</div>
+    </div>
+  </div>
+</section>
+
+<div id="register" class="cta-banner reveal" style="margin-top: 5rem;">
+  <h2>Ready to crack <em>CSIR NET 2026</em>?</h2>
+  <p>Join over 10 crore learners and get access to India's best NET coaching today.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a class="btn-lg primary" href="#register">Start learning for free</a>
+    <a class="btn-lg outline" href="#plans">View all plans</a>
+  </div>
+  <form id="csirLeadForm" class="csir-form-panel">
+    <h3 style="font-family:'Syne',sans-serif;margin-bottom:1rem;">Register your interest</h3>
+    <label for="leadName">Full name</label>
+    <input type="text" id="leadName" name="name" required autocomplete="name" />
+    <label for="leadEmail">Email</label>
+    <input type="email" id="leadEmail" name="email" required autocomplete="email" />
+    <label for="leadPhone">Phone (optional)</label>
+    <input type="tel" id="leadPhone" name="phone" autocomplete="tel" />
+    <label for="leadSubject">Subject stream</label>
+    <select id="leadSubject" name="subject">
+      <option value="">Select subject</option>
+      <option>Life Science</option>
+      <option>Chemical Science</option>
+      <option>Mathematical Science</option>
+      <option>Earth Science</option>
+      <option>Physical Science</option>
+    </select>
+    <label for="leadPlan">Plan</label>
+    <select id="leadPlan" name="plan">
+      <option value="free">Free</option>
+      <option value="plus">Plus</option>
+      <option value="pro">Pro Annual</option>
+    </select>
+    <button type="submit" class="btn-lg primary" style="width:100%;border:none;cursor:pointer">Register</button>
+    <p id="csirLeadMsg" class="csir-form-msg" role="status"></p>
+  </form>
+</div>
+
+<section class="section" id="ai-doubt" style="padding-top:0">
+  <div class="section-label">AI doubts</div>
+  <h2>Ask a <em>doubt</em></h2>
+  <p class="section-sub">Try the Derived doubt API (placeholder until an LLM is connected).</p>
+  <form id="csirDoubtForm" class="csir-form-panel">
+    <label for="doubtSubject">Subject</label>
+    <select id="doubtSubject" name="subject">
+      <option>General</option>
+      <option>Life Science</option>
+      <option>Chemical Science</option>
+      <option>Mathematical Science</option>
+      <option>Earth Science</option>
+      <option>Physical Science</option>
+    </select>
+    <label for="doubtQuestion">Your question</label>
+    <textarea id="doubtQuestion" name="question" required placeholder="Type your doubt here…"></textarea>
+    <button type="submit" class="btn-lg primary" style="width:100%;border:none;cursor:pointer">Get answer</button>
+    <p id="csirDoubtAnswer" class="doubt-answer" role="status"></p>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="/" style="font-size: 1.6rem;">derived</a>
+      <p>Democratising education — making quality CSIR NET coaching accessible to every aspirant in India.</p>
+      <div class="socials">
+        <a class="social-btn" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" title="Facebook">f</a>
+        <a class="social-btn" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" title="YouTube">▶</a>
+        <a class="social-btn" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" title="Twitter">𝕏</a>
+        <a class="social-btn" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" title="Instagram">◎</a>
+        <a class="social-btn" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" title="LinkedIn">in</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="/about.html">About us</a></li>
+        <li><a href="/blog.html">Blogs</a></li>
+        <li><a href="/about.html">Privacy policy</a></li>
+        <li><a href="/about.html">Terms &amp; conditions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Help &amp; support</h5>
+      <ul>
+        <li><a href="/about.html">User guidelines</a></li>
+        <li><a href="#plans">Refund policy</a></li>
+        <li><a href="tel:+918585858585">Grievance redressal</a></li>
+        <li><a href="/">Sitemap</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Popular goals</h5>
+      <ul>
+        <li><a href="/">CSIR UGC NET</a></li>
+        <li><a href="#subjects">IIT JEE</a></li>
+        <li><a href="#subjects">UPSC</a></li>
+        <li><a href="#subjects">NEET UG</a></li>
+        <li><a href="#subjects">SSC</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Derived.co.in · All rights reserved</span>
+    <span>📞 <a href="tel:+918585858585">+91-8585858585</a></span>
+  </div>
+</footer>
+
+<script defer src="app.js"></script>
+</body>
+</html>

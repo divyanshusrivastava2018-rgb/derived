@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading…</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-app-region: drag; /* make splash draggable */
+    }
+
+    .card {
+      background: linear-gradient(145deg, #161616, #1f1c14);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 20px;
+      width: 480px;
+      padding: 52px 40px 44px;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 32px 80px rgba(0,0,0,0.7);
+      animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);    }
+    }
+
+    .logo-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37 0%, #f5d98b 50%, #b8952a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 22px;
+      font-size: 32px;
+      box-shadow: 0 0 28px rgba(212,175,55,0.45);
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #f0e6c0;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: rgba(240,230,192,0.5);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .bar-track {
+      background: rgba(255,255,255,0.07);
+      border-radius: 999px;
+      height: 4px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #b8952a, #f5d98b, #d4af37);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite, grow 1.8s ease-out forwards;
+    }
+
+    @keyframes grow {
+      from { width: 0%; }
+      to   { width: 96%; }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .status {
+      font-size: 12px;
+      color: rgba(240,230,192,0.35);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 0.35; }
+      50%      { opacity: 0.7; }
+    }
+  </style>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <div class="card">
+    <div class="logo-ring">🎓</div>
+    <h1>Researchium</h1>
+    <p class="tagline">Learn · Research · Grow</p>
+    <div class="bar-track">
+      <div class="bar-fill"></div>
+    </div>
+    <p class="status" id="status">Starting up…</p>
+  </div>
+
+  <script>
+    const messages = [
+      'Starting up…',
+      'Loading courses…',
+      'Connecting to live classes…',
+      'Almost there…',
+    ];
+    let i = 0;
+    const el = document.getElementById('status');
+    const interval = setInterval(() => {
+      i = (i + 1) % messages.length;
+      el.textContent = messages[i];
+    }, 600);
+  </script>
+</body>
+</html>

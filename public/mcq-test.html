@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCQ Practice – Researchium</title>
+    <meta name="description" content="Generate topic-based MCQ practice tests powered by the Researchium API." />
+    <meta name="robots" content="index, follow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  </head>
+  <body class="site-page" data-page="mcq">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="inner-main">
+      <div class="page-hero">
+        <div class="sec-tag">PRACTICE · INSTANT FEEDBACK</div>
+        <h1>MCQ <span class="gold">Practice</span></h1>
+        <p>Pick a topic, generate questions from the server, and submit for your score.</p>
+        <p class="admin-muted">
+          Looking for the static GATE 2018–2021 bank?
+          <a href="/GATE_2018_2021%20MCQ_TEST.html" class="u-link-gold">Open GATE question bank</a>
+        </p>
+      </div>
+
+      <section class="section admin-card" style="max-width: 900px; margin: 0 auto">
+        <div class="admin-row2" style="margin-bottom: 1rem">
+          <div>
+            <label class="admin-label" for="mcqTopic">Topic</label>
+            <select id="mcqTopic" class="admin-input"></select>
+          </div>
+          <div>
+            <label class="admin-label" for="mcqCount">Number of questions</label>
+            <input type="number" id="mcqCount" class="admin-input" min="1" max="30" value="10" />
+          </div>
+        </div>
+        <div class="cta-row" style="margin-bottom: 1.5rem">
+          <button type="button" class="btn-gold" id="btnGenerateMcq">Generate test</button>
+          <button type="button" class="btn-ghost" id="btnSubmitMcq" disabled>Submit answers</button>
+        </div>
+        <div id="mcqForm"></div>
+        <p id="mcqResult" class="admin-muted" style="margin-top: 1rem; font-weight: 600"></p>
+      </section>
+    </main>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/mcq-test.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
+  </body>
+</html>

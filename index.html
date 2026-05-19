@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FZP26CRWV1"></script>
+    <script defer src="/js/gtag-init.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Researchium — Learn. Research. Grow.</title>
+    <meta name="description" content="Researchium offers curated courses, live classes, and research writing guidance for exam prep, careers, and publication-ready skills." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.derived.co.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Researchium — Learn. Research. Grow." />
+    <meta property="og:description" content="Researchium offers curated courses, live classes, and research writing guidance for exam prep, careers, and publication-ready skills." />
+    <meta property="og:url" content="https://www.derived.co.in/" />
+    <meta property="og:site_name" content="Researchium" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Researchium — Learn. Research. Grow." />
+    <meta name="twitter:description" content="Researchium offers curated courses, live classes, and research writing guidance for exam prep, careers, and publication-ready skills." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/app.css" />
+    <script type="application/ld+json" src="/seo/home-org.jsonld"></script>
+
+    <style>
+      /* ── DIPS spotlight section ── */
+      .dips-spotlight {
+        background: linear-gradient(135deg, #1a1a3e 0%, #3949ab 60%, #5c3fa3 100%);
+        padding: 56px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .dips-spotlight::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 15% 50%, rgba(245,176,20,.13) 0%, transparent 55%),
+          radial-gradient(circle at 85% 20%, rgba(92,63,163,.3) 0%, transparent 50%);
+        pointer-events: none;
+      }
+      .dips-spotlight-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 32px;
+        align-items: center;
+      }
+      @media (max-width: 640px) {
+        .dips-spotlight-inner { grid-template-columns: 1fr; }
+      }
+      .dips-spotlight-left .tag {
+        display: inline-block;
+        background: rgba(245,176,20,.18);
+        border: 1px solid rgba(245,176,20,.4);
+        color: #f5b014;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+      }
+      .dips-spotlight-left h2 {
+        font-size: clamp(1.3rem, 3vw, 1.9rem);
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      .dips-spotlight-left h2 em {
+        font-style: normal;
+        color: #f5b014;
+      }
+      .dips-spotlight-left p {
+        color: rgba(255,255,255,.72);
+        font-size: 14px;
+        line-height: 1.7;
+        max-width: 540px;
+        margin-bottom: 20px;
+      }
+      .dips-subject-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-bottom: 24px;
+      }
+      .dchip {
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.2);
+        color: rgba(255,255,255,.85);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 6px;
+      }
+      .dips-cta-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btn-dips-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #f5b014, #d4930a);
+        color: #1a1a3e;
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: opacity .18s, transform .18s;
+      }
+      .btn-dips-primary:hover { opacity: .9; transform: translateY(-1px); }
+      .btn-dips-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 20px;
+        background: rgba(255,255,255,.1);
+        border: 1.5px solid rgba(255,255,255,.3);
+        color: rgba(255,255,255,.85);
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: background .18s;
+      }
+      .btn-dips-ghost:hover { background: rgba(255,255,255,.18); }
+
+      /* stat panel on right */
+      .dips-stat-panel {
+        background: rgba(255,255,255,.08);
+        border: 1.5px solid rgba(255,255,255,.15);
+        border-radius: 16px;
+        padding: 24px 28px;
+        min-width: 170px;
+        text-align: center;
+      }
+      .dips-stat-panel .big-num {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #f5b014;
+        line-height: 1;
+        display: block;
+      }
+      .dips-stat-panel .big-lbl {
+        font-size: 12px;
+        color: rgba(255,255,255,.65);
+        font-weight: 500;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .dips-stat-panel .divider {
+        height: 1px;
+        background: rgba(255,255,255,.12);
+        margin: 14px 0;
+      }
+      .dips-stat-panel .sub-stat {
+        font-size: 12px;
+        color: rgba(255,255,255,.7);
+        font-weight: 600;
+      }
+      .dips-stat-panel .sub-stat span { color: #f5b014; }
+    </style>
+  </head>
+  <body data-page="home" data-cms-page="home">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <header class="home-hero">
+      <div class="sec-tag">EDUCATION · RESEARCH · CAREERS</div>
+      <h1>Your path from <span class="gold">classroom</span> to <span class="gold">career</span></h1>
+      <p class="lead">
+        Researchium connects self-paced courses, live teaching, and research writing — so you can prep for JEE &amp; NEET, crack interviews, or publish
+        with clarity.
+      </p>
+      <div class="home-cta">
+        <a href="/courses.html" class="btn-gold u-inline-block">Browse courses</a>
+        <a href="/live-classes.html" class="btn-ghost u-inline-block u-rounded-pill">Join live classes</a>
+      </div>
+    </header>
+
+    <section class="home-features" id="features">
+      <h2>Why Researchium</h2>
+      <div class="feature-grid">
+        <div
+          class="feature-flip"
+          tabindex="0"
+          role="button"
+          aria-expanded="false"
+          aria-label="Curated catalog. Hover or click to see more."
+        >
+          <div class="feature-flip-inner">
+            <div class="feature-flip-face feature-flip-front feature-card">
+              <h3>📚 Curated catalog</h3>
+              <p>Filter by category, level, language, and format — YouTube, uploads, and external links in one grid.</p>
+              <span class="feature-flip-cta-muted">Open courses →</span>
+              <span class="feature-flip-hint">Hover or tap to flip</span>
+            </div>
+            <div class="feature-flip-face feature-flip-back feature-card">
+              <h3>📚 Go deeper</h3>
+              <p>Sort by popularity, price, and language. Thumbnails for YouTube courses, clear badges for uploads and external programs.</p>
+              <ul class="feature-flip-list">
+                <li>JEE / NEET, UPSC, coding &amp; more</li>
+                <li>Free and paid tracks in one place</li>
+              </ul>
+              <a href="/why-feature.html?slug=catalog" class="feature-flip-cta">Open details →</a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="feature-flip"
+          tabindex="0"
+          role="button"
+          aria-expanded="false"
+          aria-label="Live doubt labs. Hover or click to see more."
+        >
+          <div class="feature-flip-inner">
+            <div class="feature-flip-face feature-flip-front feature-card">
+              <h3>📡 Live doubt labs</h3>
+              <p>Scheduled sessions with educators across JEE, UPSC, and coding — plus a free YouTube playlist with an in-page player and numbered queue.</p>
+              <span class="feature-flip-cta-muted">View schedule →</span>
+              <span class="feature-flip-hint">Hover or tap to flip</span>
+            </div>
+            <div class="feature-flip-face feature-flip-back feature-card">
+              <h3>📡 Live &amp; playlist</h3>
+              <p>See what's on this week, join from one link, and replay curated YouTube sets with our built-in queue and sort options.</p>
+              <ul class="feature-flip-list">
+                <li>Live timetable in one place</li>
+                <li>In-page YouTube player</li>
+              </ul>
+              <a href="/why-feature.html?slug=live-labs" class="feature-flip-cta">Open details →</a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="feature-flip"
+          tabindex="0"
+          role="button"
+          aria-expanded="false"
+          aria-label="Research blog. Hover or click to see more."
+        >
+          <div class="feature-flip-inner">
+            <div class="feature-flip-face feature-flip-front feature-card">
+              <h3>✍️ Research blog</h3>
+              <p>Methods, literature review tips, and publishing guides — written for students moving into serious research.</p>
+              <span class="feature-flip-cta-muted">Read articles →</span>
+              <span class="feature-flip-hint">Hover or tap to flip</span>
+            </div>
+            <div class="feature-flip-face feature-flip-back feature-card">
+              <h3>✍️ Writing &amp; methods</h3>
+              <p>Short, practical posts on IMRAD structure, reading strategies, and turning class projects into papers.</p>
+              <ul class="feature-flip-list">
+                <li>RSS-friendly updates</li>
+                <li>Curated for undergrads → researchers</li>
+              </ul>
+              <a href="/why-feature.html?slug=research-blog" class="feature-flip-cta">Open details →</a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="feature-flip"
+          tabindex="0"
+          role="button"
+          aria-expanded="false"
+          aria-label="Plans that scale. Hover or click to see more."
+        >
+          <div class="feature-flip-inner">
+            <div class="feature-flip-face feature-flip-front feature-card">
+              <h3>💳 Plans that scale</h3>
+              <p>Start free, upgrade when you need live hours, mentor access, or team seats — transparent pricing.</p>
+              <span class="feature-flip-cta-muted">Compare plans →</span>
+              <span class="feature-flip-hint">Hover or tap to flip</span>
+            </div>
+            <div class="feature-flip-face feature-flip-back feature-card">
+              <h3>💳 Transparent tiers</h3>
+              <p>Know what you get before you pay: self-serve courses, optional live blocks, and room to grow for teams.</p>
+              <ul class="feature-flip-list">
+                <li>Free catalog access</li>
+                <li>Upgrade only when you need more</li>
+              </ul>
+              <a href="/why-feature.html?slug=plans" class="feature-flip-cta">Open details →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         DIPS ACADEMY NOTES SPOTLIGHT  ← NEW SECTION
+    ══════════════════════════════════════════════════════ -->
+    <section class="dips-spotlight" id="dips-notes-section">
+      <div class="dips-spotlight-inner">
+        <div class="dips-spotlight-left">
+          <div class="tag">FREE STUDY MATERIAL</div>
+          <h2>DIPS Academy Notes<br /><em>UGC-NET · CSIR · IIT JAM · GATE</em></h2>
+          <p>
+            Access 17 free PDF notes from DIPS Academy, Delhi — covering Group Theory, Ring Theory,
+            Linear Algebra, Real &amp; Complex Analysis, Differential Equations, Statistics, and
+            General Aptitude. Handwritten and printed editions, no login required.
+          </p>
+          <div class="dips-subject-chips">
+            <span class="dchip">∑ Abstract Algebra</span>
+            <span class="dchip">ℝ Real Analysis</span>
+            <span class="dchip">ℂ Complex Analysis</span>
+            <span class="dchip">∂ Diff. Equations</span>
+            <span class="dchip">📊 Statistics</span>
+            <span class="dchip">🧠 General Aptitude</span>
+          </div>
+          <div class="dips-cta-row">
+            <a href="/dips-notes.html" class="btn-dips-primary">
+              📖 Browse All Notes
+            </a>
+            <a href="/courses.html" class="btn-dips-ghost">
+              More Resources →
+            </a>
+          </div>
+        </div>
+        <div class="dips-stat-panel">
+          <span class="big-num">17</span>
+          <div class="big-lbl">Free PDF<br />Study Notes</div>
+          <div class="divider"></div>
+          <div class="sub-stat"><span>5</span> Subject Areas</div>
+          <div class="divider"></div>
+          <div class="sub-stat">☁️ Google Drive</div>
+        </div>
+      </div>
+    </section>
+    <!-- ── end DIPS spotlight ── -->
+
+    <section class="program-strip">
+      <h2>Explore every corner of the platform</h2>
+      <div class="program-mini-grid">
+        <a href="/courses.html" class="program-pill">
+          <span class="icon" aria-hidden="true">🎓</span>
+          <span><span class="label">Course library</span><span class="hint">On-demand learning</span></span>
+        </a>
+        <a href="/live-classes.html" class="program-pill">
+          <span class="icon" aria-hidden="true">▶</span>
+          <span><span class="label">Live classes</span><span class="hint">Real-time teaching</span></span>
+        </a>
+        <a href="/blog.html" class="program-pill">
+          <span class="icon" aria-hidden="true">📰</span>
+          <span><span class="label">Research blog</span><span class="hint">Ideas &amp; methods</span></span>
+        </a>
+        <a href="/pricing.html" class="program-pill">
+          <span class="icon" aria-hidden="true">✨</span>
+          <span><span class="label">Pricing</span><span class="hint">Pick your plan</span></span>
+        </a>
+        <a href="/about.html" class="program-pill">
+          <span class="icon" aria-hidden="true">⬡</span>
+          <span><span class="label">About us</span><span class="hint">Mission &amp; stack</span></span>
+        </a>
+        <a href="/signin.html" class="program-pill">
+          <span class="icon" aria-hidden="true">🔐</span>
+          <span><span class="label">Sign in</span><span class="hint">Access your space</span></span>
+        </a>
+        <a href="/mcq-test.html" class="program-pill">
+          <span class="icon" aria-hidden="true">📝</span>
+          <span><span class="label">MCQ test</span><span class="hint">Auto-generated practice</span></span>
+        </a>
+        <!-- ── NEW DIPS pill ── -->
+        <a href="/dips-notes.html" class="program-pill">
+          <span class="icon" aria-hidden="true">🗂️</span>
+          <span><span class="label">DIPS Notes</span><span class="hint">UGC-NET / CSIR PDFs</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="jee-neet-strip" id="jee-neet">
+      <h2>JEE / NEET with Maths with Divyanshu Sir</h2>
+      <p class="jee-neet-sub">
+        Latest lessons from your YouTube content, surfaced here for quick access.
+      </p>
+      <div class="jee-neet-grid" id="jee-neet-grid">
+        <p class="loading-banner">Loading JEE / NEET videos...</p>
+      </div>
+      <div class="cta-row jee-neet-cta">
+        <a
+          href="https://www.youtube.com/@MathswithDivyanshuSir"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-gold u-inline-block"
+          >Open YouTube channel</a
+        >
+        <a
+          href="https://www.youtube.com/watch?v=9jhxdr_qmaM&list=PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-ghost u-inline-block u-rounded-pill"
+          >Open full playlist</a
+        >
+      </div>
+    </section>
+
+    <section class="mcq-spotlight">
+      <h2>Take an auto-generated MCQ test</h2>
+      <p>Choose your topic, generate fresh questions, and check your score instantly.</p>
+      <div class="cta-row">
+        <a href="/mcq-test.html" class="btn-gold u-inline-block">Start test now</a>
+      </div>
+    </section>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="/js/site-shell.js"></script>
+    <script src="/js/cms-hero.js"></script>
+    <script src="/js/home-features-flip.js"></script>
+    <script src="/js/jee-neet-section.js"></script>
+  </body>
+</html>

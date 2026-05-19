@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Courses – Researchium</title>
+    <meta
+      name="description"
+      content="Browse Researchium courses by category, level, language, and format with filters for YouTube, uploads, and external programs."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.derived.co.in/courses.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="All Courses – Researchium" />
+    <meta
+      property="og:description"
+      content="Browse Researchium courses by category, level, language, and format with filters for YouTube, uploads, and external programs."
+    />
+    <meta property="og:url" content="https://www.derived.co.in/courses.html" />
+    <meta property="og:site_name" content="Researchium" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap" />
+  </head>
+  <body class="site-page" data-page="courses" data-cms-page="courses">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="inner-main">
+      <div class="page-hero">
+        <div class="sec-tag" id="courseCountTag">—</div>
+        <h1>Explore All <span class="gold">Researchium</span> Courses</h1>
+        <p>From JEE to FAANG — filter by category, level, format, and price.</p>
+        <div class="search-wrap">
+          <input type="text" id="searchBox" placeholder="Search courses, topics, educators…" />
+          <button type="button" class="btn-gold" id="btnSearchCourses">Search</button>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="courses-layout">
+          <aside class="filter-panel">
+            <h3>Filter courses</h3>
+            <div class="fg">
+              <h4>Category</h4>
+              <label><input type="checkbox" class="filter-cb" data-filter="category" value="JEE / NEET" checked /> JEE / NEET</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="category" value="UPSC / SSC" checked /> UPSC / SSC</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="category" value="Coding & AI" checked /> Coding &amp; AI</label>
+              <label
+                ><input type="checkbox" class="filter-cb" data-filter="category" value="Research & Science" checked /> Research
+                &amp; Science</label
+              >
+              <label><input type="checkbox" class="filter-cb" data-filter="category" value="Finance & MBA" checked /> Finance &amp; MBA</label>
+            </div>
+            <div class="fg">
+              <h4>Level</h4>
+              <label><input type="checkbox" class="filter-cb" data-filter="level" value="Beginner" checked /> Beginner</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="level" value="Intermediate" checked /> Intermediate</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="level" value="Advanced" checked /> Advanced</label>
+            </div>
+            <div class="fg">
+              <h4>Type</h4>
+              <label><input type="checkbox" class="filter-cb" data-filter="type" value="youtube" checked /> YouTube</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="type" value="upload" checked /> Uploaded</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="type" value="external" checked /> External</label>
+            </div>
+            <div class="fg">
+              <h4>Price</h4>
+              <label><input type="checkbox" class="filter-cb" data-filter="price" value="free" checked /> Free</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="price" value="paid" checked /> Paid</label>
+            </div>
+            <div class="fg">
+              <h4>Language</h4>
+              <label><input type="checkbox" class="filter-cb" data-filter="lang" value="English" checked /> English</label>
+              <label><input type="checkbox" class="filter-cb" data-filter="lang" value="Hindi" checked /> Hindi</label>
+            </div>
+          </aside>
+
+          <div>
+            <div class="toolbar">
+              <span class="results-label" id="resultsCount">Loading courses…</span>
+              <select class="sort-sel" id="sortSelect">
+                <option value="newest">Newest first</option>
+                <option value="popular">Most popular</option>
+                <option value="rating">Highest rated</option>
+                <option value="price-asc">Price: low → high</option>
+                <option value="price-desc">Price: high → low</option>
+              </select>
+            </div>
+            <div class="courses-grid" id="allCoursesGrid">
+              <div class="loading-banner u-span-courses-grid">Loading courses…</div>
+            </div>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/cms-hero.js"></script>
+    <script defer src="/js/courses-app.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
+  </body>
+</html>

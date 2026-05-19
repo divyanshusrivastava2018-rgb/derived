@@ -1,0 +1,9 @@
+node_modules/
+server/uploads/*
+!server/uploads/.gitkeep
+server/data/courses.json
+.env
+server/data/csir-leads.json
+server/data/member-interest.json
+*.log
+.DS_Store
