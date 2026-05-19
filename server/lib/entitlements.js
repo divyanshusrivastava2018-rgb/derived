@@ -35,7 +35,10 @@ function publicCourseView(course, req) {
     canWatch: allowed
   };
   if (!allowed) return base;
-  if (course.type === 'youtube' && course.ytId) base.ytId = course.ytId;
+  if (course.type === 'youtube' && course.ytId) {
+    base.ytId = course.ytId;
+    if (course.ytListId) base.ytListId = course.ytListId;
+  }
   if (course.type === 'external' && course.extUrl) base.extUrl = course.extUrl;
   if (course.type === 'upload') {
     if (course.fileUrl) base.fileUrl = course.fileUrl;

@@ -26,10 +26,17 @@
   function renderPlayer(c, host) {
     host.innerHTML = "";
     if (c.type === "youtube" && c.ytId) {
-      host.innerHTML =
-        '<iframe src="https://www.youtube.com/embed/' +
+      var embedSrc =
+        "https://www.youtube.com/embed/" +
         escapeHtml(c.ytId) +
-        '?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+        "?rel=0";
+      if (c.ytListId) {
+        embedSrc += "&list=" + encodeURIComponent(c.ytListId);
+      }
+      host.innerHTML =
+        '<iframe src="' +
+        embedSrc +
+        '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
     } else if (c.type === "upload" && c.fileUrl) {
       var mime = c.mimeType || "";
       if (mime.startsWith("video/")) {
