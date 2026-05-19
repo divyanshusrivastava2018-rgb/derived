@@ -2160,6 +2160,11 @@ body[data-page="courses"] .admin-catalog-hint a {
   color: var(--on-primary);
   border-color: var(--ac-primary);
 }
+.admin-tab-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
 .admin-panel {
   margin-bottom: 40px;
 }

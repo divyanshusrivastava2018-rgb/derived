@@ -241,6 +241,11 @@ async function main() {
       fail(`/admin.html should be served`);
     }
 
+    res = await req('GET', '/csir-admin.html');
+    if (res.status !== 200 || !res.text.includes('csirAdminLoginForm')) {
+      fail(`/csir-admin.html should be served`);
+    }
+
     res = await req('GET', '/mcq-test.html');
     if (res.status !== 200 || !res.text.includes('btnGenerateMcq')) {
       fail(`/mcq-test.html should be served`);

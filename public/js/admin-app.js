@@ -890,9 +890,13 @@
               .map(function (l) {
                 return (
                   "<tr><td>" +
+                  esc(l.type || "—") +
+                  "</td><td>" +
                   esc(l.name) +
                   "</td><td>" +
                   esc(l.email) +
+                  "</td><td>" +
+                  esc(l.phone || "—") +
                   "</td><td>" +
                   esc(l.subject || l.plan || "—") +
                   "</td><td>" +
@@ -904,7 +908,7 @@
               })
               .join("");
             csirWrap.innerHTML =
-              '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Created</th></tr></thead><tbody>' +
+              '<table class="admin-table"><thead><tr><th>Type</th><th>Name</th><th>Email</th><th>Mobile</th><th>Subject</th><th>Message</th><th>Created</th></tr></thead><tbody>' +
               rows1 +
               "</tbody></table>";
           }
