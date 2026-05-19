@@ -30,16 +30,23 @@
       return;
     }
     btn.disabled = true;
-    fetch("/api/member/interest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, source: "signin" })
-    })
-      .then(function (r) {
-        return r.json().then(function (j) {
-          return { ok: r.ok, status: r.status, body: j };
-        });
-      })
+    var post =
+      window.ResearchiumApi && window.ResearchiumApi.post
+        ? window.ResearchiumApi.post("/api/member/interest", { email: email, source: "signin" }).then(
+            function (j) {
+              return { ok: true, status: 201, body: j };
+            }
+          )
+        : fetch("/api/member/interest", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email, source: "signin" })
+          }).then(function (r) {
+            return r.json().then(function (j) {
+              return { ok: r.ok, status: r.status, body: j };
+            });
+          });
+    post
       .then(function (res) {
         if (res.ok || res.status === 200) {
           window.location.href = "/courses.html";

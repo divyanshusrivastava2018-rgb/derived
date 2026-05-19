@@ -2,6 +2,7 @@ const express = require('express');
 const { nanoid } = require('nanoid');
 const newsStore = require('../lib/newsStore');
 const { requireAdmin } = require('../lib/adminAuth');
+const { isSafeHttpUrl } = require('../lib/safeUrl');
 
 const router = express.Router();
 const jsonParser = express.json({ limit: '256kb' });
@@ -57,8 +58,18 @@ router.put('/:id', requireAdmin, jsonParser, (req, res) => {
     content,
     status: body.status === 'archive' ? 'archive' : body.status === 'current' ? 'current' : cur.status,
     date: body.date ? new Date(body.date).toISOString() : cur.date,
-    image: body.image !== undefined ? String(body.image).trim() : cur.image
+    image:
+      body.image !== undefined
+        ? (() => {
+            const img = String(body.image).trim();
+            if (img && !isSafeHttpUrl(img)) return null;
+            return img;
+          })()
+        : cur.image
   };
+  if (items[idx].image === null) {
+    return res.status(400).json({ error: 'image must be a valid http(s) URL or empty' });
+  }
   newsStore.writeAll(items);
   res.json(items[idx]);
 });

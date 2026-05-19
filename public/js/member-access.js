@@ -6,10 +6,13 @@
   var checked = false;
 
   function refreshStatus() {
-    return fetch("/api/member/status", { credentials: "same-origin" })
-      .then(function (r) {
-        return r.ok ? r.json() : { paid: false };
-      })
+    var req =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/member/status")
+        : fetch("/api/member/status", { credentials: "same-origin" }).then(function (r) {
+            return r.ok ? r.json() : { paid: false };
+          });
+    return req
       .then(function (data) {
         cachedPaid = !!(data && data.paid);
         checked = true;

@@ -1,5 +1,14 @@
 const API = "/api/courses";
 
+async function fetchCourses() {
+  if (window.ResearchiumApi && window.ResearchiumApi.get) {
+    return window.ResearchiumApi.get(API);
+  }
+  const r = await fetch(API);
+  if (!r.ok) throw new Error("Failed to load");
+  return r.json();
+}
+
 let courses = [];
 let filteredCourses = [];
 let currentPage = 1;
@@ -21,9 +30,7 @@ async function refreshCourses() {
   if (!grid) return;
   grid.innerHTML = '<div class="loading-banner u-span-courses-grid">Loading courses…</div>';
   try {
-    const r = await fetch(API);
-    if (!r.ok) throw new Error("Failed to load");
-    courses = await r.json();
+    courses = await fetchCourses();
     applyFilters();
   } catch (e) {
     grid.innerHTML =

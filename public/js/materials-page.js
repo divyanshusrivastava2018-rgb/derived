@@ -10,11 +10,14 @@
 
   grid.innerHTML = '<p class="admin-muted">Loading study materials…</p>';
 
-  fetch("/api/materials")
-    .then(function (r) {
-      if (!r.ok) throw new Error("load");
-      return r.json();
-    })
+  var load =
+    window.ResearchiumApi && window.ResearchiumApi.get
+      ? window.ResearchiumApi.get("/api/materials")
+      : fetch("/api/materials").then(function (r) {
+          if (!r.ok) throw new Error("load");
+          return r.json();
+        });
+  load
     .then(function (items) {
       if (!Array.isArray(items) || !items.length) {
         grid.innerHTML =

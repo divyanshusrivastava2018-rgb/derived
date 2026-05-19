@@ -30,12 +30,14 @@
     var cached = readCache();
     if (cached) return Promise.resolve(cached);
     if (inflight) return inflight;
-    inflight = fetch("/api/site")
-      .then(function (r) {
-        if (!r.ok) throw new Error("site");
-        return r.json();
-      })
-      .then(function (data) {
+    var req =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/site")
+        : fetch("/api/site").then(function (r) {
+            if (!r.ok) throw new Error("site");
+            return r.json();
+          });
+    inflight = req.then(function (data) {
         writeCache(data);
         inflight = null;
         return data;

@@ -13,6 +13,14 @@ const generateLimiter = rateLimit({
   message: { error: 'Too many test generations. Try again later.' }
 });
 
+const submitLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 80,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many submissions. Try again later.' }
+});
+
 const MCQ_BANK = {
   'JEE / NEET': [
     {
@@ -173,7 +181,7 @@ router.post('/generate', generateLimiter, jsonParser, (req, res) => {
   });
 });
 
-router.post('/submit', jsonParser, (req, res) => {
+router.post('/submit', submitLimiter, jsonParser, (req, res) => {
   const body = req.body || {};
   const testId = typeof body.testId === 'string' ? body.testId.trim() : '';
   const answers = Array.isArray(body.answers) ? body.answers : [];

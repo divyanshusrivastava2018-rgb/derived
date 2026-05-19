@@ -4,11 +4,7 @@ const COOKIE_NAME = 'researchium_member';
 const TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 function getMemberSecret() {
-  const s =
-    process.env.RESEARCHIUM_MEMBER_SECRET ||
-    process.env.RESEARCHIUM_ADMIN_PASSWORD ||
-    '';
-  return String(s).trim();
+  return String(process.env.RESEARCHIUM_MEMBER_SECRET || '').trim();
 }
 
 function signMemberPayload(payload) {

@@ -7,7 +7,7 @@ const { canWatchCourse, isFreeCourse } = require('../lib/entitlements');
 const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
 const router = express.Router();
 
-/** Paid course media files require entitlement; thumbnails stay public for catalog cards. */
+/** Paid course uploads (video/PDF and thumbnails) require entitlement. */
 function findPaidCourseMedia(filename) {
   if (!filename || filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
     return null;
@@ -15,9 +15,16 @@ function findPaidCourseMedia(filename) {
   const needle = `/uploads/${filename}`;
   const courses = store.readAll();
   return courses.find((c) => {
-    if (isFreeCourse(c) || c.type !== 'upload') return false;
-    const u = c.fileUrl || '';
-    return typeof u === 'string' && (u.endsWith(needle) || u.endsWith(filename));
+    if (isFreeCourse(c)) return false;
+    const fileUrl = c.fileUrl || '';
+    const thumbUrl = c.thumbUrl || '';
+    const matchesFile =
+      typeof fileUrl === 'string' && (fileUrl.endsWith(needle) || fileUrl.endsWith(filename));
+    const matchesThumb =
+      typeof thumbUrl === 'string' && (thumbUrl.endsWith(needle) || thumbUrl.endsWith(filename));
+    if (c.type === 'upload' && matchesFile) return true;
+    if (matchesThumb && Number(c.price) > 0) return true;
+    return false;
   });
 }
 

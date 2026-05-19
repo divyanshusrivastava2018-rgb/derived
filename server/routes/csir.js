@@ -110,7 +110,7 @@ router.post('/leads', postLimiter, jsonParser, (req, res) => {
 
   res.status(201).json({
     message: 'Registered successfully! Welcome to Derived.',
-    lead: { id: lead.id, name: lead.name, email: lead.email, plan: lead.plan }
+    lead: { id: lead.id, plan: lead.plan }
   });
 });
 

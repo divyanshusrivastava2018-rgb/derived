@@ -29,8 +29,8 @@ const { DEV_DEFAULT_SECRET, getAdminPassword } = require('./lib/adminAuth');
 const memberCookie = require('./lib/memberCookie');
 
 const WEAK_PASSWORDS = new Set([
-  'divyanshu#17',
   'change-me-to-a-long-random-secret',
+  'change-me-member-signing-secret',
   'researchium-dev-secret',
   DEV_DEFAULT_SECRET
 ]);
@@ -195,7 +195,11 @@ app.use((_req, res) => {
 
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ error: err.message || 'Server error' });
+  const msg =
+    process.env.NODE_ENV === 'production'
+      ? 'Internal server error'
+      : err.message || 'Server error';
+  res.status(500).json({ error: msg });
 });
 
 const server = app.listen(PORT, () => {
@@ -207,7 +211,7 @@ const server = app.listen(PORT, () => {
   }
   if (!memberCookie.getMemberSecret()) {
     console.warn(
-      '[Researchium] Member demo unlock disabled until RESEARCHIUM_MEMBER_SECRET or RESEARCHIUM_ADMIN_PASSWORD is set.'
+      '[Researchium] Member demo unlock disabled until RESEARCHIUM_MEMBER_SECRET is set in .env'
     );
   }
 });

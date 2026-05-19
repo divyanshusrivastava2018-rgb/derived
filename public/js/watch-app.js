@@ -139,11 +139,18 @@
     return { credentials: "same-origin" };
   }
 
+  async function apiGet(path) {
+    if (window.ResearchiumApi && window.ResearchiumApi.get) {
+      return window.ResearchiumApi.get(path);
+    }
+    var r = await fetch(path, fetchOpts());
+    if (!r.ok) throw new Error("Could not load");
+    return r.json();
+  }
+
   async function loadAllCourses(silent) {
     try {
-      var r = await fetch(API, fetchOpts());
-      if (!r.ok) throw new Error("Could not load catalog");
-      allCourses = await r.json();
+      allCourses = await apiGet(API);
       renderSidebarList();
       var note = document.getElementById("watchRefreshNote");
       if (note && !silent) {
@@ -174,19 +181,11 @@
     currentId = id;
 
     try {
-      var r = await fetch(API + "/" + encodeURIComponent(id), fetchOpts());
-      if (!r.ok) {
-        setError("Course not found.");
-        document.getElementById("watchPlayerSection").hidden = true;
-        setPaywallVisible(false);
-        await loadAllCourses(false);
-        return;
-      }
-      var c = await r.json();
+      var c = await apiGet(API + "/" + encodeURIComponent(id));
       setError("");
       renderDetail(c);
-    } catch {
-      setError("Could not load this course.");
+    } catch (e) {
+      setError(e && e.status === 404 ? "Course not found." : "Could not load this course.");
       document.getElementById("watchPlayerSection").hidden = true;
       setPaywallVisible(false);
     }
@@ -195,10 +194,7 @@
     setInterval(function () {
       loadAllCourses(true);
       if (currentId) {
-        fetch(API + "/" + encodeURIComponent(currentId), fetchOpts())
-          .then(function (r) {
-            return r.ok ? r.json() : null;
-          })
+        apiGet(API + "/" + encodeURIComponent(currentId))
           .then(function (c) {
             if (c) renderDetail(c);
           })

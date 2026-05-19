@@ -122,12 +122,14 @@
   function loadCourses() {
     var grid = document.getElementById("etCoursesGrid");
     if (!grid) return;
-    fetch("/api/courses")
-      .then(function (r) {
-        if (!r.ok) throw new Error();
-        return r.json();
-      })
-      .then(renderCourses)
+    var load =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/courses")
+        : fetch("/api/courses").then(function (r) {
+            if (!r.ok) throw new Error();
+            return r.json();
+          });
+    load.then(renderCourses)
       .catch(function () {
         grid.innerHTML =
           '<p class="loading-banner">Could not load courses. Start the server with <code>npm start</code>.</p>';
@@ -208,7 +210,11 @@
           document.getElementById("etHeroBadge").textContent = String(p.secTag).replace(/<[^>]+>/g, "").trim() || "100% Online Learning";
         }
         if (p.titleHtml && document.getElementById("etHeroTitle")) {
-          document.getElementById("etHeroTitle").innerHTML = p.titleHtml;
+          var safe =
+            window.ResearchiumSanitize && window.ResearchiumSanitize.html
+              ? window.ResearchiumSanitize.html(p.titleHtml)
+              : String(p.titleHtml).replace(/<[^>]+>/g, "");
+          document.getElementById("etHeroTitle").innerHTML = safe;
         }
         if (p.leadHtml && document.getElementById("etHeroLead")) {
           document.getElementById("etHeroLead").textContent = String(p.leadHtml).replace(/<[^>]+>/g, " ").trim();
@@ -218,12 +224,14 @@
   }
 
   function loadHomeSummary() {
-    fetch("/api/home/summary")
-      .then(function (r) {
-        if (!r.ok) throw new Error();
-        return r.json();
-      })
-      .then(function (s) {
+    var summaryLoad =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/home/summary")
+        : fetch("/api/home/summary").then(function (r) {
+            if (!r.ok) throw new Error();
+            return r.json();
+          });
+    summaryLoad.then(function (s) {
         var proof = document.querySelector(".et-social-proof strong");
         if (proof && s.learnerCount) {
           proof.textContent = Number(s.learnerCount).toLocaleString() + "+";

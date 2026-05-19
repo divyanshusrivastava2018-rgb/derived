@@ -130,17 +130,18 @@
     if (blogModal) blogModal.style.display = "none";
   }
 
+  function apiGet(path) {
+    if (window.ResearchiumApi && window.ResearchiumApi.get) {
+      return window.ResearchiumApi.get(path);
+    }
+    return fetch(path).then(function (r) {
+      if (!r.ok) throw new Error();
+      return r.json();
+    });
+  }
+
   function loadData() {
-    Promise.all([
-      fetch("/api/news").then(function (r) {
-        if (!r.ok) throw new Error();
-        return r.json();
-      }),
-      fetch("/api/blog").then(function (r) {
-        if (!r.ok) throw new Error();
-        return r.json();
-      })
-    ])
+    Promise.all([apiGet("/api/news"), apiGet("/api/blog")])
       .then(function (pair) {
         newsData = Array.isArray(pair[0]) ? pair[0] : [];
         blogsData = Array.isArray(pair[1]) ? pair[1] : [];

@@ -79,4 +79,6 @@
       }
     })
     .catch(function () {});
+
+  window.ResearchiumSanitize = { html: sanitizeHtml };
 })();
