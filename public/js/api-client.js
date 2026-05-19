@@ -32,6 +32,20 @@
     return fetch(rel, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error("Offline data missing");
       return r.json();
+    }).then(function (data) {
+      var courseMatch = apiPath.match(/^\/api\/courses\/([^/?#]+)$/);
+      if (courseMatch && Array.isArray(data)) {
+        var one = data.find(function (c) {
+          return c && c.id === courseMatch[1];
+        });
+        if (!one) {
+          var err = new Error("Course not found");
+          err.status = 404;
+          throw err;
+        }
+        return one;
+      }
+      return data;
     });
   }
 

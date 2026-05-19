@@ -2,12 +2,15 @@
   var API = "/api/courses";
   var REFRESH_MS = 60 * 1000;
   var CHEMISTRY_PLAYLIST_ID = "PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN";
+  var CHEMISTRY_PLAYLIST_URL =
+    "https://www.youtube.com/playlist?list=" + CHEMISTRY_PLAYLIST_ID;
 
   var currentId = null;
   var currentCourse = null;
   var allCourses = [];
   var playlistVideos = [];
   var activeVideoId = null;
+  var chemistryBundlePromise = null;
 
   function qs(name) {
     return new URLSearchParams(window.location.search).get(name);
@@ -20,6 +23,12 @@
     return d.innerHTML;
   }
 
+  function isChemistryDemo(c) {
+    if (!c) return false;
+    if (c.id === "d1") return true;
+    return /^CHEMISTRY\s+DEMO/i.test(String(c.title || "").trim());
+  }
+
   function isFreeCourse(c) {
     return !c.price || Number(c.price) === 0;
   }
@@ -30,21 +39,82 @@
     return isFreeCourse(c);
   }
 
+  function fetchChemistryBundle() {
+    if (!chemistryBundlePromise) {
+      chemistryBundlePromise = fetch("/data/chemistry-playlist.json", { cache: "no-store" })
+        .then(function (r) {
+          if (!r.ok) throw new Error("missing");
+          return r.json();
+        })
+        .catch(function () {
+          return null;
+        });
+    }
+    return chemistryBundlePromise;
+  }
+
+  async function enrichCourse(c) {
+    if (!c || typeof c !== "object" || Array.isArray(c)) return c;
+    if (!isChemistryDemo(c)) return c;
+
+    var bundle = await fetchChemistryBundle();
+    var videos =
+      Array.isArray(c.playlistVideos) && c.playlistVideos.length
+        ? c.playlistVideos
+        : bundle && Array.isArray(bundle.videos)
+          ? bundle.videos
+          : [];
+
+    var firstId = (videos[0] && videos[0].id) || c.ytId || null;
+
+    return Object.assign({}, c, {
+      type: "youtube",
+      title: c.title || "CHEMISTRY DEMO VIDEO",
+      category: c.category || "JEE / NEET",
+      level: c.level || "Advanced",
+      instructor: c.instructor || "Researchium",
+      lang: c.lang || "Hindi",
+      price: c.price != null ? c.price : 0,
+      ytId: c.ytId || firstId,
+      ytListId: c.ytListId || (bundle && bundle.playlistId) || CHEMISTRY_PLAYLIST_ID,
+      playlistUrl: c.playlistUrl || (bundle && bundle.playlistUrl) || CHEMISTRY_PLAYLIST_URL,
+      playlistVideos: videos,
+      duration: c.duration || (videos.length ? "Playlist · " + videos.length + " videos" : "Playlist"),
+      desc:
+        c.desc ||
+        (bundle && bundle.subheading) ||
+        "Class-10 Chemistry — watch all lectures in order."
+    });
+  }
+
   function embedSrc(ytId, ytListId) {
-    var src = "https://www.youtube.com/embed/" + encodeURIComponent(ytId) + "?rel=0";
-    if (ytListId) src += "&list=" + encodeURIComponent(ytListId);
-    return src;
+    if (ytId) {
+      var src = "https://www.youtube.com/embed/" + encodeURIComponent(ytId) + "?rel=0";
+      if (ytListId) src += "&list=" + encodeURIComponent(ytListId);
+      return src;
+    }
+    if (ytListId) {
+      return (
+        "https://www.youtube.com/embed/videoseries?list=" + encodeURIComponent(ytListId) + "&rel=0"
+      );
+    }
+    return null;
+  }
+
+  function ytThumb(id) {
+    return "https://img.youtube.com/vi/" + encodeURIComponent(id) + "/mqdefault.jpg";
   }
 
   function renderPlayer(ytId, ytListId, host) {
     host.innerHTML = "";
-    if (!ytId) {
-      host.innerHTML = '<div class="watch-no-preview">Preview not available.</div>';
+    var src = embedSrc(ytId, ytListId);
+    if (!src) {
+      host.innerHTML = '<div class="watch-no-preview">Could not load playlist. Try again later.</div>';
       return;
     }
     host.innerHTML =
       '<iframe src="' +
-      embedSrc(ytId, ytListId) +
+      src +
       '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
   }
 
@@ -80,19 +150,9 @@
   }
 
   async function loadPlaylistVideos(c) {
-    if (Array.isArray(c.playlistVideos) && c.playlistVideos.length) {
-      return c.playlistVideos.slice();
-    }
-    if (c.ytListId === CHEMISTRY_PLAYLIST_ID || c.id === "d1") {
-      try {
-        var r = await fetch("/data/chemistry-playlist.json");
-        if (r.ok) {
-          var data = await r.json();
-          if (Array.isArray(data.videos) && data.videos.length) return data.videos;
-        }
-      } catch (_) {
-        /* ignore */
-      }
+    var enriched = await enrichCourse(c);
+    if (Array.isArray(enriched.playlistVideos) && enriched.playlistVideos.length) {
+      return enriched.playlistVideos.slice();
     }
     return [];
   }
@@ -102,14 +162,13 @@
     activeVideoId = ytId;
     var host = document.getElementById("watchFrame");
     if (host && canWatchCourse(currentCourse)) {
-      renderPlayer(ytId, currentCourse.ytListId || null, host);
+      renderPlayer(ytId, currentCourse.ytListId || CHEMISTRY_PLAYLIST_ID, host);
     }
     renderPlaylistSidebar();
     var params = new URLSearchParams(window.location.search);
     params.set("id", currentId);
     params.set("v", ytId);
-    var next = window.location.pathname + "?" + params.toString();
-    window.history.replaceState(null, "", next);
+    window.history.replaceState(null, "", window.location.pathname + "?" + params.toString());
   }
 
   function renderPlaylistSidebar() {
@@ -118,39 +177,39 @@
 
     setSidebarTitle(
       "Playlist · " + playlistVideos.length + " videos",
-      currentCourse && currentCourse.playlistUrl
-        ? "Tap a lecture to play. Full series on YouTube linked below."
-        : "Tap a lecture to play in order."
+      "Tap a lecture to play — same style as Live Classes."
     );
 
-    var linkHtml = "";
-    if (currentCourse && currentCourse.playlistUrl) {
-      linkHtml =
-        '<p class="watch-pl-yt-link"><a href="' +
-        escapeHtml(currentCourse.playlistUrl) +
-        '" target="_blank" rel="noopener noreferrer">Open full playlist on YouTube ↗</a></p>';
-    }
+    var linkHtml =
+      '<p class="watch-pl-yt-link"><a href="' +
+      escapeHtml((currentCourse && currentCourse.playlistUrl) || CHEMISTRY_PLAYLIST_URL) +
+      '" target="_blank" rel="noopener noreferrer">Open full playlist on YouTube ↗</a></p>';
 
     list.innerHTML =
       linkHtml +
+      '<div class="watch-pl-queue" role="list" aria-label="Chemistry playlist">' +
       playlistVideos
         .map(function (v) {
           var active = v.id === activeVideoId;
           return (
-            '<button type="button" class="watch-list-item watch-pl-item' +
+            '<button type="button" class="watch-list-item watch-pl-item yt-pl-item' +
             (active ? " is-active" : "") +
             '" data-vid="' +
             escapeHtml(v.id) +
-            '">' +
+            '" role="listitem">' +
             '<span class="watch-pl-seq">' +
             (v.seq || "") +
             "</span>" +
+            '<img class="watch-pl-thumb" src="' +
+            escapeHtml(ytThumb(v.id)) +
+            '" alt="" loading="lazy" width="80" height="45" />' +
             '<span class="watch-list-title">' +
             escapeHtml(v.title || "Lecture") +
             "</span></button>"
           );
         })
-        .join("");
+        .join("") +
+      "</div>";
 
     list.querySelectorAll(".watch-pl-item").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -159,24 +218,30 @@
     });
   }
 
-  function renderDetail(c) {
-    currentCourse = c;
-    document.getElementById("watchCategory").textContent = c.category || "";
-    document.getElementById("watchTitle").textContent = c.title || "";
+  async function renderDetail(c) {
+    currentCourse = await enrichCourse(c);
+    document.getElementById("watchCategory").textContent = currentCourse.category || "";
+    document.getElementById("watchTitle").textContent = currentCourse.title || "";
     document.getElementById("watchInstructor").textContent =
-      "👤 " + (c.instructor || "Researchium") + " · " + (c.level || "") + " · " + (c.lang || "English");
-    document.getElementById("watchDesc").textContent = c.desc || "";
-    document.title = (c.title ? c.title + " · " : "") + "Watch – Researchium";
+      "👤 " +
+      (currentCourse.instructor || "Researchium") +
+      " · " +
+      (currentCourse.level || "") +
+      " · " +
+      (currentCourse.lang || "English");
+    document.getElementById("watchDesc").textContent = currentCourse.desc || "";
+    document.title = (currentCourse.title ? currentCourse.title + " · " : "") + "Watch – Researchium";
 
-    var allowed = canWatchCourse(c);
+    var allowed = canWatchCourse(currentCourse);
     setPaywallVisible(!allowed);
 
-    var startId = qs("v") || c.ytId;
+    var startId = qs("v") || currentCourse.ytId;
+    if (!startId && playlistVideos.length) startId = playlistVideos[0].id;
     activeVideoId = startId;
 
     var host = document.getElementById("watchFrame");
     if (allowed) {
-      renderPlayer(startId, c.ytListId || null, host);
+      renderPlayer(startId, currentCourse.ytListId || CHEMISTRY_PLAYLIST_ID, host);
     } else if (host) {
       host.innerHTML = "";
     }
@@ -254,7 +319,12 @@
 
   async function loadAllCourses(silent) {
     try {
-      allCourses = await apiGet(API);
+      var list = await apiGet(API);
+      var enriched = [];
+      for (var i = 0; i < list.length; i++) {
+        enriched.push(await enrichCourse(list[i]));
+      }
+      allCourses = enriched;
       if (currentCourse) {
         await refreshSidebarForCourse(currentCourse);
       } else {
@@ -266,8 +336,8 @@
       }
     } catch (e) {
       if (!silent) {
-        var list = document.getElementById("watchList");
-        if (list) list.innerHTML = '<p class="watch-list-empty">Could not refresh list. Is the server running?</p>';
+        var el = document.getElementById("watchList");
+        if (el) el.innerHTML = '<p class="watch-list-empty">Could not refresh list. Is the server running?</p>';
       }
     }
   }
@@ -289,14 +359,23 @@
     currentId = id;
 
     try {
-      var c = await apiGet(API + "/" + encodeURIComponent(id));
+      var raw = await apiGet(API + "/" + encodeURIComponent(id));
       setError("");
-      renderDetail(c);
-      await refreshSidebarForCourse(c);
+      playlistVideos = await loadPlaylistVideos(raw);
+      await renderDetail(raw);
+      await refreshSidebarForCourse(raw);
     } catch (e) {
-      setError(e && e.status === 404 ? "Course not found." : "Could not load this course.");
-      document.getElementById("watchPlayerSection").hidden = true;
-      setPaywallVisible(false);
+      if (isChemistryDemo({ id: id, title: "CHEMISTRY DEMO VIDEO" })) {
+        var fallback = await enrichCourse({ id: id, title: "CHEMISTRY DEMO VIDEO", price: 0, type: "youtube" });
+        setError("");
+        playlistVideos = await loadPlaylistVideos(fallback);
+        await renderDetail(fallback);
+        await refreshSidebarForCourse(fallback);
+      } else {
+        setError(e && e.status === 404 ? "Course not found." : "Could not load this course.");
+        document.getElementById("watchPlayerSection").hidden = true;
+        setPaywallVisible(false);
+      }
     }
 
     await loadAllCourses(true);
@@ -304,11 +383,11 @@
       loadAllCourses(true);
       if (currentId) {
         apiGet(API + "/" + encodeURIComponent(currentId))
-          .then(function (c) {
+          .then(async function (c) {
             if (!c) return;
-            currentCourse = c;
-            renderDetail(c);
-            return refreshSidebarForCourse(c);
+            playlistVideos = await loadPlaylistVideos(c);
+            await renderDetail(c);
+            await refreshSidebarForCourse(c);
           })
           .catch(function () {});
       }

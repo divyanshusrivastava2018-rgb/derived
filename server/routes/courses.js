@@ -7,6 +7,7 @@ const store = require('../lib/store');
 const { requireAdmin } = require('../lib/adminAuth');
 const { isSafeHttpUrl } = require('../lib/safeUrl');
 const { publicCourseView } = require('../lib/entitlements');
+const { enrichChemistryCourse } = require('../lib/chemistryPlaylist');
 
 const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
 const ALLOWED_THUMB_MIME = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -98,14 +99,14 @@ function publicUploadUrl(req, filename) {
 
 router.get('/', (req, res) => {
   const courses = store.readAll();
-  res.json(courses.map((c) => publicCourseView(c, req)));
+  res.json(courses.map((c) => publicCourseView(enrichChemistryCourse(c), req)));
 });
 
 router.get('/:id', (req, res) => {
   const courses = store.readAll();
   const c = courses.find((x) => x.id === req.params.id);
   if (!c) return res.status(404).json({ error: 'Course not found' });
-  res.json(publicCourseView(c, req));
+  res.json(publicCourseView(enrichChemistryCourse(c), req));
 });
 
 router.post('/', requireAdmin, parseBody, async (req, res) => {
