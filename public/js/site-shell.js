@@ -18,7 +18,7 @@
     '<li><a href="/study-materials.html" data-nav="study">Study Materials</a></li>' +
     '<li><a href="/mcq-test.html" data-nav="mcq">MCQ Practice</a></li>' +
     '<li><a href="/pricing.html" data-nav="pricing">Pricing</a></li>' +
-    '<li><a href="/csir-net.html">CSIR UGC NET</a></li>' +
+    '<li><a href="/csir-net.html" data-nav="csir">CSIR UGC NET</a></li>' +
     '<li><a href="/watch.html">Watch</a></li>' +
     "</ul></li>" +
     '<li><a href="/blog.html" data-nav="blog">Blog</a></li>' +

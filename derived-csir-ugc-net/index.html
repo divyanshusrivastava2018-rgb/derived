@@ -75,12 +75,6 @@
     }
     .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
 
-    .call-bar {
-      display: flex; align-items: center; gap: .5rem;
-      font-size: .83rem; color: var(--muted);
-    }
-    .call-bar a { color: var(--accent); text-decoration: none; font-weight: 500; }
-
     .hero {
       position: relative;
       min-height: 92vh;
@@ -368,7 +362,6 @@
       .hero { padding: 10% 4% 6%; }
       .section { padding: 3.5rem 4%; }
       .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .call-bar { display: none; }
     }
 
     .reveal {
@@ -429,8 +422,12 @@
 </head>
 <body data-csir-standalone="true">
 
+<p class="csir-standalone-banner" style="margin:0;padding:.55rem 5%;text-align:center;font-size:.85rem;background:#131c35;border-bottom:1px solid #1e2d52;">
+  Local dev mode — integrated site: <a href="/" style="color:#4fffb0">Researchium home</a> · <a href="/csir-net.html" style="color:#00c2ff">CSIR on main server</a> (run <code>npm start</code> from project root)
+</p>
+
 <nav>
-  <a class="nav-logo" href="/">derived</a>
+  <a class="nav-logo" href="/">Researchium</a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#subjects">Subjects</a></li>
@@ -440,7 +437,6 @@
     <li><a href="#subjects">All courses</a></li>
   </ul>
   <div class="nav-cta">
-    <div class="call-bar">📞 <a href="tel:+918585858585">+91-8585858585</a></div>
     <a class="btn-ghost" href="#register">Log in</a>
     <a class="btn-primary" href="#register">Join free</a>
   </div>
@@ -729,7 +725,7 @@
     </div>
     <div class="test-card reveal">
       <div class="test-stars">★★★★★</div>
-      <p class="test-quote">"Coming from a small town with no coaching nearby, Derived was my only hope. The full syllabus playlist and test series got me to my dream score."</p>
+      <p class="test-quote">"Coming from a small town with no coaching nearby, Researchium was my only hope. The full syllabus playlist and test series got me to my dream score."</p>
       <div class="test-author">
         <div class="test-avatar">PD</div>
         <div>
@@ -764,14 +760,14 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" type="button">Is there a refund policy? <span class="arrow">▼</span></button>
-      <div class="faq-a">Yes. We offer a 7-day full refund on all paid plans if you are not satisfied with the platform. Contact our support team at <a href="tel:+918585858585" style="color:var(--accent)">+91-8585858585</a> within 7 days of purchase.</div>
+      <div class="faq-a">Yes. We offer a 7-day full refund on all paid plans if you are not satisfied with the platform. Contact support within 7 days of purchase.</div>
     </div>
   </div>
 </section>
 
 <div id="register" class="cta-banner reveal" style="margin-top: 5rem;">
   <h2>Ready to crack <em>CSIR NET 2026</em>?</h2>
-  <p>Join over 10 crore learners and get access to India's best NET coaching today.</p>
+  <p>Start your CSIR NET preparation with Derived — live classes, mocks, and expert guidance.</p>
   <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
     <a class="btn-lg primary" href="#register">Start learning for free</a>
     <a class="btn-lg outline" href="#plans">View all plans</a>
@@ -829,14 +825,7 @@
   <div class="footer-grid">
     <div class="footer-brand">
       <a class="nav-logo" href="/" style="font-size: 1.6rem;">derived</a>
-      <p>Democratising education — making quality CSIR NET coaching accessible to every aspirant in India.</p>
-      <div class="socials">
-        <a class="social-btn" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" title="Facebook">f</a>
-        <a class="social-btn" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" title="YouTube">▶</a>
-        <a class="social-btn" href="https://twitter.com/" target="_blank" rel="noopener noreferrer" title="Twitter">𝕏</a>
-        <a class="social-btn" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" title="Instagram">◎</a>
-        <a class="social-btn" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" title="LinkedIn">in</a>
-      </div>
+      <p>Quality CSIR NET coaching — live classes, full syllabus, and exam-pattern practice for every aspirant.</p>
     </div>
     <div class="footer-col">
       <h5>Company</h5>
@@ -852,24 +841,23 @@
       <ul>
         <li><a href="/about.html">User guidelines</a></li>
         <li><a href="#plans">Refund policy</a></li>
-        <li><a href="tel:+918585858585">Grievance redressal</a></li>
+        <li><a href="#faq">Help centre</a></li>
         <li><a href="/">Sitemap</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <h5>Popular goals</h5>
+      <h5>CSIR NET subjects</h5>
       <ul>
-        <li><a href="/">CSIR UGC NET</a></li>
-        <li><a href="#subjects">IIT JEE</a></li>
-        <li><a href="#subjects">UPSC</a></li>
-        <li><a href="#subjects">NEET UG</a></li>
-        <li><a href="#subjects">SSC</a></li>
+        <li><a href="#subjects">Life Science</a></li>
+        <li><a href="#subjects">Chemical Science</a></li>
+        <li><a href="#subjects">Mathematical Science</a></li>
+        <li><a href="#subjects">Physical Science</a></li>
+        <li><a href="#subjects">Earth Science</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Derived.co.in · All rights reserved</span>
-    <span>📞 <a href="tel:+918585858585">+91-8585858585</a></span>
   </div>
 </footer>
 

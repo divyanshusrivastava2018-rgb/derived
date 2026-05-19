@@ -159,7 +159,7 @@ const faqs = [
 
 function goalStats() {
   return {
-    learners: '10 Cr+',
+    learners: '50K+',
     educators: 500,
     successRate: '98%',
     subjects: subjects.length

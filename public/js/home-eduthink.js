@@ -223,6 +223,29 @@
       .catch(function () {});
   }
 
+  function loadCsirHomeStats() {
+    var statLoad =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/goal/stats")
+        : fetch("/api/goal/stats").then(function (r) {
+            if (!r.ok) throw new Error();
+            return r.json();
+          });
+    statLoad
+      .then(function (s) {
+        if (!s) return;
+        var learners = document.getElementById("etCsirStatLearners");
+        var educators = document.getElementById("etCsirStatEducators");
+        var meta = document.getElementById("etCsirLearnerStat");
+        if (learners && s.learners) learners.textContent = String(s.learners);
+        if (educators && s.educators != null) {
+          educators.textContent = String(s.educators) + "+";
+        }
+        if (meta && s.learners) meta.textContent = String(s.learners) + " NET learners";
+      })
+      .catch(function () {});
+  }
+
   function loadHomeSummary() {
     var summaryLoad =
       window.ResearchiumApi && window.ResearchiumApi.get
@@ -249,4 +272,5 @@
   bindTestimonials();
   bindCmsHero();
   loadHomeSummary();
+  loadCsirHomeStats();
 })();

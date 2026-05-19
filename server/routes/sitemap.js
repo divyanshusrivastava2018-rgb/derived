@@ -11,6 +11,7 @@ const STATIC_PATHS = [
   '/live-classes.html',
   '/blog.html',
   '/signin.html',
+  '/csir-net.html',
   '/admin.html',
   '/rss.xml'
 ];

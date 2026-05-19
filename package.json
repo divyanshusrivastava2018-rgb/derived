@@ -7,7 +7,8 @@
     "start": "node server/index.js",
     "start:clean": "powershell -NoProfile -ExecutionPolicy Bypass -File server/scripts/start-clean.ps1",
     "dev": "nodemon server/index.js",
-    "test": "node server/scripts/smoke-test.js"
+    "test": "node server/scripts/smoke-test.js",
+    "build:csir": "node server/scripts/build-csir-integrated.js"
   },
   "dependencies": {
     "compression": "^1.8.1",
