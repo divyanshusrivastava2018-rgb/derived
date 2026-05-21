@@ -1,0 +1,442 @@
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var year = params.get("year") || params.get("paper") || "2024";
+  var candidate = params.get("name") || "Candidate";
+
+  var paper = null;
+  var sessionId = "";
+  var allQuestions = [];
+  var currentIndex = 0;
+  var currentSectionKey = "";
+  var timerSeconds = 0;
+  var timerHandle = null;
+
+  var VIEWS = [
+    "view-login",
+    "view-instructions",
+    "view-paper-instructions",
+    "view-exam",
+    "view-result"
+  ];
+
+  /** @type {Record<string, { visited: boolean, answer: number|null, marked: boolean }>} */
+  var state = {};
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function showView(id) {
+    VIEWS.forEach(function (v) {
+      var el = $(v);
+      if (el) el.classList.toggle("gate-hidden", v !== id);
+    });
+  }
+
+  function flatQuestions() {
+    var list = [];
+    if (!paper) return list;
+    paper.sections.forEach(function (sec) {
+      sec.questions.forEach(function (q) {
+        list.push({
+          id: q.id,
+          number: q.number,
+          sectionKey: sec.key,
+          sectionLabel: sec.label,
+          type: q.type,
+          marks: q.marks,
+          negativeMarks: q.negativeMarks,
+          text: q.text,
+          options: q.options
+        });
+      });
+    });
+    return list;
+  }
+
+  function initState() {
+    state = {};
+    allQuestions.forEach(function (q) {
+      state[q.id] = { visited: false, answer: null, marked: false };
+    });
+  }
+
+  function statusOf(qid) {
+    var s = state[qid];
+    if (!s) return "not-visited";
+    if (!s.visited) return "not-visited";
+    if (s.answer !== null && s.answer >= 0) return s.marked ? "answered-marked" : "answered";
+    if (s.marked) return "marked";
+    return "not-answered";
+  }
+
+  function formatTime(sec) {
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  function countStats() {
+    var visited = 0;
+    var notAns = 0;
+    var ans = 0;
+    var marked = 0;
+    allQuestions.forEach(function (q) {
+      var st = statusOf(q.id);
+      if (st !== "not-visited") visited += 1;
+      if (st === "not-answered" || st === "marked") notAns += st === "not-answered" ? 1 : 0;
+      if (st === "answered" || st === "answered-marked") ans += 1;
+      if (st === "marked" || st === "answered-marked") marked += 1;
+    });
+    notAns = allQuestions.filter(function (q) {
+      var st = statusOf(q.id);
+      return st === "not-answered" || st === "marked";
+    }).length;
+    return { visited: visited, notAns: notAns, ans: ans, marked: marked };
+  }
+
+  function renderPaletteStats() {
+    var s = countStats();
+    if ($("statVisited")) $("statVisited").textContent = String(s.visited);
+    if ($("statNotAns")) $("statNotAns").textContent = String(s.notAns);
+    if ($("statAns")) $("statAns").textContent = String(s.ans);
+    if ($("statMarked")) $("statMarked").textContent = String(s.marked);
+  }
+
+  function startTimer() {
+    if (timerHandle) clearInterval(timerHandle);
+    timerHandle = setInterval(function () {
+      timerSeconds -= 1;
+      var el = $("examTimer");
+      if (el) el.textContent = "Time Left : " + formatTime(Math.max(0, timerSeconds));
+      if (timerSeconds <= 0) {
+        clearInterval(timerHandle);
+        submitExam(true);
+      }
+    }, 1000);
+  }
+
+  function fillLoginPanel() {
+    if (!paper) return;
+    if ($("loginSystemId")) $("loginSystemId").textContent = "RSH-" + paper.subject + "-" + paper.year;
+    if ($("loginSubject")) $("loginSubject").textContent = paper.title;
+    if ($("loginDuration")) $("loginDuration").textContent = paper.durationMinutes + " minutes";
+    if ($("examPaperTitle")) $("examPaperTitle").textContent = paper.subjectLabel || paper.title;
+  }
+
+  function renderPaperTable() {
+    var body = $("paperMarksBody");
+    if (!body || !paper) return;
+    body.innerHTML = paper.sections
+      .map(function (sec) {
+        return (
+          "<tr><td>" +
+          sec.label +
+          "</td><td>" +
+          sec.marks1Count +
+          "</td><td>" +
+          sec.marks2Count +
+          "</td></tr>"
+        );
+      })
+      .join("");
+    var totalQ = allQuestions.length;
+    var totalM = allQuestions.reduce(function (n, q) {
+      return n + q.marks;
+    }, 0);
+    var pt = $("paperInstrText");
+    if (pt)
+      pt.innerHTML =
+        "This examination has <strong>" +
+        totalQ +
+        "</strong> questions for <strong>" +
+        totalM +
+        "</strong> marks.";
+  }
+
+  function renderSectionTabs() {
+    var tabs = $("sectionTabs");
+    if (!tabs || !paper) return;
+    tabs.innerHTML = paper.sections
+      .map(function (sec) {
+        var active = sec.key === currentSectionKey ? " active" : "";
+        return (
+          '<button type="button" class="gate-exam-tab' +
+          active +
+          '" data-sec="' +
+          sec.key +
+          '">' +
+          sec.label +
+          "</button>"
+        );
+      })
+      .join("");
+    tabs.querySelectorAll(".gate-exam-tab").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentSectionKey = btn.getAttribute("data-sec");
+        var first = allQuestions.findIndex(function (q) {
+          return q.sectionKey === currentSectionKey;
+        });
+        if (first >= 0) goToQuestion(first);
+        renderSectionTabs();
+      });
+    });
+  }
+
+  function renderPalette() {
+    var grid = $("questionPalette");
+    var label = $("paletteSectionLabel");
+    if (!grid) return;
+    var secQuestions = allQuestions.filter(function (q) {
+      return q.sectionKey === currentSectionKey;
+    });
+    if (label) label.textContent = secQuestions[0] ? secQuestions[0].sectionLabel : "Section";
+
+    grid.innerHTML = secQuestions
+      .map(function (q) {
+        var globalIdx = allQuestions.findIndex(function (x) {
+          return x.id === q.id;
+        });
+        var st = statusOf(q.id);
+        var cur = globalIdx === currentIndex ? " current" : "";
+        return (
+          '<button type="button" class="gate-q-btn ' +
+          st +
+          cur +
+          '" data-idx="' +
+          globalIdx +
+          '">' +
+          q.number +
+          "</button>"
+        );
+      })
+      .join("");
+
+    grid.querySelectorAll(".gate-q-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        goToQuestion(parseInt(btn.getAttribute("data-idx"), 10));
+      });
+    });
+    renderPaletteStats();
+  }
+
+  function renderQuestion() {
+    var q = allQuestions[currentIndex];
+    if (!q) return;
+    state[q.id].visited = true;
+    currentSectionKey = q.sectionKey;
+
+    $("qNumber").textContent = "Question No. " + q.number;
+    var math = window.ResearchiumMath;
+    var opts = $("qOptions");
+    var sel = state[q.id].answer;
+
+    $("qMarksLine").textContent =
+      "Marks for correct answer: " +
+      q.marks +
+      " | Negative Marks: " +
+      q.negativeMarks;
+
+    if (opts) {
+      opts.innerHTML = q.options
+        .map(function (op, i) {
+          var checked = sel === i ? " checked" : "";
+          var opHtml = math ? math.toMathHtml(op) : op;
+          var a11y = math ? math.latexToAccessibleText(op) : op;
+          return (
+            '<label><input type="radio" name="gateOpt" value="' +
+            i +
+            '"' +
+            checked +
+            ' aria-label="Option ' +
+            (i + 1) +
+            ": " +
+            a11y +
+            '" /> <span class="gate-opt-text" role="math">(' +
+            (i + 1) +
+            ") " +
+            opHtml +
+            "</span></label>"
+          );
+        })
+        .join("");
+    }
+
+    function typesetOptions() {
+      if (math && opts) return math.typeset(opts);
+      return Promise.resolve();
+    }
+
+    if (math && $("qText")) {
+      math.setMathHtml($("qText"), q.text).then(typesetOptions);
+    } else {
+      if ($("qText")) $("qText").textContent = q.text;
+      typesetOptions();
+    }
+
+    renderSectionTabs();
+    renderPalette();
+  }
+
+  function goToQuestion(idx) {
+    if (idx < 0 || idx >= allQuestions.length) return;
+    currentIndex = idx;
+    currentSectionKey = allQuestions[idx].sectionKey;
+    renderQuestion();
+  }
+
+  function saveCurrentAnswer() {
+    var q = allQuestions[currentIndex];
+    if (!q) return;
+    var picked = document.querySelector('input[name="gateOpt"]:checked');
+    if (picked) {
+      state[q.id].answer = parseInt(picked.value, 10);
+      state[q.id].marked = false;
+    }
+  }
+
+  function submitExam(auto) {
+    if (!auto && !confirm("Submit examination? You cannot change answers after submit.")) return;
+    saveCurrentAnswer();
+    if (timerHandle) clearInterval(timerHandle);
+
+    var responses = {};
+    allQuestions.forEach(function (q) {
+      var s = state[q.id];
+      responses[q.id] = s && s.answer !== null ? s.answer : -1;
+    });
+
+    fetch("/api/mcq/gate/paper/" + encodeURIComponent(year) + "/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId: sessionId, responses: responses })
+    })
+      .then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok) throw new Error(j.error || "submit failed");
+          return j;
+        });
+      })
+      .then(function (j) {
+        showView("view-result");
+        $("resultTitle").textContent = paper.title + " — Submitted";
+        $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
+        $("resultDetail").textContent =
+          "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
+      })
+      .catch(function () {
+        alert("Could not submit. Check your connection and try again.");
+      });
+  }
+
+  function bindEvents() {
+    $("btnSignIn").addEventListener("click", function () {
+      showView("view-instructions");
+    });
+
+    $("linkVerifyPhoto").addEventListener("click", function (e) {
+      e.preventDefault();
+      alert("This is a practice session. Contact your test administrator if your details are incorrect.");
+    });
+
+    $("btnToPaperInstr").addEventListener("click", function () {
+      showView("view-paper-instructions");
+    });
+    $("btnToGeneralInstr").addEventListener("click", function () {
+      showView("view-instructions");
+    });
+    $("declareReady").addEventListener("change", function () {
+      $("btnBeginExam").disabled = !this.checked;
+    });
+    $("btnBeginExam").addEventListener("click", function () {
+      showView("view-exam");
+      startTimer();
+      goToQuestion(0);
+    });
+    $("btnSaveNext").addEventListener("click", function () {
+      saveCurrentAnswer();
+      if (currentIndex < allQuestions.length - 1) goToQuestion(currentIndex + 1);
+      else renderPalette();
+    });
+    $("btnPrevQ").addEventListener("click", function () {
+      saveCurrentAnswer();
+      if (currentIndex > 0) goToQuestion(currentIndex - 1);
+    });
+    $("btnMarkReview").addEventListener("click", function () {
+      var q = allQuestions[currentIndex];
+      if (q) {
+        state[q.id].marked = true;
+        state[q.id].answer = null;
+      }
+      if (currentIndex < allQuestions.length - 1) goToQuestion(currentIndex + 1);
+      else renderPalette();
+    });
+    $("btnClear").addEventListener("click", function () {
+      var q = allQuestions[currentIndex];
+      if (q) {
+        state[q.id].answer = null;
+        state[q.id].marked = false;
+      }
+      renderQuestion();
+    });
+    $("btnSubmitExam").addEventListener("click", function () {
+      submitExam(false);
+    });
+    $("btnCloseWindow").addEventListener("click", function () {
+      window.location.assign("/mcq-test.html#mock-test-series");
+    });
+    $("btnCalculator").addEventListener("click", function () {
+      $("gateCalcModal").classList.remove("gate-hidden");
+    });
+    $("btnCloseCalc").addEventListener("click", function () {
+      $("gateCalcModal").classList.add("gate-hidden");
+    });
+  }
+
+  function setCandidateNames() {
+    [
+      "loginCandidateName",
+      "candidateName",
+      "candidateName2",
+      "candidateName3"
+    ].forEach(function (id) {
+      var el = $(id);
+      if (el) el.textContent = candidate;
+    });
+  }
+
+  function loadPaper() {
+    return fetch("/api/mcq/gate/paper/" + encodeURIComponent(year) + "/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}"
+    })
+      .then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok) throw new Error(j.error || "load failed");
+          return j;
+        });
+      })
+      .then(function (j) {
+        sessionId = j.sessionId || "";
+        paper = j.paper;
+        document.title = paper.title + " — Online Assessment";
+        $("durText").textContent = String(paper.durationMinutes);
+        timerSeconds = (paper.durationMinutes || 180) * 60;
+        $("examTimer").textContent = "Time Left : " + formatTime(timerSeconds);
+        allQuestions = flatQuestions();
+        initState();
+        fillLoginPanel();
+        renderPaperTable();
+      });
+  }
+
+  setCandidateNames();
+  bindEvents();
+  showView("view-login");
+
+  loadPaper().catch(function () {
+    document.body.innerHTML =
+      '<p style="padding:2rem;text-align:center">Could not load examination. <a href="/mcq-test.html#mock-test-series">Back to Mock Test Series</a></p>';
+  });
+})();

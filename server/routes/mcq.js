@@ -1,8 +1,14 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { nanoid } = require('nanoid');
+const gateExamRouter = require('./gateExam');
+const mockTestsRouter = require('./mockTests');
+const { CATEGORY_QUIZ, getCategoryQuizPool } = require('../lib/mockTestCatalog');
+const { formatMathText } = require('../lib/mathLatex');
 
 const router = express.Router();
+router.use('/gate', gateExamRouter);
+router.use('/mock-tests', mockTestsRouter);
 const jsonParser = express.json({ limit: '64kb' });
 
 const generateLimiter = rateLimit({
@@ -125,7 +131,8 @@ function shuffle(arr) {
 }
 
 function pickQuestions(topic, count) {
-  const pool = MCQ_BANK[topic] || MCQ_BANK['JEE / NEET'];
+  const t = String(topic || '').trim();
+  const pool = MCQ_BANK[t] || getCategoryQuizPool(t);
   const c = Math.max(1, Math.min(20, Number(count) || 10));
   if (pool.length >= c) return shuffle(pool).slice(0, c);
   const out = [];
@@ -141,8 +148,8 @@ const TEST_TTL_MS = 30 * 60 * 1000;
 function toPublicQuestion(q, i) {
   return {
     id: `q${i + 1}`,
-    question: q.question,
-    options: q.options
+    question: formatMathText(q.question),
+    options: (q.options || []).map(formatMathText)
   };
 }
 
@@ -157,7 +164,21 @@ const sweepTimer = setInterval(cleanupTests, 10 * 60 * 1000);
 if (sweepTimer.unref) sweepTimer.unref();
 
 router.get('/topics', (_req, res) => {
-  res.json({ topics: Object.keys(MCQ_BANK) });
+  const topics = Object.keys(MCQ_BANK).concat(Object.keys(CATEGORY_QUIZ));
+  res.json({ topics: [...new Set(topics)] });
+});
+
+router.get('/category/:slug', (req, res) => {
+  const { getCategoryBySlug } = require('../lib/mockTestCatalog');
+  const cat = getCategoryBySlug(String(req.params.slug || '').trim());
+  if (!cat) return res.status(404).json({ error: 'Category not found' });
+  const pool = getCategoryQuizPool(cat.name);
+  res.json({
+    slug: cat.slug,
+    name: cat.name,
+    questionCount: Math.min(10, pool.length),
+    quizTopic: cat.name
+  });
 });
 
 router.post('/generate', generateLimiter, jsonParser, (req, res) => {
@@ -165,17 +186,18 @@ router.post('/generate', generateLimiter, jsonParser, (req, res) => {
   const topic = String(body.topic || 'JEE / NEET').trim();
   const count = body.count;
   const picked = pickQuestions(topic, count);
+  const resolvedTopic = MCQ_BANK[topic] ? topic : String(topic || '').trim() || 'Practice';
   const testId = nanoid(18);
   ACTIVE_TESTS.set(testId, {
     createdAt: Date.now(),
     expiresAt: Date.now() + TEST_TTL_MS,
-    topic: MCQ_BANK[topic] ? topic : 'JEE / NEET',
+    topic: resolvedTopic,
     answers: picked.map((q) => q.answerIndex)
   });
   res.json({
     ok: true,
     testId,
-    topic: MCQ_BANK[topic] ? topic : 'JEE / NEET',
+    topic: resolvedTopic,
     count: picked.length,
     questions: picked.map(toPublicQuestion)
   });

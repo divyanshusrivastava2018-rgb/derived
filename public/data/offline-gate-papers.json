@@ -1,0 +1,220 @@
+{
+  "papers": [
+    {
+      "year": 2018,
+      "slug": "2018",
+      "title": "GATE Mathematics 2018",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2019,
+      "slug": "2019",
+      "title": "GATE Mathematics 2019",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2020,
+      "slug": "2020",
+      "title": "GATE Mathematics 2020",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2021,
+      "slug": "2021",
+      "title": "GATE Mathematics 2021",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2022,
+      "slug": "2022",
+      "title": "GATE Mathematics 2022",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "slug": "2023",
+      "title": "GATE Mathematics 2023",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "slug": "2024",
+      "title": "GATE Mathematics 2024",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "slug": "2025",
+      "title": "GATE Mathematics 2025",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "slug": "2026",
+      "title": "GATE Mathematics 2026",
+      "subject": "MA",
+      "subjectLabel": "MA Mathematics",
+      "durationMinutes": 180,
+      "totalQuestions": 30,
+      "totalMarks": 44,
+      "sections": [
+        {
+          "key": "ga",
+          "label": "General Aptitude",
+          "marks1Count": 5,
+          "marks2Count": 5
+        },
+        {
+          "key": "ma",
+          "label": "MA Mathematics",
+          "marks1Count": 10,
+          "marks2Count": 10
+        }
+      ]
+    }
+  ]
+}

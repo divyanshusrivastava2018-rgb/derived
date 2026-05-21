@@ -16,7 +16,8 @@
     "sync:biology": "node server/scripts/import-demo-playlist.js biology",
     "sync:physics": "node server/scripts/import-demo-playlist.js physics",
     "sync:mathematics": "node server/scripts/import-demo-playlist.js mathematics",
-    "import:math-science": "node server/scripts/import-mathematical-science-materials.js"
+    "import:math-science": "node server/scripts/import-mathematical-science-materials.js",
+    "sync:mock-offline": "node server/scripts/sync-offline-mock-data.js"
   },
   "dependencies": {
     "compression": "^1.8.1",

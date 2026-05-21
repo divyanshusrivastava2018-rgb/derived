@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Assessment — Researchium</title>
+    <link rel="stylesheet" href="/css/gate-exam.css" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" as="style" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/math-content.css" />
+  </head>
+  <body class="gate-exam-body">
+    <header class="gate-app-header">
+      <span class="gate-app-brand">Researchium Online Assessment</span>
+      <span class="gate-app-ver">Mock Practice · v1.0</span>
+    </header>
+
+    <!-- Step 0: Sign-in (DigiALM-style layout, original content only) -->
+    <div id="view-login" class="gate-screen">
+      <div class="gate-screen-title">Login</div>
+      <div class="gate-login-panel">
+        <div class="gate-login-main">
+          <table class="gate-info-table">
+            <tr>
+              <td class="gate-info-label">System Name :</td>
+              <td class="gate-info-value" id="loginSystemId">RSH-MA</td>
+            </tr>
+          </table>
+          <p class="gate-verify-link">
+            <a href="#" id="linkVerifyPhoto">Click here</a> if the name and photograph shown on the screen is not yours
+          </p>
+          <table class="gate-info-table gate-info-table-spaced">
+            <tr>
+              <td class="gate-info-label">Candidate Name :</td>
+              <td class="gate-info-value gate-info-highlight" id="loginCandidateName">Candidate</td>
+            </tr>
+            <tr>
+              <td class="gate-info-label">Subject :</td>
+              <td class="gate-info-value" id="loginSubject">Mock Examination</td>
+            </tr>
+            <tr>
+              <td class="gate-info-label">Duration :</td>
+              <td class="gate-info-value" id="loginDuration">180 minutes</td>
+            </tr>
+          </table>
+          <div class="gate-login-actions">
+            <button type="button" class="gate-btn-signin" id="btnSignIn">Sign in to Continue</button>
+          </div>
+          <div class="gate-lang-row">
+            <label>Change Language :</label>
+            <select id="langSelect" class="gate-lang-select" disabled>
+              <option selected>English</option>
+            </select>
+          </div>
+        </div>
+        <aside class="gate-login-photo">
+          <div class="gate-photo-frame" id="candidatePhoto" aria-hidden="true">
+            <span class="gate-photo-placeholder">Photo</span>
+          </div>
+          <p class="gate-photo-caption">Candidate photograph</p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Step 1: General Instructions -->
+    <div id="view-instructions" class="gate-screen gate-hidden">
+      <div class="gate-screen-title">Instructions</div>
+      <div class="gate-panel-layout">
+        <div class="gate-panel-main">
+          <h1 class="gate-heading-center">General Instructions</h1>
+          <p class="gate-heading-sub">Please read the following carefully.</p>
+          <div class="gate-instructions">
+            <ol>
+              <li>Total duration of the examination is <strong id="durText">180</strong> minutes.</li>
+              <li>The countdown timer is displayed on the examination screen.</li>
+              <li>When the timer reaches zero, the examination will end automatically.</li>
+              <li>The examination is divided into a question area and a question palette on the right.</li>
+              <li>
+                <table class="gate-legend-table">
+                  <tr>
+                    <td><span class="gate-palette-icon not-visited">1</span></td>
+                    <td>You have <strong>not visited</strong> the question yet.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="gate-palette-icon not-answered">2</span></td>
+                    <td>You have <strong>not answered</strong> the question.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="gate-palette-icon answered">3</span></td>
+                    <td>You have <strong>answered</strong> the question.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="gate-palette-icon marked">4</span></td>
+                    <td>Marked for review (not answered).</td>
+                  </tr>
+                  <tr>
+                    <td><span class="gate-palette-icon answered-marked">5</span></td>
+                    <td>Answered and marked for review.</td>
+                  </tr>
+                </table>
+              </li>
+              <li>Click <strong>Save &amp; Next</strong> to save your response and move forward.</li>
+              <li>Negative marking applies as shown for each question.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="gate-panel-side">
+          <div class="gate-photo-frame gate-photo-frame-sm"><span class="gate-photo-placeholder">Photo</span></div>
+          <p class="gate-side-name" id="candidateName">Candidate</p>
+        </aside>
+      </div>
+      <div class="gate-footer-bar">
+        <span></span>
+        <button type="button" class="gate-btn-nav" id="btnToPaperInstr">Next &gt;</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Paper-specific instructions -->
+    <div id="view-paper-instructions" class="gate-screen gate-hidden">
+      <div class="gate-screen-title">Other Important Instructions</div>
+      <div class="gate-panel-layout">
+        <div class="gate-panel-main gate-panel-main-center">
+          <h1 class="gate-heading-center">Paper-specific instructions</h1>
+          <p class="gate-heading-sub">Please read the following carefully.</p>
+          <p id="paperInstrText" class="gate-instr-summary"></p>
+          <table class="gate-paper-table">
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>1-mark questions</th>
+                <th>2-mark questions</th>
+              </tr>
+            </thead>
+            <tbody id="paperMarksBody"></tbody>
+          </table>
+          <p class="gate-instr-note">The 1-mark questions appear before the 2-mark questions in each section.</p>
+          <label class="gate-declare">
+            <input type="checkbox" id="declareReady" />
+            <span
+              >I have read and understood all instructions. I confirm that the computer allotted to me is in proper
+              working condition and I am ready to begin the examination.</span
+            >
+          </label>
+        </div>
+        <aside class="gate-panel-side">
+          <div class="gate-photo-frame gate-photo-frame-sm"><span class="gate-photo-placeholder">Photo</span></div>
+          <p class="gate-side-name" id="candidateName2">Candidate</p>
+        </aside>
+      </div>
+      <div class="gate-footer-bar">
+        <button type="button" class="gate-btn-nav" id="btnToGeneralInstr">&lt; Previous</button>
+        <button type="button" class="gate-btn-begin" id="btnBeginExam" disabled>I am ready to begin</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Examination -->
+    <div id="view-exam" class="gate-screen gate-hidden">
+      <div class="gate-exam-toolbar">
+        <div class="gate-exam-toolbar-left">
+          <span class="gate-exam-subject-tab" id="examPaperTitle">MA Mathematics</span>
+        </div>
+        <div class="gate-exam-toolbar-right">
+          <button type="button" class="gate-tool-btn" id="btnCalculator" title="Calculator">Calc</button>
+          <span class="gate-timer" id="examTimer">Time Left : 180:00</span>
+        </div>
+      </div>
+      <div class="gate-exam-body">
+        <div class="gate-exam-left">
+          <div class="gate-section-tabs" id="sectionTabs"></div>
+          <div class="gate-question-panel">
+            <div class="gate-q-meta">
+              <span>Question Type : <strong>MCQ</strong></span>
+              <span id="qMarksLine">Marks for correct answer: 1 | Negative Marks: 0.33</span>
+            </div>
+            <p class="gate-q-text"><strong id="qNumber">Question No. 1</strong></p>
+            <p class="gate-q-body" id="qText"></p>
+            <div class="gate-options" id="qOptions"></div>
+          </div>
+          <div class="gate-exam-actions">
+            <div class="gate-exam-actions-left">
+              <button type="button" class="gate-btn-action" id="btnMarkReview">Mark for Review &amp; Next</button>
+              <button type="button" class="gate-btn-action" id="btnClear">Clear Response</button>
+              <button type="button" class="gate-btn-action" id="btnPrevQ">&lt;&lt; Back</button>
+            </div>
+            <button type="button" class="gate-btn-action gate-btn-save" id="btnSaveNext">Save &amp; Next</button>
+          </div>
+        </div>
+        <aside class="gate-exam-palette">
+          <div class="gate-palette-profile">
+            <div class="gate-photo-frame gate-photo-frame-xs"><span class="gate-photo-placeholder">Photo</span></div>
+            <p class="gate-side-name" id="candidateName3">Candidate</p>
+          </div>
+          <div class="gate-palette-stats" id="paletteStats">
+            <div class="gate-stat"><span class="gate-stat-n" id="statVisited">0</span><span>Visited</span></div>
+            <div class="gate-stat"><span class="gate-stat-n gate-stat-red" id="statNotAns">0</span><span>Not Answered</span></div>
+            <div class="gate-stat"><span class="gate-stat-n gate-stat-green" id="statAns">0</span><span>Answered</span></div>
+            <div class="gate-stat"><span class="gate-stat-n gate-stat-purple" id="statMarked">0</span><span>Marked</span></div>
+          </div>
+          <p class="gate-palette-legend-title">Question Palette</p>
+          <p class="gate-palette-section" id="paletteSectionLabel">Section</p>
+          <p class="gate-palette-hint">Choose a Question</p>
+          <div class="gate-q-grid" id="questionPalette"></div>
+          <button type="button" class="gate-btn-submit-exam" id="btnSubmitExam">Submit Examination</button>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Step 4: Result -->
+    <div id="view-result" class="gate-screen gate-hidden">
+      <div class="gate-screen-title">Examination Completed</div>
+      <div class="gate-result-panel">
+        <h2 id="resultTitle">Result</h2>
+        <p id="resultScore" class="gate-result-score"></p>
+        <p id="resultDetail" class="gate-result-detail"></p>
+        <button type="button" class="gate-btn-begin" id="btnCloseWindow">Back to Mock Test Series</button>
+      </div>
+    </div>
+
+    <div id="gateCalcModal" class="gate-modal gate-hidden" role="dialog" aria-label="Calculator">
+      <div class="gate-modal-box">
+        <p class="gate-modal-title">Scientific calculator</p>
+        <p class="gate-modal-text">Use your system calculator for practice. An on-screen calculator may be added in a future release.</p>
+        <button type="button" class="gate-btn-nav" id="btnCloseCalc">Close</button>
+      </div>
+    </div>
+
+    <footer class="gate-app-footer">© Researchium Learning · Mock assessment interface (design inspired by standard CBT portals)</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script src="/js/math-render.js"></script>
+    <script src="/js/gate-exam.js"></script>
+  </body>
+</html>

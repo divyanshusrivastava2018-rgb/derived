@@ -1,0 +1,199 @@
+/* Researchium — KaTeX math (readable, responsive, accessible) */
+
+:root {
+  --math-text: #1a1a2e;
+  --math-muted: #374151;
+  --math-min-font: 1rem;
+}
+
+.math-content,
+.gate-q-body,
+.mcq-q,
+.mcq-option,
+.gate-options label {
+  font-size: clamp(var(--math-min-font), 2.8vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--math-text);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Reserve space while KaTeX loads — reduces layout shift */
+.math-typesetting {
+  min-height: 2.75em;
+}
+
+.math-content .katex,
+.gate-q-body .katex,
+.mcq-q .katex,
+.mcq-option .katex,
+.gate-options .katex {
+  font-size: 1.1em;
+  color: var(--math-text) !important;
+}
+
+/* High contrast for symbols */
+.katex .mord,
+.katex .mbin,
+.katex .mrel,
+.katex .mop,
+.katex .mopen,
+.katex .mclose,
+.katex .mpunct,
+.katex .minner {
+  color: var(--math-text);
+}
+
+/* Display math — matrices, integrals, multi-line */
+.math-content .katex-display,
+.gate-q-body .katex-display,
+.mcq-q .katex-display {
+  margin: 0.75em 0;
+  padding: 0.35rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Inline math in options — allow horizontal scroll on narrow screens */
+.gate-options label,
+.mcq-option {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gate-q-body,
+.mcq-q {
+  margin: 0.75rem 0 1rem;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gate-options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.55rem 0;
+  padding: 0.4rem 0.25rem;
+  cursor: pointer;
+}
+
+.gate-options label input[type="radio"] {
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.gate-options .gate-opt-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mcq-card {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mcq-q {
+  margin-bottom: 0.85rem;
+}
+
+.mcq-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.45rem 0;
+  padding: 0.3rem 0.15rem;
+  cursor: pointer;
+}
+
+.mcq-option input {
+  flex-shrink: 0;
+  margin-top: 0.3rem;
+}
+
+.mcq-option .mcq-opt-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* KaTeX matrix / array — prevent clipping */
+.katex .array,
+.katex .matrix,
+.katex .cases {
+  font-size: 1em;
+}
+
+/* Fallback when CDN fails — still readable */
+.math-fallback .math-latex-fallback {
+  display: block !important;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+  color: var(--math-muted);
+  white-space: pre-wrap;
+  margin-top: 0.35rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.math-fallback .math-latex-fallback[hidden] {
+  display: block !important;
+}
+
+/* Screen-reader-only raw LaTeX (when KaTeX succeeds, MathML is primary) */
+.sr-only-math-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --math-min-font: 1.02rem;
+  }
+
+  .math-content .katex,
+  .gate-q-body .katex,
+  .mcq-q .katex,
+  .mcq-option .katex {
+    font-size: 1.05em;
+  }
+
+  .katex-display {
+    font-size: 1em;
+  }
+
+  .gate-options label,
+  .mcq-option {
+    padding: 0.5rem 0.2rem;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --math-text: #000;
+  }
+
+  .katex .mord,
+  .katex .mbin,
+  .katex .mrel {
+    color: #000 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .math-typesetting {
+    min-height: 0;
+  }
+}

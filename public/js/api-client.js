@@ -23,6 +23,8 @@
     if (apiPath.indexOf("/api/blog") === 0) return "/data/offline-blog.json";
     if (apiPath.indexOf("/api/news") === 0) return "/data/offline-news.json";
     if (apiPath.indexOf("/api/materials") === 0) return "/data/offline-materials.json";
+    if (apiPath.indexOf("/api/mcq/mock-tests") === 0) return "/data/offline-mock-tests.json";
+    if (apiPath.indexOf("/api/mcq/gate/papers") === 0) return "/data/offline-gate-papers.json";
     return null;
   }
 
