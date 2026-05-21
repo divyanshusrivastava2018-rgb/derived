@@ -1,0 +1,346 @@
+{
+  "youtubePlaylist": {
+    "heading": "Divyanshu Sir YouTube Playlist",
+    "subheading": "Linked playlist for channel content. Use Admin import with YOUTUBE_API_KEY to sync all public videos to courses and this player.",
+    "playlistId": "PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN",
+    "playlistUrl": "https://www.youtube.com/watch?v=9jhxdr_qmaM&list=PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN",
+    "channelUrl": "https://www.youtube.com/@MathswithDivyanshuSir",
+    "videos": [
+      {
+        "id": "xG-u2ro5e6A",
+        "seq": 1,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Basics for Class 10/11/12 | JEE Mains Foundation Math"
+      },
+      {
+        "id": "Sn4zjZL-Fic",
+        "seq": 2,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Lecture 2 | Standard Notation, Set, Empty Set & Subset || JEE Mains Maths"
+      },
+      {
+        "id": "YKgpAjMb7BQ",
+        "seq": 3,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Lecture 03 || Subsets, Superset, Set Difference,  Cartesian Product JEE MAINS"
+      },
+      {
+        "id": "An0qpJHo7aE",
+        "seq": 4,
+        "title": "",
+        "views": null,
+        "note": "Lecture 04: Mastering Venn Diagrams || Sets & Relations– JEE Mains"
+      },
+      {
+        "id": "EvOzZreWsMA",
+        "seq": 5,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Lecture 09 | Graphs of Exponential & Log Functions + Practice Questions | JEE Mains"
+      },
+      {
+        "id": "-cL6-JWAoFY",
+        "seq": 6,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Lecture 06 | Cartesian Product , JEE Mains Practice Questions | Class 11 Maths"
+      },
+      {
+        "id": "6RyZrq5i_4c",
+        "seq": 7,
+        "title": "",
+        "views": null,
+        "note": "Lecture 05.  Disjoint Sets, Complement, De Morgan's Laws, Cardinal Number + MCQs | JEE Mains 2025"
+      },
+      {
+        "id": "nTKU4xA_CsM",
+        "seq": 8,
+        "title": "",
+        "views": null,
+        "note": "Lecture 8  Absolute Value of x (x)  Meaning, Properties, Graphs & Practice Questions  Class 11 , 12."
+      },
+      {
+        "id": "2qTA8Jsth6Q",
+        "seq": 9,
+        "title": "",
+        "views": null,
+        "note": "Set Theory Lecture 07 | Intervals, Inequalities | JEE Mains Practice Questions | Class 11 Maths"
+      },
+      {
+        "id": "0WSojvl1X2k",
+        "seq": 10,
+        "title": "",
+        "views": null,
+        "note": "JEE Mains Lecture 10 | Logarithmic Functions Practice Questions | Important Problems for JEE 2025"
+      },
+      {
+        "id": "L0goTKmIynA",
+        "seq": 11,
+        "title": "",
+        "views": null,
+        "note": "Equivalence Relation | Set Theory Lecture 12 | JEE Mains PYQ & Practice | Class 11 Maths ..."
+      },
+      {
+        "id": "P2oQETXeRAY",
+        "seq": 12,
+        "title": "",
+        "views": null,
+        "note": "LECTURE NO-14 | Range of a Function PYQ 2025 | JEE Mains Question Practice"
+      },
+      {
+        "id": "1B4vNAbXLIA",
+        "seq": 13,
+        "title": "",
+        "views": null,
+        "note": "Lecture 15: Greatest Integer, Fractional Part, Signum, Log & Exp Ftn. | JEE Mains & Boards"
+      },
+      {
+        "id": "lbRMiGX4znE",
+        "seq": 14,
+        "title": "",
+        "views": null,
+        "note": "Top 10 JEE Main MCQs on Greatest Integer & Fractional Part Functions  (2025 Updated)"
+      },
+      {
+        "id": "8NI7QzANb7U",
+        "seq": 15,
+        "title": "",
+        "views": null,
+        "note": "Latest JEE Mains Questions on Relations and Functions | Complete Concept + PYQs Solved"
+      },
+      {
+        "id": "mlCbylGbiaY",
+        "seq": 16,
+        "title": "",
+        "views": null,
+        "note": "Functions One Shot🔥 | One-One, Onto, Bijective, Even/Odd | JEE Main 2024 | 10 MCQs Solved"
+      },
+      {
+        "id": "5FunyvZa-TI",
+        "seq": 17,
+        "title": "",
+        "views": null,
+        "note": "Limits for JEE Mains | Neighborhood, Indeterminate Forms & PYQs Explained"
+      },
+      {
+        "id": "dflWhx7-rzM",
+        "seq": 18,
+        "title": "",
+        "views": null,
+        "note": "Lecture 20: Sandwich Theorem & JEE Limits | PYQs + Methods (2017–2022)"
+      },
+      {
+        "id": "erHg5IxHTYw",
+        "seq": 19,
+        "title": "",
+        "views": null,
+        "note": "LECTURE NO- 13 || Functions Domain & Range PYQ 2025 ||JEE Mains Question Practice"
+      },
+      {
+        "id": "mIZwCbgu6xM",
+        "seq": 20,
+        "title": "",
+        "views": null,
+        "note": "LECTURE-21  – Rationalization & Binomial Expansion Methods (2024–2025 PYQs with Solutions)"
+      },
+      {
+        "id": "QcGRuFPWC8I",
+        "seq": 21,
+        "title": "",
+        "views": null,
+        "note": "LECTURE-21  – Rationalization & Binomial Expansion Methods (2024–2025 PYQs with Solutions)"
+      },
+      {
+        "id": "kRiL_ZA3tTg",
+        "seq": 22,
+        "title": "",
+        "views": null,
+        "note": "Lecture 22: Limits at Infinity | Trigonometric, Exponential & Logarithmic Limits | JEE Mains"
+      },
+      {
+        "id": "NmsvU_ZpOok",
+        "seq": 23,
+        "title": "",
+        "views": null,
+        "note": "lecture-23 | Use of Expansion in Evaluating concepts Limits & L'Hospital Rule | JEE Mains"
+      },
+      {
+        "id": "sxCTBQTyduQ",
+        "seq": 24,
+        "title": "",
+        "views": null,
+        "note": "lecture 24: use of expansion based limit question | jee mains limit problems"
+      },
+      {
+        "id": "WwbNDfYRQa4",
+        "seq": 25,
+        "title": "",
+        "views": null,
+        "note": "Lecture-26 | Limits of Algebraic and Trigonometric Functions | JEE Mains/Advanced  (2020-2024)"
+      },
+      {
+        "id": "tOQkUusPgEQ",
+        "seq": 26,
+        "title": "",
+        "views": null,
+        "note": "LECTURE-27  Exercise Questions on Trigonometric Functions | JEE Mains & Boards Practice"
+      },
+      {
+        "id": "Yi3GbUQzcrU",
+        "seq": 27,
+        "title": "",
+        "views": null,
+        "note": "LECTURE-27 ( Part-2)   Exercise Questions on Trigonometric Functions | JEE Mains & Boards Practice"
+      },
+      {
+        "id": "C18tTkLv7ao",
+        "seq": 28,
+        "title": "",
+        "views": null,
+        "note": "Lecture 29 – Continuity and Differentiability | Complete JEE Mains Preparation."
+      },
+      {
+        "id": "PDrRzYcPH-g",
+        "seq": 29,
+        "title": "",
+        "views": null,
+        "note": "Lecture No-30: Continuity PYQs & NCERT Problem Solutions | JEE Mains 2025"
+      },
+      {
+        "id": "7KZILnqZUfU",
+        "seq": 30,
+        "title": "",
+        "views": null,
+        "note": "Continuity PYQs & NCERT Problem Solutions | JEE Mains 2025 | Most Expected Questions with Tricks"
+      },
+      {
+        "id": "wEfLYtRDg7w",
+        "seq": 31,
+        "title": "",
+        "views": null,
+        "note": "Lecture-33: Differentiability Concepts  PYQ Questions | JEE Mains 2025"
+      },
+      {
+        "id": "r6xDR3RQAIY",
+        "seq": 32,
+        "title": "",
+        "views": null,
+        "note": "Mean Value Theorems, Maxima and Minima   JEE Mains Lecture - 35 | Scholar Science | #divyanshusir"
+      },
+      {
+        "id": "0yFjRH_FWSs",
+        "seq": 33,
+        "title": "",
+        "views": null,
+        "note": "Mean Value Theorems  LMVT & Rolles Theorem | JEE Mains Lecture 36 | Divyanshu Sir #jeemains2026"
+      },
+      {
+        "id": "5SgEBdJtgKQ",
+        "seq": 34,
+        "title": "",
+        "views": null,
+        "note": "Score Full Marks in Maxima & Minima | Monotonicity & Extremum Tricks | JEE Mains 2026"
+      },
+      {
+        "id": "6nPgt8lgAlw",
+        "seq": 35,
+        "title": "",
+        "views": null,
+        "note": "Maxima and Minima | Class 12 Maths  JEE Mains | Complete Concept & PYQs Explained"
+      },
+      {
+        "id": "X3Sid65TejA",
+        "seq": 36,
+        "title": "",
+        "views": null,
+        "note": "Maxima and Minima | Class 12 Maths  JEE Mains | Concept & PYQs Explained"
+      },
+      {
+        "id": "cgQf80WIHoM",
+        "seq": 37,
+        "title": "",
+        "views": null,
+        "note": "Neighbourhood and Interior Points | Real Analysis Lecture | Class 11 & 12 Maths | JEE Mains"
+      },
+      {
+        "id": "Y6-DmXQC0Y4",
+        "seq": 38,
+        "title": "",
+        "views": null,
+        "note": "Archimedean Property and Intervals in Point Set Topology  {Lecture 2} -2025"
+      },
+      {
+        "id": "vpj-mn9M4Lo",
+        "seq": 39,
+        "title": "",
+        "views": null,
+        "note": "Understanding Bounded Sets and Supremum/Infimum in Point Set Topology #iitjam"
+      }
+    ]
+  },
+  "liveSchedule": [
+    {
+      "time": "6:00 PM",
+      "title": "JEE Physics — Rotation & COM",
+      "meta": "Advanced · Hindi · Today",
+      "linkHref": "/signin.html",
+      "linkLabel": "Join →"
+    },
+    {
+      "time": "7:30 PM",
+      "title": "UPSC CSAT — Comprehension drills",
+      "meta": "Intermediate · English · Today",
+      "linkHref": "/signin.html",
+      "linkLabel": "Join →"
+    },
+    {
+      "time": "8:15 PM",
+      "title": "DSA — Graphs & shortest paths",
+      "meta": "Intermediate · English · Tomorrow",
+      "linkHref": "/signin.html",
+      "linkLabel": "Remind me"
+    },
+    {
+      "time": "Sat 10 AM",
+      "title": "Research writing — IMRAD walkthrough",
+      "meta": "Beginner · English · Weekend",
+      "linkHref": "/blog.html",
+      "linkLabel": "Related reads"
+    }
+  ],
+  "pageCopy": {
+    "home": {
+      "secTag": "EDUCATION · RESEARCH · CAREERS",
+      "titleHtml": "Your path from <span class=\"gold\">classroom</span> to <span class=\"gold\">career</span>",
+      "leadHtml": "Researchium connects self-paced courses, live teaching, and research writing — so you can prep for JEE &amp; NEET, crack interviews, or publish with clarity."
+    },
+    "about": {
+      "secTag": "MISSION · TEAM · STACK",
+      "titleHtml": "About <span class=\"gold\">Researchium</span>",
+      "leadHtml": "We build bridges between competitive exams, industry skills, and research literacy — one learner at a time."
+    },
+    "pricing": {
+      "secTag": "SIMPLE · TRANSPARENT",
+      "titleHtml": "Choose your <span class=\"gold\">Researchium</span> plan",
+      "leadHtml": "Start free with the full course catalog. Add live hours, mentors, and teams when you need them."
+    },
+    "live": {
+      "secTag": "LIVE · INTERACTIVE · DOUBTS",
+      "titleHtml": "Live <span class=\"gold\">Classes</span> &amp; doubt labs",
+      "leadHtml": "Join educators in real time — then continue practice on-demand in the <a href=\"/courses.html\" style=\"color: var(--gold); font-weight: 600\">course library</a>."
+    },
+    "blog": {
+      "secTag": "METHODS · WRITING · TOOLS",
+      "titleHtml": "<span class=\"gold\">Research</span> Blog",
+      "leadHtml": "Practical notes for students crossing into papers, theses, and serious technical writing — then apply skills in <a href=\"/courses.html\" style=\"color: var(--gold); font-weight: 600\">Courses</a>."
+    },
+    "courses": {
+      "secTag": "—",
+      "titleHtml": "Explore All <span class=\"gold\">Researchium</span> Courses",
+      "leadHtml": "From JEE to FAANG — find your perfect learning path and start today"
+    }
+  }
+}

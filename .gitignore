@@ -1,0 +1,18 @@
+node_modules/
+server/uploads/*
+!server/uploads/.gitkeep
+server/data/courses.json
+.env
+server/data/csir-leads.json
+server/data/member-interest.json
+*.log
+.DS_Store
+*known_hosts*
+
+# Local source PDFs (copies live under public/study-materials/)
+MATHEMATICAL SCIENCE*/
+**/MATHEMATICAL SCIENCE */
+
+# GitHub file size limit (100 MB)
+**/gate-solved-paper.pdf
+**/gate solved paper.pdf

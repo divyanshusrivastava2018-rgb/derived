@@ -1,0 +1,86 @@
+[
+  {
+    "name": "DIPS Handwritten Notes",
+    "slug": "dips-handwritten",
+    "code": "DIPS",
+    "image": "/images/materials/dips-handwritten.svg"
+  },
+  {
+    "name": "DIPS Notes",
+    "slug": "dips-notes",
+    "code": "DIPS+",
+    "image": "/images/materials/dips-notes.svg"
+  },
+  {
+    "name": "GATE Papers & Solutions",
+    "slug": "gate-papers",
+    "code": "GATE",
+    "image": "/images/materials/gate-papers.svg"
+  },
+  {
+    "name": "IIT JAM Papers & Prep",
+    "slug": "iit-jam",
+    "code": "JAM",
+    "image": "/images/materials/iit-jam.svg"
+  },
+  {
+    "name": "Topology",
+    "slug": "topology",
+    "code": "TOP",
+    "image": "/images/materials/topology.svg"
+  },
+  {
+    "name": "Metric Spaces",
+    "slug": "metric-spaces",
+    "code": "MET",
+    "image": "/images/materials/metric-spaces.svg"
+  },
+  {
+    "name": "Complex Analysis",
+    "slug": "complex-analysis",
+    "code": "CA",
+    "image": "/images/materials/complex-analysis.svg"
+  },
+  {
+    "name": "Linear Algebra",
+    "slug": "linear-algebra",
+    "code": "LA",
+    "image": "/images/materials/linear-algebra.svg"
+  },
+  {
+    "name": "Functional Analysis",
+    "slug": "functional-analysis",
+    "code": "FA",
+    "image": "/images/materials/functional-analysis.svg"
+  },
+  {
+    "name": "Numerical Analysis",
+    "slug": "numerical-analysis",
+    "code": "NA",
+    "image": "/images/materials/numerical-analysis.svg"
+  },
+  {
+    "name": "Class 12 Mathematics",
+    "slug": "class-12",
+    "code": "XII",
+    "image": "/images/materials/class-12.svg"
+  },
+  {
+    "name": "Syllabus & Keys",
+    "slug": "syllabus-keys",
+    "code": "KEY",
+    "image": "/images/materials/syllabus-keys.svg"
+  },
+  {
+    "name": "Reference Books & General",
+    "slug": "reference-books",
+    "code": "REF",
+    "image": "/images/materials/reference-books.svg"
+  },
+  {
+    "name": "Question Banks & Miscellaneous",
+    "slug": "question-banks",
+    "code": "QB",
+    "image": "/images/materials/question-banks.svg"
+  }
+]

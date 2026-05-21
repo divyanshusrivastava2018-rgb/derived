@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=http://localhost:3000/" />
+    <title>Researchium</title>
+    <script>
+      (function () {
+        var port = 3000;
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+          location.replace("http://" + location.hostname + ":" + port + "/");
+        } else {
+          location.replace("/");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="http://localhost:3000/">Researchium</a>… Run <code>npm start</code> first.</p>
+  </body>
+</html>

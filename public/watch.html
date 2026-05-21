@@ -1,0 +1,82 @@
+<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Watch – Researchium</title>
+    <meta name="description" content="Watch course videos and lessons on Researchium with a focused viewer and up-to-date catalog playlist." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.derived.co.in/watch.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Watch – Researchium" />
+    <meta property="og:description" content="Watch course videos and lessons on Researchium with a focused viewer and up-to-date catalog playlist." />
+    <meta property="og:url" content="https://www.derived.co.in/watch.html" />
+    <meta property="og:site_name" content="Researchium" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Watch – Researchium" />
+    <meta name="twitter:description" content="Watch course videos and lessons on Researchium with a focused viewer and up-to-date catalog playlist." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  </head>
+  <body class="site-page" data-page="watch">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="inner-main watch-page">
+      <div class="watch-toolbar">
+        <a href="/courses.html" class="btn-ghost u-rounded-pill u-inline-flex-centergap">← Back to courses</a>
+        <span id="watchRefreshNote" class="watch-refresh-note" aria-live="polite"></span>
+      </div>
+
+      <div class="watch-layout">
+        <div class="watch-primary">
+          <div id="watchError" class="watch-error" hidden></div>
+          <div id="watchPlayerSection">
+            <div class="watch-meta-block">
+              <div class="card-category" id="watchCategory"></div>
+              <h1 class="watch-title" id="watchTitle"></h1>
+              <p class="watch-instructor" id="watchInstructor"></p>
+              <p class="watch-desc" id="watchDesc"></p>
+            </div>
+            <div id="watchPaywall" class="watch-paywall" hidden>
+              <div class="watch-paywall-inner">
+                <h2>Pro content</h2>
+                <p>
+                  This lesson is listed at a <strong>paid</strong> price. Activate Pro (demo) to play paid catalog items in this viewer.
+                </p>
+                <a id="watchUpgradeLink" href="/pricing.html" class="btn-gold u-watch-upgrade">View plans &amp; unlock</a>
+                <p class="watch-paywall-foot">
+                  Free lessons still play here for everyone. <a href="/courses.html">Find free courses →</a>
+                </p>
+              </div>
+            </div>
+            <div id="watchPlayerHost" class="watch-player-host">
+              <div class="video-frame watch-frame" id="watchFrame"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="watch-sidebar" aria-labelledby="watch-sidebar-title">
+          <div class="watch-sidebar-head">
+            <h2 id="watch-sidebar-title">All videos</h2>
+            <p class="watch-sidebar-hint">List refreshes from the server every minute so new uploads appear automatically.</p>
+          </div>
+          <div id="watchList" class="watch-list"></div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script defer src="/js/member-access.js"></script>
+        <script defer src="/js/api-client.js"></script><script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/watch-app.js"></script>
+      <script defer src="/js/gtag-lazy.js"></script>
+  </body>
+</html>

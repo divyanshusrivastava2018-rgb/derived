@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Materials - Researchium</title>
+    <meta name="description" content="Mathematical Science study materials — GATE, IIT JAM, topology, analysis PDFs by category." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/study-materials.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  </head>
+  <body class="site-page" data-page="study">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="materials-page" style="padding-left: 1.5rem; padding-right: 1.5rem; max-width: 100%">
+      <h1 class="materials-page-title">Mathematical Science Study Materials</h1>
+      <p class="materials-page-sub">
+        Choose a category to browse and download PDFs — GATE papers, IIT JAM, topology, DIPS notes, and more.
+      </p>
+
+      <div id="materials-root" class="materials-root">
+        <!-- Category grid -->
+        <div id="materials-grid-view">
+          <div id="dept-grid" class="dept-grid" aria-label="Study material categories"></div>
+        </div>
+
+        <!-- PDF list for selected category -->
+        <div id="materials-detail-view" class="materials-detail materials-hidden" hidden>
+          <button type="button" id="materials-back" class="materials-back" aria-label="Back to categories">
+            ← All categories
+          </button>
+          <div class="materials-detail-head">
+            <img id="materials-detail-thumb" class="materials-detail-thumb" src="" alt="" width="120" height="75" />
+            <div>
+              <h2 id="materials-detail-title" class="materials-detail-title"></h2>
+              <p id="materials-detail-meta" class="materials-detail-meta"></p>
+            </div>
+          </div>
+          <div id="materials-pdf-grid" class="materials-pdf-grid"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer site-footer-extended">
+      <div id="site-footer-main"></div>
+      <div class="footer-bottom">
+        <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script defer src="/js/api-client.js"></script>
+    <script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/materials-page.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
+  </body>
+</html>

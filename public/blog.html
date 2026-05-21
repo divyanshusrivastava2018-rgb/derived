@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Research Blog & News – Researchium</title>
+    <meta name="description" content="Latest research news, updates, and blog posts from Researchium. Read practical research methods, literature review tips, and academic writing guidance." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.derived.co.in/blog.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Research Blog & News – Researchium" />
+    <meta property="og:description" content="Latest research news, updates, and blog posts from Researchium." />
+    <meta property="og:url" content="https://www.derived.co.in/blog.html" />
+    <meta property="og:site_name" content="Researchium" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Research Blog & News – Researchium" />
+    <meta name="twitter:description" content="Latest research news, updates, and blog posts from Researchium." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="alternate" type="application/rss+xml" title="Researchium Blog RSS" href="/rss.xml" />
+    <link rel="stylesheet" href="/css/app.css" />
+    
+    <style>
+        /* Additional styles for news section */
+        .news-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .news-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .news-header h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .news-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .news-tab {
+            padding: 12px 28px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .news-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .news-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .news-card-header {
+            padding: 20px 20px 0 20px;
+        }
+
+        .news-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .badge-current {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .badge-archive {
+            background: linear-gradient(135deg, #ff9800, #fb8c00);
+            color: white;
+        }
+
+        .news-date {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a3e;
+            line-height: 1.3;
+        }
+
+        .news-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .news-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .read-more-btn {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: gap 0.3s;
+        }
+
+        .read-more-btn:hover {
+            gap: 10px;
+        }
+
+        /* Blog Section Styles */
+        .blog-main-section {
+            padding: 60px 0;
+            background: #fafafa;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .blog-header h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .blog-filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .blog-filter-btn {
+            padding: 8px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .blog-filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .blog-filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .blog-card-content {
+            padding: 25px;
+        }
+
+        .blog-category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .blog-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a3e;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .blog-date {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+            font-size: 18px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .news-card, .blog-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .news-grid, .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .news-header h2, .blog-header h2 {
+                font-size: 28px;
+            }
+            
+            .news-tabs, .blog-filters {
+                gap: 10px;
+            }
+            
+            .news-tab, .blog-filter-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        #blogModal.modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 1rem;
+        }
+        #blogModal .modal-content {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+        #blogModal .modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+        #blogModal .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body class="site-page" data-page="blog" data-cms-page="blog">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="inner-main">
+        <!-- Hero Section -->
+        <div class="page-hero">
+            <div class="sec-tag">METHODS · WRITING · TOOLS</div>
+            <h1><span class="gold">Research</span> Blog & News</h1>
+            <p>Practical notes for students crossing into papers, theses, and serious technical writing — then apply skills in <a href="/courses.html" class="u-link-gold">Courses</a>.</p>
+            <div class="cta-row">
+                <a href="/courses.html" class="btn-gold u-inline-block">Find a writing course</a>
+                <a href="/about.html" class="btn-ghost u-inline-block u-rounded-pill">Our editorial values</a>
+            </div>
+        </div>
+
+        <!-- News Section -->
+        <section class="news-section">
+            <div class="container">
+                <div class="news-header">
+                    <h2>📢 Latest News & Announcements</h2>
+                    <p>Stay updated with the latest from Researchium</p>
+                </div>
+
+                <div class="news-tabs">
+                    <button class="news-tab active" data-news-filter="current">🔥 Current News</button>
+                    <button class="news-tab" data-news-filter="archive">📦 Archives</button>
+                    <button class="news-tab" data-news-filter="all">📰 All News</button>
+                </div>
+
+                <div id="newsContainer" class="news-grid">
+                    <div class="loading-spinner">Loading news...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section class="blog-main-section">
+            <div class="container">
+                <div class="blog-header">
+                    <h2>✍️ Featured Blog Posts</h2>
+                    <p>Expert insights, research tips, and academic guidance</p>
+                </div>
+
+                <div class="blog-filters" id="blogFilters">
+                    <button class="blog-filter-btn active" data-blog-filter="all">All Posts</button>
+                    <button class="blog-filter-btn" data-blog-filter="Research">Research</button>
+                    <button class="blog-filter-btn" data-blog-filter="Education">Education</button>
+                    <button class="blog-filter-btn" data-blog-filter="Career">Career</button>
+                    <button class="blog-filter-btn" data-blog-filter="Technology">Technology</button>
+                </div>
+
+                <div id="blogContainer" class="blog-grid">
+                    <div class="loading-spinner">Loading blog posts...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer site-footer-extended">
+        <div id="site-footer-main"></div>
+        <div class="footer-bottom">
+            <p>© 2026 Researchium Learning Pvt. Ltd. · All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Blog Modal for Full Post View -->
+    <div id="blogModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+        <script defer src="/js/api-client.js"></script><script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/cms-hero.js"></script>
+    <script defer src="/js/blog-page.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
+</body>
+</html>

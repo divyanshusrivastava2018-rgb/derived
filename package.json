@@ -1,0 +1,37 @@
+{
+  "name": "researchium",
+  "version": "1.0.0",
+  "description": "Researchium static site + Express API",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "start:clean": "powershell -NoProfile -ExecutionPolicy Bypass -File server/scripts/start-clean.ps1",
+    "dev": "nodemon server/index.js",
+    "test": "node server/scripts/smoke-test.js",
+    "build:csir": "node server/scripts/build-csir-integrated.js",
+    "sync:courses": "node server/scripts/sync-demo-courses-from-seed.js",
+    "sync:courses:full": "node server/scripts/sync-demo-courses-from-seed.js --full",
+    "sync:chemistry": "node server/scripts/import-demo-playlist.js chemistry",
+    "sync:demos": "node server/scripts/import-demo-playlist.js --all",
+    "sync:biology": "node server/scripts/import-demo-playlist.js biology",
+    "sync:physics": "node server/scripts/import-demo-playlist.js physics",
+    "sync:mathematics": "node server/scripts/import-demo-playlist.js mathematics",
+    "import:math-science": "node server/scripts/import-mathematical-science-materials.js"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "file-type": "^19.6.0",
+    "helmet": "^7.1.0",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^3.3.7",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

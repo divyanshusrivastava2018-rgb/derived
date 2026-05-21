@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Researchium</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/css/app.css" as="style" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  </head>
+  <body class="site-page" data-page="admin">
+    <header id="site-header" class="site-header-mount"></header>
+
+    <main class="container admin-shell">
+      <section id="admin-login" class="admin-login-card admin-card">
+        <h1 class="admin-title">Staff sign in</h1>
+        <p class="admin-lead">Use the credentials configured on the server (<code>RESEARCHIUM_ADMIN_*</code> environment variables).</p>
+        <form id="adminLoginForm" class="admin-form">
+          <label class="admin-label" for="adminUsername">Login ID</label>
+          <input type="text" id="adminUsername" class="admin-input" autocomplete="username" required />
+          <label class="admin-label" for="adminPassword">Password</label>
+          <div class="admin-password-row">
+            <input type="password" id="adminPassword" class="admin-input" autocomplete="current-password" required />
+            <button type="button" id="adminTogglePw" class="btn-ghost" aria-pressed="false">Show</button>
+          </div>
+          <button type="submit" class="btn-gold admin-login-btn">Sign in</button>
+          <p id="adminLoginErr" class="admin-err" hidden></p>
+        </form>
+        <p id="adminLoginInfo" class="admin-login-info admin-muted"></p>
+        <p class="admin-hint"><a href="/">← Back to site</a></p>
+      </section>
+
+      <section id="admin-dash" class="admin-dash" hidden>
+        <div class="admin-dash-head">
+          <div>
+            <h1 class="admin-title">Admin dashboard</h1>
+            <p class="admin-muted">Manage blog posts, courses, live schedule, and page copy.</p>
+          </div>
+          <div class="admin-dash-actions">
+            <button type="button" id="adminLogout" class="btn-ghost">Sign out</button>
+          </div>
+        </div>
+
+        <div class="admin-tabs" role="tablist">
+          <button type="button" class="admin-tab active" data-tab="blog">Blog</button>
+          <button type="button" class="admin-tab" data-tab="videos">Courses</button>
+          <button type="button" class="admin-tab" data-tab="liveyt">Live &amp; YouTube</button>
+          <button type="button" class="admin-tab" data-tab="pages">Page copy</button>
+          <button type="button" class="admin-tab" data-tab="news">News</button>
+          <button type="button" class="admin-tab" data-tab="materials">Materials</button>
+          <button type="button" class="admin-tab" data-tab="leads">Leads</button>
+          <a href="/csir-admin.html" class="admin-tab admin-tab-link" target="_blank" rel="noopener">CSIR inbox</a>
+        </div>
+
+        <div id="panel-blog" class="admin-panel">
+          <div class="admin-panel-head">
+            <h2>Blog posts</h2>
+            <button type="button" id="btnNewPost" class="btn-gold">+ New post</button>
+          </div>
+          <div id="blogTableWrap" class="admin-table-wrap"></div>
+        </div>
+
+        <div id="panel-videos" class="admin-panel" hidden>
+          <div class="admin-panel-head"><h2>Course catalog</h2></div>
+          <div class="admin-two-col">
+            <div class="admin-card">
+              <h3>Add course</h3>
+              <div class="tab-btn-row">
+                <button type="button" class="tab-btn active" data-ctab="youtube">YouTube</button>
+                <button type="button" class="tab-btn" data-ctab="upload">Upload</button>
+                <button type="button" class="tab-btn" data-ctab="external">External</button>
+              </div>
+              <form id="adminCourseForm" class="admin-form">
+                <label class="admin-label">Title</label>
+                <input type="text" id="admTitle" class="admin-input" required />
+                <div class="admin-row2">
+                  <div>
+                    <label class="admin-label">Category</label>
+                    <select id="admCat" class="admin-input">
+                      <option>JEE / NEET</option>
+                      <option>Coding &amp; AI</option>
+                      <option>UPSC / SSC</option>
+                      <option>Research &amp; Science</option>
+                      <option>Finance &amp; MBA</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="admin-label">Level</label>
+                    <select id="admLvl" class="admin-input">
+                      <option>Beginner</option>
+                      <option>Intermediate</option>
+                      <option>Advanced</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="admin-row2">
+                  <div>
+                    <label class="admin-label">Language</label>
+                    <select id="admLang" class="admin-input">
+                      <option>English</option>
+                      <option>Hindi</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="admin-label">Price (₹, 0 = free)</label>
+                    <input type="number" id="admPrice" class="admin-input" min="0" value="0" />
+                  </div>
+                </div>
+                <label class="admin-label">Instructor</label>
+                <input type="text" id="admInst" class="admin-input" />
+                <label class="admin-label">Duration</label>
+                <input type="text" id="admDur" class="admin-input" placeholder="Self-paced" />
+                <label class="admin-label">Description</label>
+                <textarea id="admDesc" class="admin-textarea" rows="3"></textarea>
+                <div id="adm-tab-youtube">
+                  <label class="admin-label">YouTube URL</label>
+                  <input type="url" id="admYtUrl" class="admin-input" placeholder="https://www.youtube.com/watch?v=…" />
+                </div>
+                <div id="adm-tab-upload" class="u-hidden">
+                  <label class="admin-label">Course file (video or PDF)</label>
+                  <input type="file" id="admFile" accept="video/mp4,video/webm,video/quicktime,application/pdf" />
+                  <label class="admin-label">Thumbnail (optional)</label>
+                  <input type="file" id="admThumb" accept="image/jpeg,image/png,image/webp,image/gif" />
+                </div>
+                <div id="adm-tab-external" class="u-hidden">
+                  <label class="admin-label">External URL (https)</label>
+                  <input type="url" id="admExtUrl" class="admin-input" />
+                </div>
+                <button type="submit" class="btn-gold">Publish course</button>
+              </form>
+            </div>
+            <div class="admin-card">
+              <div class="admin-panel-head">
+                <h3>Published courses</h3>
+                <button type="button" id="btnClearAllCourses" class="btn-card-danger">Clear all</button>
+              </div>
+              <div id="adminCourseList" class="admin-course-list"></div>
+            </div>
+          </div>
+
+          <div class="admin-card admin-playlist-card">
+            <h3>Import YouTube playlist</h3>
+            <p class="admin-muted">Requires <code>YOUTUBE_API_KEY</code> on the server.</p>
+            <label class="admin-label">Playlist URL</label>
+            <input type="url" id="importPlaylistUrl" class="admin-input" placeholder="https://www.youtube.com/playlist?list=…" />
+            <div class="admin-row2">
+              <div>
+                <label class="admin-label">Category (blank = auto)</label>
+                <select id="importCategory" class="admin-input">
+                  <option value="">Auto from title</option>
+                  <option>JEE / NEET</option>
+                  <option>Coding &amp; AI</option>
+                  <option>UPSC / SSC</option>
+                  <option>Research &amp; Science</option>
+                  <option>Finance &amp; MBA</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="admin-label">Level</label>
+                <select id="importLevel" class="admin-input">
+                  <option>Beginner</option>
+                  <option>Intermediate</option>
+                  <option>Advanced</option>
+                </select>
+              </div>
+            </div>
+            <div class="admin-row2">
+              <div>
+                <label class="admin-label">Language</label>
+                <select id="importLang" class="admin-input">
+                  <option>English</option>
+                  <option>Hindi</option>
+                </select>
+              </div>
+              <div>
+                <label class="admin-label">Price (₹)</label>
+                <input type="number" id="importPrice" class="admin-input" min="0" value="0" />
+              </div>
+            </div>
+            <label class="admin-label">Instructor</label>
+            <input type="text" id="importInst" class="admin-input" />
+            <label class="admin-check"><input type="checkbox" id="chkImportCourses" checked /> Add videos to course catalog</label>
+            <label class="admin-check"><input type="checkbox" id="chkSyncPlayer" /> Sync on-page YouTube player</label>
+            <button type="button" id="btnImportPlaylist" class="btn-gold">Import playlist</button>
+            <p id="importPlaylistResult" class="admin-muted" hidden></p>
+          </div>
+        </div>
+
+        <div id="panel-liveyt" class="admin-panel" hidden>
+          <div class="admin-panel-head"><h2>Live schedule &amp; YouTube player</h2></div>
+          <div class="admin-two-col">
+            <div class="admin-card">
+              <h3>Live schedule rows</h3>
+              <div id="scheduleEditor" class="schedule-editor"></div>
+              <button type="button" id="btnAddSchedule" class="btn-ghost">+ Add row</button>
+            </div>
+            <div class="admin-card">
+              <h3>On-page player (JSON)</h3>
+              <label class="admin-label">Heading</label>
+              <input type="text" id="ytHeading" class="admin-input" />
+              <label class="admin-label">Subheading</label>
+              <input type="text" id="ytSub" class="admin-input" />
+              <label class="admin-label">Videos JSON</label>
+              <textarea id="ytVideosJson" class="admin-textarea admin-monospace" rows="8"></textarea>
+            </div>
+          </div>
+          <button type="button" id="btnSaveLiveYt" class="btn-gold">Save live &amp; player</button>
+        </div>
+
+        <div id="panel-pages" class="admin-panel" hidden>
+          <div class="admin-panel-head">
+            <h2>Page hero copy</h2>
+            <button type="button" id="btnSavePages" class="btn-gold">Save page copy</button>
+          </div>
+          <div id="pageCopyEditor" class="page-copy-editor admin-card"></div>
+        </div>
+
+        <div id="panel-news" class="admin-panel" hidden>
+          <div class="admin-panel-head">
+            <h2>News announcements</h2>
+            <button type="button" id="btnNewNews" class="btn-gold">+ New item</button>
+          </div>
+          <form id="newsAdminForm" class="admin-form admin-card" style="margin-bottom: 1rem">
+            <input type="hidden" id="newsEditId" />
+            <label class="admin-label" for="newsFieldTitle">Title</label>
+            <input type="text" id="newsFieldTitle" class="admin-input" required />
+            <label class="admin-label" for="newsFieldContent">Content</label>
+            <textarea id="newsFieldContent" class="admin-textarea" rows="4" required></textarea>
+            <label class="admin-label" for="newsFieldStatus">Status</label>
+            <select id="newsFieldStatus" class="admin-input">
+              <option value="current">Current</option>
+              <option value="archive">Archive</option>
+            </select>
+            <button type="submit" class="btn-gold">Save news</button>
+            <button type="button" id="btnCancelNews" class="btn-ghost">Clear form</button>
+          </form>
+          <div id="newsTableWrap" class="admin-table-wrap"></div>
+        </div>
+
+        <div id="panel-materials" class="admin-panel" hidden>
+          <div class="admin-panel-head">
+            <h2>Study materials (PDFs)</h2>
+            <button type="button" id="btnNewMaterial" class="btn-gold">+ New PDF</button>
+          </div>
+          <form id="materialAdminForm" class="admin-form admin-card" style="margin-bottom: 1rem">
+            <input type="hidden" id="materialEditId" />
+            <label class="admin-label" for="materialFieldTitle">Title</label>
+            <input type="text" id="materialFieldTitle" class="admin-input" required />
+            <label class="admin-label" for="materialFieldUrl">File URL (site path)</label>
+            <input type="text" id="materialFieldUrl" class="admin-input" placeholder="/study-materials/example.pdf" required />
+            <button type="submit" class="btn-gold">Save material</button>
+            <button type="button" id="btnCancelMaterial" class="btn-ghost">Clear form</button>
+          </form>
+          <div id="materialsTableWrap" class="admin-table-wrap"></div>
+        </div>
+
+        <div id="panel-leads" class="admin-panel" hidden>
+          <div class="admin-panel-head"><h2>Leads &amp; interest</h2></div>
+          <p class="admin-muted">CSIR NET sign-ups and sign-in email interest (read-only).</p>
+          <h3 class="admin-h3">CSIR leads</h3>
+          <div id="csirLeadsTableWrap" class="admin-table-wrap"></div>
+          <h3 class="admin-h3">Member interest</h3>
+          <div id="memberInterestTableWrap" class="admin-table-wrap"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer-main" class="site-footer-mount"></footer>
+
+    <div id="blogModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal admin-modal">
+        <div class="modal-header">
+          <h2 id="blogModalTitle">Post</h2>
+          <button type="button" id="blogModalClose" class="modal-close" aria-label="Close">×</button>
+        </div>
+        <form id="blogModalForm" class="admin-form">
+          <input type="hidden" id="blogEditId" />
+          <label class="admin-label">Tag</label>
+          <input type="text" id="blogFieldTag" class="admin-input" />
+          <label class="admin-label">Title</label>
+          <input type="text" id="blogFieldTitle" class="admin-input" required />
+          <label class="admin-label">Excerpt</label>
+          <textarea id="blogFieldExcerpt" class="admin-textarea" rows="3"></textarea>
+          <label class="admin-label">Link (path or https URL)</label>
+          <input type="text" id="blogFieldHref" class="admin-input" value="/" />
+          <label class="admin-label">Sort order</label>
+          <input type="number" id="blogFieldOrder" class="admin-input" />
+          <label class="admin-label">Extra JSON (optional)</label>
+          <textarea id="blogEditExtras" class="admin-textarea admin-monospace" rows="3" placeholder="{}"></textarea>
+          <button type="submit" class="btn-gold">Save post</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="adminToast" class="admin-toast" hidden role="status"></div>
+
+        <script defer src="/js/api-client.js"></script><script defer src="/js/site-data.js"></script>
+    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/admin-app.js"></script>
+  </body>
+</html>

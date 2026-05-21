@@ -1,0 +1,381 @@
+[
+  {
+    "id": "d1",
+    "type": "youtube",
+    "ytId": "9jhxdr_qmaM",
+    "ytListId": "PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN",
+    "title": "CHEMISTRY DEMO VIDEO",
+    "category": "JEE / NEET",
+    "level": "Advanced",
+    "instructor": "Researchium",
+    "lang": "Hindi",
+    "price": 0,
+    "duration": "Playlist · 16 videos",
+    "desc": "Class-10 Chemistry — 16 lectures. Watch in order below or on YouTube.",
+    "rating": 4.8,
+    "students": 12400,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0,
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN",
+    "playlistVideos": [
+      {
+        "id": "9jhxdr_qmaM",
+        "seq": 1,
+        "title": "Class 10 Science | Chemical Reactions and Equations | Full Chapter Explanation by Divyanshu Sir"
+      },
+      {
+        "id": "R5YDa-xupr8",
+        "seq": 2,
+        "title": "🔥 New Course Launch for Class 10 & 12 | PCM & PCB Group | Gene Tutorial | Board Exam 2025"
+      },
+      {
+        "id": "quK3jq65Mi4",
+        "seq": 3,
+        "title": "Chemical Reactions & Equations | Class 10 Science | Balancing Equations & PYQs Explained (2025 - 26)"
+      },
+      {
+        "id": "RPMa145Nskw",
+        "seq": 4,
+        "title": " Types of Chemical Reactions | Class 10 Science Chapter 1 | CBSE NCERT | Board Exam 2025 Preparation"
+      },
+      {
+        "id": "37ZmqYlH5jw",
+        "seq": 5,
+        "title": "Types of Chemical Reactions | Class 10 Science Lecture 3 | BOARD EXAM TOPIC  | CBSE 2025-26"
+      },
+      {
+        "id": "SYs0rkr3_bE",
+        "seq": 6,
+        "title": "Rusting, Rancidity, Physical & Chemical Changes in Depth | Class 10 Science | Chemical Reactions  "
+      },
+      {
+        "id": "XaZ9iWc7C7Q",
+        "seq": 7,
+        "title": "Chemical Reactions & Equations MCQ PYQ 2025-26 | Class 10 Science Chapter 1 MCQs"
+      },
+      {
+        "id": "uEq5NsOF3o4",
+        "seq": 8,
+        "title": "Acids, Bases & Salts Class 10 | Lecture 1 | Introduction, Concepts & Daily Life Examples | NCERT "
+      },
+      {
+        "id": "6_NSeWsXV_E",
+        "seq": 9,
+        "title": "​Acids, Bases, & Salts Mechanism Explained | Class 10 Chemistry (H+/OH- Ions) LECTURE -2 NCERT BOARD"
+      },
+      {
+        "id": "PjNFFYGTn58",
+        "seq": 10,
+        "title": "Salts and Types of Salts | pH Scale Explained in Detail | Class 10 Chemistry Lecture 03 | NCERT "
+      },
+      {
+        "id": "r5p78FstLJQ",
+        "seq": 11,
+        "title": " Salts  LECTURE - 4  Preparation, Hydrolysis & Qualitative Analysis | CBSE NCERT "
+      },
+      {
+        "id": "BAmjO1fE6EQ",
+        "seq": 12,
+        "title": "Metals and Non-Metals | Class 10 Chemistry Chapter 3 | NCERT Explanation, Reactions & Properties"
+      },
+      {
+        "id": "-MOiAZSjHBs",
+        "seq": 13,
+        "title": "Metal and Non-Metal Class 10 | LIVE Lecture -02 | Important Concepts, Reactions  | CBSE 2025-26"
+      },
+      {
+        "id": "oJOuuNVC96o",
+        "seq": 14,
+        "title": "Minerals and Ores | Complete Explanation | Class 10 Science | By Divyanshu Sir | CBSE BoardExam 2025"
+      },
+      {
+        "id": "79poTPk89FQ",
+        "seq": 15,
+        "title": "Carbon and Its Compounds | Class 10 Chemistry | Complete Chapter Explanation with Reactions ."
+      },
+      {
+        "id": "82I46MlowyA",
+        "seq": 16,
+        "title": "Carbon and Its Compounds – Lecture 2 | NCERT Class 10 Chemistry | Important Concepts & Reactions "
+      }
+    ]
+  },
+  {
+    "id": "d7",
+    "type": "youtube",
+    "ytId": "yGDeKcdpaLs",
+    "ytListId": "PLIowxflsb4xDrjtyb5ON5AGyRzrWmfuxp",
+    "title": "BIOLOGY DEMO VIDEO",
+    "category": "JEE / NEET",
+    "level": "Advanced",
+    "instructor": "Researchium",
+    "lang": "Hindi",
+    "price": 0,
+    "duration": "Playlist · 11 videos",
+    "desc": "Class-10 Biology — 11 lectures. Watch in order below or on YouTube.",
+    "rating": 4.8,
+    "students": 11800,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0,
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLIowxflsb4xDrjtyb5ON5AGyRzrWmfuxp",
+    "playlistVideos": [
+      {
+        "id": "yGDeKcdpaLs",
+        "seq": 1,
+        "title": "🔥DNA Replication पूरा Concept Clear | Molecular Basic of Inheritance_CBSE Class 12th #neet2026 #cbse"
+      },
+      {
+        "id": "mLLUQANqXVU",
+        "seq": 2,
+        "title": "🔥Semiconservative Model of DNA Replication_Meselson Stahl Experiment_Lec 08_MBI #class12th #neet2026"
+      },
+      {
+        "id": "N7vmOjsel_g",
+        "seq": 3,
+        "title": "Properties of Genetic Material 💯 DNA vs RNA_Imp. Molecular Basis of Inheritance #class12biology #dna"
+      },
+      {
+        "id": "j9bfoFq20dM",
+        "seq": 4,
+        "title": "Class 12th Biology | Molecular Basis Of Inheritance | Cocept Series 🔥 Lec 07 | CBSE  #cuet #neet2026"
+      },
+      {
+        "id": "ONfl3aa6J3k",
+        "seq": 5,
+        "title": "Hershey and Chase Experiment🔥इस वीडियो में सारे Concept Clear_Lec 07 (B)12th Biology #genetics #neet"
+      },
+      {
+        "id": "MsAHDxzKWoM",
+        "seq": 6,
+        "title": "Class 12th Biology | Molecular Basis Of Inheritance | Cocept Series 🔥 Lec 06 | CBSE  #cuet #neet2026"
+      },
+      {
+        "id": "4lRJrOB6niM",
+        "seq": 7,
+        "title": "Molecular Basis Of Inheritance | Biology Cocept Series 🔥 Lec 05 #CBSEClass12th #neet2026 #genetics"
+      },
+      {
+        "id": "GoQbmICrhk4",
+        "seq": 8,
+        "title": "Molecular Basis Of Inheritance | Biology Cocept Series 🔥 Lec 04 #CBSEClass12th #neet2026 #genetics"
+      },
+      {
+        "id": "bZKqGgvudwg",
+        "seq": 9,
+        "title": "Molecular Basis Of Inheritance | Biology Cocept Series 🔥 Lec 03 #CBSEClass12th #neet2026 #genetics"
+      },
+      {
+        "id": "XaARPoZHzHI",
+        "seq": 10,
+        "title": "Molecular Basis Of Inheritance | Cocept Series 🔥 Lec 02 | CBSE 12th Biology #bio #NEET2026 #cuet2026"
+      },
+      {
+        "id": "kftbnl92MRU",
+        "seq": 11,
+        "title": "Molecular Basis Of Inheritance | Cocept Series 🔥 Lec 01 | CBSE 12th Biology #bio #NEET2026 #cuet2026"
+      }
+    ]
+  },
+  {
+    "id": "d2",
+    "type": "youtube",
+    "ytId": "rfscVS0vtbw",
+    "title": "Python for Beginners – Full Course",
+    "category": "Coding & AI",
+    "level": "Beginner",
+    "instructor": "freeCodeCamp",
+    "lang": "English",
+    "price": 0,
+    "duration": "4.5 hrs",
+    "desc": "Learn Python programming from scratch with hands-on projects.",
+    "rating": 4.9,
+    "students": 89000,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0
+  },
+  {
+    "id": "d3",
+    "type": "youtube",
+    "ytId": "zwuSJWd-JAM",
+    "ytListId": "PLIowxflsb4xDremjV66Zw4lyNh4zq6o3j",
+    "title": "PHYSICS DEMO VIDEO",
+    "category": "JEE / NEET",
+    "level": "Advanced",
+    "instructor": "Researchium",
+    "lang": "Hindi",
+    "price": 0,
+    "duration": "Playlist · 11 videos",
+    "desc": "Class-10 Physics — 11 lectures. Watch in order below or on YouTube.",
+    "rating": 4.8,
+    "students": 11200,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0,
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLIowxflsb4xDremjV66Zw4lyNh4zq6o3j",
+    "playlistVideos": [
+      {
+        "id": "zwuSJWd-JAM",
+        "seq": 1,
+        "title": "Refercationon of Light | Concept + Important Numericals | Class 10 Science | By Rakesh Sir #Physics"
+      },
+      {
+        "id": "G48iN1BMiSU",
+        "seq": 2,
+        "title": "Refraction of Light Numericals: Class 10 Science | Board Exam Problems |  By Rakesh Sir"
+      },
+      {
+        "id": "ftDRZm99rxA",
+        "seq": 3,
+        "title": "CBSE CLASS-10 PHYSICS REFERCATION OF LIGHT 🔥SPHERICAL LENSES#PYQ"
+      },
+      {
+        "id": "rNA1tMJHy2g",
+        "seq": 4,
+        "title": "CBSE CLASS-10 PHYSICS REFRACTION OF LIGHT 🔥 spherical lenses"
+      },
+      {
+        "id": "m3dL6Uv3QeM",
+        "seq": 5,
+        "title": "CBSE CLASS-10 PHYSICS REFERCTION OF LIGHT🔥"
+      },
+      {
+        "id": "6Pk-nv3Mbhg",
+        "seq": 6,
+        "title": "Reflection Based Numericals problem | CBSE Class 10 Science | Full Concepts + PYQs"
+      },
+      {
+        "id": "Rlo_d29XorQ",
+        "seq": 7,
+        "title": "Image formation by a Concave Mirror | Simple Trick : position of image | For class 10 "
+      },
+      {
+        "id": "TmeO7DrcmMU",
+        "seq": 8,
+        "title": "Mirror Magnification Tricks | Spherical Mirror Formula Explained | Magnification Shortcut ."
+      },
+      {
+        "id": "yF8uKmE5A4o",
+        "seq": 9,
+        "title": "Class 10 Science | Light – Reflection & Refraction Part-2 | Full Chapter with PYQ | CBSE 2025-26"
+      },
+      {
+        "id": "HnPIObYN4Lg",
+        "seq": 10,
+        "title": "Class 10 Science | Light – Reflection & Refraction Part -1 | Full Chapter with PYQ | CBSE 2025-26"
+      },
+      {
+        "id": "R5YDa-xupr8",
+        "seq": 11,
+        "title": "🔥 New Course Launch for Class 10 & 12 | PCM & PCB Group | Gene Tutorial | Board Exam 2025"
+      }
+    ]
+  },
+  {
+    "id": "d4",
+    "type": "youtube",
+    "ytId": "Wwlu7i2Mygw",
+    "ytListId": "PLIowxflsb4xC5meAS5MW21PHFnqVPokPc",
+    "title": "MATHEMATICS DEMO VIDEO",
+    "category": "JEE / NEET",
+    "level": "Advanced",
+    "instructor": "Researchium",
+    "lang": "Hindi",
+    "price": 0,
+    "duration": "Playlist · 8 videos",
+    "desc": "Class-10 Mathematics — 8 lectures. Watch in order below or on YouTube.",
+    "rating": 4.8,
+    "students": 10600,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0,
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLIowxflsb4xC5meAS5MW21PHFnqVPokPc",
+    "playlistVideos": [
+      {
+        "id": "Wwlu7i2Mygw",
+        "seq": 1,
+        "title": "🛑Class 11 Maths – Straight Lines | NCERT Exercise 9.1 Solutions live By-Deepu Sir"
+      },
+      {
+        "id": "EFqokmFLCFI",
+        "seq": 2,
+        "title": "Straight Lines Class 11 Maths Exercise 9.3 Full Solution | NCERT | By Deepu Sir | GENE TUTORIAL"
+      },
+      {
+        "id": "g9mY4HmCQ8U",
+        "seq": 3,
+        "title": "Straight Lines Class 11 Maths Exercise 9.3 | NCERT Solutions | By Deepu Sir | GENE TUTORIAL #maths "
+      },
+      {
+        "id": "WOG3sUd6lVM",
+        "seq": 4,
+        "title": "🎯 Straight Lines JEE Mains & Advanced PYQs | Complete Discussion by Deepu Sir | GENE TUTORIAL #jee"
+      },
+      {
+        "id": "dy8ee6XD1HA",
+        "seq": 5,
+        "title": "Class 11 Maths–Straight Lines | NCERT concept+ Example 9.1 Solutions by-Deepu Sir"
+      },
+      {
+        "id": "jbwD1VxDktE",
+        "seq": 6,
+        "title": "CIRCLE🔥 Class 11 Maths Exercise 10.1 INTERODUCTION NCERT | By Deepu Sir | GENE TUTORIAL #circle "
+      },
+      {
+        "id": "BcS3GJhJWbk",
+        "seq": 7,
+        "title": "🔥circle class 11th math NCERT concept+ questions exercise 10.1 By Deepu sir"
+      },
+      {
+        "id": "bBKNzO307B4",
+        "seq": 8,
+        "title": "🔥 Parabola | Class-11 Maths Chapter-10.2 Concept, & Example| By-Deepu Sir🛑live"
+      }
+    ]
+  },
+  {
+    "id": "d5",
+    "type": "youtube",
+    "ytId": "HXV3zeQKqGY",
+    "title": "SQL Full Course – Database for Beginners",
+    "category": "Coding & AI",
+    "level": "Beginner",
+    "instructor": "freeCodeCamp",
+    "lang": "English",
+    "price": 0,
+    "duration": "4.2 hrs",
+    "desc": "Learn SQL from scratch — queries, joins, aggregations and more.",
+    "rating": 4.8,
+    "students": 56000,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": null,
+    "createdAt": 0
+  },
+  {
+    "id": "d6",
+    "type": "external",
+    "ytId": null,
+    "title": "Research Methodology Masterclass",
+    "category": "Research & Science",
+    "level": "Advanced",
+    "instructor": "Dr. Anika Verma",
+    "lang": "English",
+    "price": 2499,
+    "duration": "20 hrs",
+    "desc": "In-depth course on research design, statistical analysis and publishing.",
+    "rating": 4.9,
+    "students": 3200,
+    "thumbUrl": null,
+    "fileUrl": null,
+    "extUrl": "https://example.com/course",
+    "createdAt": 0
+  }
+]

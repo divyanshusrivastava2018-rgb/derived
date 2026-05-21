@@ -1,0 +1,256 @@
+/* NPTEL GATE departments–style study materials grid */
+.materials-page {
+  padding: 3rem 1rem 4rem;
+  min-height: 70vh;
+}
+
+.materials-page-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ac-text);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.materials-page-sub {
+  text-align: center;
+  color: var(--ac-muted);
+  max-width: 42rem;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.materials-root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+}
+
+/* Department grid — 3 per row, full width */
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.25rem;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .dept-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .dept-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dept-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dept-card:hover,
+.dept-card:focus-visible {
+  transform: translateY(-4px);
+  outline: none;
+}
+
+.dept-card:hover .dept-card-img,
+.dept-card:focus-visible .dept-card-img {
+  box-shadow: 0 8px 24px rgba(26, 77, 92, 0.2);
+}
+
+.dept-card-img {
+  display: block;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background: #e8eef2;
+}
+
+.dept-card-label {
+  display: block;
+  width: 100%;
+  margin-top: 0.45rem;
+  padding: 0.45rem 0.5rem;
+  background: #1a4a5c;
+  color: #fff;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.25;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.dept-card-code {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.dept-card-name {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 500;
+  opacity: 0.92;
+  margin-top: 0.15rem;
+  line-height: 1.2;
+}
+
+.dept-card-count {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 500;
+  opacity: 0.8;
+  margin-top: 0.15rem;
+}
+
+/* Category detail (PDF list) */
+.materials-detail {
+  animation: materialsFadeIn 0.25s ease;
+}
+
+@keyframes materialsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.materials-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  color: var(--ac-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.materials-back:hover {
+  text-decoration: underline;
+}
+
+.materials-detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--ac-border);
+}
+
+.materials-detail-thumb {
+  width: 120px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.materials-detail-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ac-text);
+  flex: 1;
+  min-width: 200px;
+}
+
+.materials-detail-meta {
+  font-size: 0.9rem;
+  color: var(--ac-muted);
+}
+
+.materials-pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.material-pdf-card {
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--r);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.material-pdf-card:hover {
+  border-color: var(--ac-primary-light);
+  box-shadow: var(--shadow-card);
+}
+
+.material-pdf-card h3,
+.material-pdf-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ac-text);
+  line-height: 1.35;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.material-pdf-card a {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  background: #1a4a5c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.material-pdf-card a:hover {
+  background: #153d4d;
+}
+
+.materials-loading,
+.materials-empty {
+  text-align: center;
+  color: var(--ac-muted);
+  padding: 2rem;
+}
+
+.materials-hidden {
+  display: none !important;
+}

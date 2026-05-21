@@ -1,0 +1,66 @@
+{
+  "name": "researchium",
+  "productName": "Researchium",
+  "version": "1.0.0",
+  "description": "Researchium — Learn. Research. Grow. Desktop App",
+  "main": "main.js",
+  "author": "Divyanshu Srivastava <divyanshusrivastava2018@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start":   "electron .",
+    "dev":     "RESEARCHIUM_URL=http://localhost:3000 electron . --inspect",
+    "pack":    "electron-builder --dir",
+    "dist":    "electron-builder",
+    "dist:win":"electron-builder --win",
+    "dist:mac":"electron-builder --mac",
+    "dist:linux":"electron-builder --linux"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "in.co.derived.researchium",
+    "productName": "Researchium",
+    "copyright": "© 2026 Researchium Learning Pvt. Ltd.",
+    "files": [
+      "main.js",
+      "preload.js",
+      "splash.html",
+      "assets/**"
+    ],
+    "protocols": [
+      {
+        "name": "Researchium Deep Link",
+        "schemes": ["researchium"]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "icon": "assets/icon.icns",
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ]
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Education",
+      "target": ["AppImage", "deb"]
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "divyanshusrivastava2018-rgb",
+      "repo":  "derived"
+    }
+  }
+}

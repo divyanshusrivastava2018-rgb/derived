@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSIR NET Admin – Researchium</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/csir-admin.css" />
+  </head>
+  <body class="csir-admin-page">
+    <main class="csir-admin-shell">
+      <section id="csirAdminLogin" class="csir-admin-card">
+        <a class="csir-admin-back" href="/csir-net.html">← CSIR NET site</a>
+        <h1>CSIR NET Admin</h1>
+        <p class="csir-admin-lead">Sign in to view contact form messages (name, email, mobile, subject).</p>
+        <form id="csirAdminLoginForm" class="csir-admin-form">
+          <label for="csirAdminUser">Login ID</label>
+          <input type="text" id="csirAdminUser" autocomplete="username" required />
+          <label for="csirAdminPass">Password</label>
+          <input type="password" id="csirAdminPass" autocomplete="current-password" required />
+          <button type="submit" class="csir-admin-btn">Sign in</button>
+          <p id="csirAdminLoginErr" class="csir-admin-err" hidden></p>
+        </form>
+        <p class="csir-admin-hint">Uses server credentials (<code>RESEARCHIUM_ADMIN_*</code>). Full dashboard: <a href="/admin.html">admin.html</a></p>
+      </section>
+
+      <section id="csirAdminDash" class="csir-admin-dash" hidden>
+        <header class="csir-admin-dash-head">
+          <div>
+            <h1>Contact inbox</h1>
+            <p>Messages from the CSIR NET contact form</p>
+          </div>
+          <div class="csir-admin-dash-actions">
+            <a href="/csir-net.html" class="csir-admin-btn-ghost">View site</a>
+            <button type="button" id="csirAdminRefresh" class="csir-admin-btn-ghost">Refresh</button>
+            <button type="button" id="csirAdminLogout" class="csir-admin-btn-ghost">Sign out</button>
+          </div>
+        </header>
+        <div id="csirAdminStats" class="csir-admin-stats"></div>
+        <div id="csirAdminTableWrap" class="csir-admin-table-wrap">
+          <p class="csir-admin-muted">Loading…</p>
+        </div>
+      </section>
+    </main>
+    <script defer src="/js/csir-admin.js"></script>
+  </body>
+</html>
