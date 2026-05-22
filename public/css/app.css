@@ -2622,8 +2622,8 @@ body[data-page="courses"] .admin-catalog-hint a {
   }
 }
 @media (max-width: 600px) {
-  .nav-links,
-  .nav-actions {
+  .navbar:not(.nav-open) .nav-links,
+  .navbar:not(.nav-open) .nav-actions {
     display: none;
   }
   .form-row {

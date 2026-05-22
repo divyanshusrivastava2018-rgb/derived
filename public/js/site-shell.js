@@ -19,7 +19,7 @@
     '<li><a href="/mcq-test.html" data-nav="mcq">MCQ Practice</a></li>' +
     '<li><a href="/pricing.html" data-nav="pricing">Pricing</a></li>' +
     '<li><a href="/csir-net.html" data-nav="csir">CSIR UGC NET</a></li>' +
-    '<li><a href="/watch.html">Watch</a></li>' +
+    '<li><a href="/watch.html" data-nav="watch">Watch</a></li>' +
     "</ul></li>" +
     '<li><a href="/blog.html" data-nav="blog">Blog</a></li>' +
     '<li><a href="/signin.html" data-nav="signin">Contact</a></li>' +
@@ -67,25 +67,90 @@
   var footerMount = document.getElementById("site-footer-main");
   if (footerMount) footerMount.innerHTML = footerMainHtml;
 
+  var subPages = ["live", "study", "mcq", "pricing", "csir", "watch"];
+  var isSubPage = subPages.indexOf(page) !== -1;
+
   document.querySelectorAll(".nav-links a[data-nav]").forEach(function (a) {
     a.classList.toggle("nav-active", a.getAttribute("data-nav") === page);
   });
 
   var nav = document.getElementById("siteNav");
   var toggle = document.getElementById("navToggle");
+  var mobileNavMq = window.matchMedia("(max-width: 1024px)");
+
+  function isMobileNav() {
+    return mobileNavMq.matches;
+  }
+
+  function setDropdownOpen(dropdown, open) {
+    if (!dropdown) return;
+    dropdown.classList.toggle("is-open", open);
+    var trigger = dropdown.querySelector(".nav-dropdown-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  document.querySelectorAll(".nav-has-dropdown").forEach(function (dropdown) {
+    var trigger = dropdown.querySelector(".nav-dropdown-trigger");
+    var menu = dropdown.querySelector(".nav-dropdown-menu");
+    if (!trigger) return;
+    if (menu && !menu.id) menu.id = "navPagesMenu";
+
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-controls", menu ? menu.id : "navPagesMenu");
+
+    if (isSubPage) {
+      dropdown.classList.add("nav-sub-active");
+      if (isMobileNav()) setDropdownOpen(dropdown, true);
+    }
+
+    function onTriggerActivate(e) {
+      if (!isMobileNav()) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var willOpen = !dropdown.classList.contains("is-open");
+      document.querySelectorAll(".nav-has-dropdown.is-open").forEach(function (other) {
+        if (other !== dropdown) setDropdownOpen(other, false);
+      });
+      setDropdownOpen(dropdown, willOpen);
+    }
+
+    trigger.addEventListener("click", onTriggerActivate);
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        onTriggerActivate(e);
+      }
+    });
+  });
+
+  mobileNavMq.addEventListener("change", function () {
+    if (!isMobileNav()) {
+      document.querySelectorAll(".nav-has-dropdown.is-open").forEach(function (d) {
+        setDropdownOpen(d, false);
+      });
+    } else if (isSubPage) {
+      var dd = document.querySelector(".nav-has-dropdown");
+      if (dd) setDropdownOpen(dd, true);
+    }
+  });
+
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
       var open = nav.classList.toggle("nav-open");
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (!open) {
+        document.querySelectorAll(".nav-has-dropdown.is-open").forEach(function (d) {
+          setDropdownOpen(d, false);
+        });
+      }
+    });
+
+    nav.addEventListener("click", function (e) {
+      if (!isMobileNav()) return;
+      if (!e.target.closest(".nav-has-dropdown")) {
+        document.querySelectorAll(".nav-has-dropdown.is-open").forEach(function (d) {
+          setDropdownOpen(d, false);
+        });
+      }
     });
   }
-
-  document.querySelectorAll(".nav-has-dropdown .nav-dropdown-trigger").forEach(function (trigger) {
-    trigger.addEventListener("click", function (e) {
-      if (window.innerWidth > 1024) return;
-      e.preventDefault();
-      var parent = trigger.closest(".nav-has-dropdown");
-      if (parent) parent.classList.toggle("is-open");
-    });
-  });
 })();
