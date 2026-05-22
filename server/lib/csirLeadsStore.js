@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { writeJsonPrivate, readJsonPrivate } = require('./secureDataFile');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const LEADS_FILE = path.join(DATA_DIR, 'csir-leads.json');
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
 }
 
 function readLeads() {
@@ -14,18 +15,13 @@ function readLeads() {
     writeLeads([]);
     return [];
   }
-  try {
-    const raw = fs.readFileSync(LEADS_FILE, 'utf8');
-    const data = JSON.parse(raw);
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
+  const data = readJsonPrivate(LEADS_FILE, []);
+  return Array.isArray(data) ? data : [];
 }
 
 function writeLeads(leads) {
   ensureDataDir();
-  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2), 'utf8');
+  writeJsonPrivate(LEADS_FILE, leads);
 }
 
 module.exports = { readLeads, writeLeads, LEADS_FILE };

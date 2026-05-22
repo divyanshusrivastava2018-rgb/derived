@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { writeJsonPrivate, readJsonPrivate } = require('./secureDataFile');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const FILE = path.join(DATA_DIR, 'member-interest.json');
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
 }
 
 function readAll() {
@@ -14,17 +15,13 @@ function readAll() {
     writeAll([]);
     return [];
   }
-  try {
-    const data = JSON.parse(fs.readFileSync(FILE, 'utf8'));
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
+  const data = readJsonPrivate(FILE, []);
+  return Array.isArray(data) ? data : [];
 }
 
 function writeAll(rows) {
   ensureDataDir();
-  fs.writeFileSync(FILE, JSON.stringify(rows, null, 2), 'utf8');
+  writeJsonPrivate(FILE, rows);
 }
 
 function addInterest({ email, source }) {

@@ -44,6 +44,17 @@ if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 store.readAll();
 siteStore.readSite();
 
+function warnIfGateAnswersMissing() {
+  const answersPath = path.join(__dirname, 'data', 'gate-mcq-answers.json');
+  if (!fs.existsSync(answersPath)) {
+    console.warn(
+      '[Researchium] Missing server/data/gate-mcq-answers.json — GATE exam scoring will not work. ' +
+        'Run: node server/scripts/split-gate-mcq-answers.js (if upgrading from an older bank), or copy the file from your secure backup.'
+    );
+  }
+}
+warnIfGateAnswersMissing();
+
 function assertProductionAdminConfigured() {
   if (process.env.NODE_ENV !== 'production') return;
   const user = String(process.env.RESEARCHIUM_ADMIN_USERNAME || process.env.ADMIN_USERNAME || '').trim();
@@ -63,6 +74,14 @@ function assertProductionAdminConfigured() {
     console.error(
       '[Researchium] Production requires RESEARCHIUM_MEMBER_SECRET (strong, unique) for signed entitlements.'
     );
+    process.exit(1);
+  }
+  if (!(process.env.HCAPTCHA_SECRET_KEY || '').trim()) {
+    console.error('[Researchium] Production requires HCAPTCHA_SECRET_KEY for contact and lead forms.');
+    process.exit(1);
+  }
+  if (process.env.ALLOW_DEMO_MEMBER === '1') {
+    console.error('[Researchium] ALLOW_DEMO_MEMBER must not be set in production.');
     process.exit(1);
   }
 }
@@ -104,9 +123,15 @@ app.use(
 
 const scriptSrcExtra = [
   "'self'",
+  'https://cdn.jsdelivr.net',
   'https://www.googletagmanager.com',
   'https://www.google-analytics.com',
   'https://region1.google-analytics.com'
+];
+const styleSrcExtra = [
+  "'self'",
+  'https://fonts.googleapis.com',
+  'https://cdn.jsdelivr.net'
 ];
 const connectSrcExtra = [
   "'self'",
@@ -122,7 +147,7 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: scriptSrcExtra,
-        styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+        styleSrc: styleSrcExtra,
         fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
         imgSrc: ["'self'", 'data:', 'https:'],
         connectSrc: connectSrcExtra,

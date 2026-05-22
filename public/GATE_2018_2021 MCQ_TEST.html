@@ -342,60 +342,48 @@
             <div class="stat-item"><span class="stat-value" id="answeredCount">0</span><span class="stat-label">answered</span></div>
             <div class="stat-item"><span class="stat-value" id="unattemptedCount">101</span><span class="stat-label">unattempted</span></div>
         </div>
-        <div class="key-toggle" id="toggleAnswerKeyBtn">🔍 Show answer key</div>
+        <p class="badge" style="margin-top:0.75rem">For scored GATE mocks with server-side grading, use <a href="/gate-exam.html" style="color:#fff;text-decoration:underline">GATE Exam</a>.</p>
     </div>
 
     <div class="section-tabs" id="sectionTabs"></div>
     <div id="questionsContainer" class="questions-grid"></div>
-    <footer>✔️ Negative marking: +2 for correct, -0.67 for wrong (1-mark scaled). Solutions based on official GATE keys.</footer>
+    <footer>Practice mode only — answers are not shown here. Use <a href="/gate-exam.html">GATE Exam</a> for timed mocks and scoring.</footer>
 </div>
 
 <script>
     // -------------------------- DATA (based on scanned paper & official pattern) --------------------------
     const QUESTIONS_DATA = [
-        { id: 1, text: "Let A be 3×4, B 4×3 with real entries such that AB is non-singular. Statements: P: Nullity of A is 0; Q: BA is non-singular.", options: ["Both P & Q TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"], correct: "C", solution: "AB non-singular ⇒ rank(AB)=3 ⇒ rank(A)=3, nullity(A)=4-3=1 ⇒ P false. BA is 4×4 but rank ≤3 ⇒ singular, Q false. Option D." },
-        { id: 2, text: "Möbius transformation maps 0→10, -i→5-5i, ∞→5+5i. Image of Re(z)<0 is?", options: ["|w|<5", "|w|>5", "|w-5|<5", "|w-5|>5"], correct: "C", solution: "Cross-ratio invariance leads to w = 5+5i*(z)/(z+i). Region Re(z)<0 maps to interior of circle centre (5,0) radius 5 ⇒ |w-5|<5." },
-        { id: 3, text: "f(z)=u+iv analytic non-constant. g₁=u_x - i u_y , g₂=v_x + i v_y. Then:", options: ["Both analytic", "g₁ analytic, g₂ NOT analytic", "g₁ NOT analytic, g₂ analytic", "Neither analytic"], correct: "B", solution: "g₁ satisfies CR (u harmonic) ⇒ analytic. g₂ violates CR ⇒ not analytic." },
-        { id: 4, text: "Let R be rref of 4×4 A, 3rd column = [0,1,0,0]ᵀ. Statements P: If [α β γ 0]ᵀ solves Ax=0 ⇒ γ=0. Q: rank[A|b]=rank[R|b] ∀b.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"], correct: "D", solution: "Counterexample: α=0,β=-1,γ=1 works ⇒ P false. Row operations preserve consistency, but rank equality holds for consistent systems only? actually for all b? Not always; Q false. Option D." },
-        { id: 5, text: "Eigenvalues of y''+λy=0, y(0)=0, y(π)-y'(π)=0, λ>0 are given by:", options: ["λ=(nπ)²","λ=n²","λ=kₙ², k-tan(kπ)=0","λ=kₙ², k+tan(kπ)=0"], correct: "C", solution: "General solution c₂ sin kx; boundary gives sin kπ - k cos kπ =0 ⇒ tan kπ = k." },
-        { id: 6, text: "Family u = xy + f(x²-y²) satisfies:", options: ["y u_x + x u_y = x²+y²", "x u_x + y u_y = x²+y²", "y u_x + x u_y = x²-y²", "x u_x + y u_y = x²-y²"], correct: "A", solution: "Differentiate & eliminate f' to get y u_x + x u_y = x²+y²." },
-        { id: 7, text: "Wave equation: u_tt = u_xx, u(x,0)=0, u_t(x,0)=4xe^{-x²}. Then u(5,5) equals:", options: ["1 - 1/e^{100}", "1 - e^{100}", "1 - 1/e^{10}", "1 - e^{10}"], correct: "A", solution: "D'Alembert: u=½∫_{x-t}^{x+t}4se^{-s²}ds = e^{-(x-t)²} - e^{-(x+t)²}. u(5,5)=1- e^{-100}." },
-        { id: 8, text: "Fixed point iteration x_{n+1}=3+(x_n-3)³, x₀=3.25. Order of convergence?", options: ["1", "2", "3", "4"], correct: "A", solution: "ϕ'(x)=3(x-3)²; ϕ'(3.25)≠0 ⇒ linear convergence (order 1)." },
-        { id: 9, text: "Orthonormal basis {e_n} in Hilbert space H. Statements: f(e_n)=1/n, g(e_n)=1/√n. Bounded linear functionals exist?", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"], correct: "B", solution: "∑|1/n|² converges ⇒ Riesz rep exists. ∑|1/√n|² diverges ⇒ unbounded ⇒ Q false." },
-        { id: 10, text: "f(x)=π/2 + x - arctan x on [-π/2, π/2]. Statements P: |f(x)-f(y)|<|x-y| ∀ x≠y; Q: f has fixed point.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"], correct: "D", solution: "P fails if x=y gives 0<0 impossible; Q: π/2 - arctan x =0 ⇒ x=∞ no fixed point." },
-        { id: 11, text: "Which is a metric on (0,1)? d₁=|log(x/y)|, d₂(x,y) = |x|+|y| if x≠y else 0.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"], correct: "A", solution: "d₁ satisfies metric axioms; d₂ also satisfies non-neg, symmetry, triangle (check casewise) ⇒ both metrics." },
+        { id: 1, text: "Let A be 3×4, B 4×3 with real entries such that AB is non-singular. Statements: P: Nullity of A is 0; Q: BA is non-singular.", options: ["Both P & Q TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"] },
+        { id: 2, text: "Möbius transformation maps 0→10, -i→5-5i, ∞→5+5i. Image of Re(z)<0 is?", options: ["|w|<5", "|w|>5", "|w-5|<5", "|w-5|>5"] },
+        { id: 3, text: "f(z)=u+iv analytic non-constant. g₁=u_x - i u_y , g₂=v_x + i v_y. Then:", options: ["Both analytic", "g₁ analytic, g₂ NOT analytic", "g₁ NOT analytic, g₂ analytic", "Neither analytic"] },
+        { id: 4, text: "Let R be rref of 4×4 A, 3rd column = [0,1,0,0]ᵀ. Statements P: If [α β γ 0]ᵀ solves Ax=0 ⇒ γ=0. Q: rank[A|b]=rank[R|b] ∀b.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"] },
+        { id: 5, text: "Eigenvalues of y''+λy=0, y(0)=0, y(π)-y'(π)=0, λ>0 are given by:", options: ["λ=(nπ)²","λ=n²","λ=kₙ², k-tan(kπ)=0","λ=kₙ², k+tan(kπ)=0"] },
+        { id: 6, text: "Family u = xy + f(x²-y²) satisfies:", options: ["y u_x + x u_y = x²+y²", "x u_x + y u_y = x²+y²", "y u_x + x u_y = x²-y²", "x u_x + y u_y = x²-y²"] },
+        { id: 7, text: "Wave equation: u_tt = u_xx, u(x,0)=0, u_t(x,0)=4xe^{-x²}. Then u(5,5) equals:", options: ["1 - 1/e^{100}", "1 - e^{100}", "1 - 1/e^{10}", "1 - e^{10}"] },
+        { id: 8, text: "Fixed point iteration x_{n+1}=3+(x_n-3)³, x₀=3.25. Order of convergence?", options: ["1", "2", "3", "4"] },
+        { id: 9, text: "Orthonormal basis {e_n} in Hilbert space H. Statements: f(e_n)=1/n, g(e_n)=1/√n. Bounded linear functionals exist?", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"] },
+        { id: 10, text: "f(x)=π/2 + x - arctan x on [-π/2, π/2]. Statements P: |f(x)-f(y)|<|x-y| ∀ x≠y; Q: f has fixed point.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"] },
+        { id: 11, text: "Which is a metric on (0,1)? d₁=|log(x/y)|, d₂(x,y) = |x|+|y| if x≠y else 0.", options: ["Both TRUE", "P TRUE, Q FALSE", "P FALSE, Q TRUE", "Both FALSE"] },
         // Additional important ones (ensuring 20+ questions, but we'll show 20 as sample but user can extend)
-        { id: 12, text: "Boundary value problem eigenvalues: y''+λy=0, y(0)=0, y(π)-y'(π)=0 leads to:", options: ["λ=tan²(kπ)", "tan(kπ)=k", "k = tan(kπ)", "None"], correct: "C", solution: "Characteristic: sin(kπ)-k cos(kπ)=0 ⇒ tan(kπ)=k." },
-        { id: 13, text: "If A is 4×4 with eigenvalues 1,1,2,2, then tr(A⁴ - A) equals:", options: ["28", "24", "36", "20"], correct: "A", solution: "tr(A⁴ - A)=∑(λ⁴-λ)= (1-1)+(1-1)+(16-2)+(16-2)=28." },
-        { id: 14, text: "Legendre polynomial P'₁₁(1) equals:", options: ["55","60","66","72"], correct: "C", solution: "P'_n(1)=n(n+1)/2 ⇒ 11·12/2=66." },
-        { id: 15, text: "Let Möbius transformation T maps 0, -i, ∞ → 10,5-5i,5+5i. Image of Re(z)<0 is:", options: ["|w-5|<5","|w-5|>5","|w|<5","|w|>5"], correct: "A", solution: "Transformation derived maps left half-plane to disk center 5 radius 5." },
-        { id: 16, text: "For the fixed point x_{n+1}=√(10/(4+x_n)) on [1,1.5], convergence is:", options: ["Always converges","Diverges for some x₀","Only if x₀=1","None"], correct: "A", solution: "g'(x) negative and |g'|<1 on interval, contraction ⇒ convergence." },
-        { id: 17, text: "Let A be 4×4 rref, third column [0,1,0,0]ᵀ. Then for Ax=0 solution [α β γ 0]ᵀ, which is true?", options: ["γ=0 must hold","γ free","β must be 0","none"], correct: "D", solution: "Let R with free variables; example α=0,β=-1,γ=1 works → γ not forced 0." },
-        { id: 18, text: "Family of surfaces u=xy+f(x²-y²) satisfies PDE:", options: ["y u_x + x u_y = x²+y²", "x u_x + y u_y = x²-y²", "y u_x + x u_y = 0", "x u_x - y u_y = 0"], correct: "A", solution: "Derivation yields y u_x + x u_y = x²+y²." },
-        { id: 19, text: "If f(z) analytic non-constant, then g(z)=u_x - i u_y is:", options: ["Analytic", "Not analytic", "Harmonic but not analytic", "Constant"], correct: "A", solution: "g(z)=f'(z) up to factor, analytic." },
-        { id: 20, text: "Consider heat equation u_t = u_xx, u(0,t)=u(π,t)=0, u(x,0)=sin(4x)cos(3x). Then u(π/4,t) equals:", options: ["e^{-49t}/√2","e^{-t} sin(π/4)","e^{-49t} sin(π/4)","0"], correct: "C", solution: "sin4x cos3x = (1/2)(sin7x+sinx). Solution: (1/2)[e^{-49t} sin7x + e^{-t} sinx]; at x=π/4 gives e^{-49t}/√2." },
+        { id: 12, text: "Boundary value problem eigenvalues: y''+λy=0, y(0)=0, y(π)-y'(π)=0 leads to:", options: ["λ=tan²(kπ)", "tan(kπ)=k", "k = tan(kπ)", "None"] },
+        { id: 13, text: "If A is 4×4 with eigenvalues 1,1,2,2, then tr(A⁴ - A) equals:", options: ["28", "24", "36", "20"] },
+        { id: 14, text: "Legendre polynomial P'₁₁(1) equals:", options: ["55","60","66","72"] },
+        { id: 15, text: "Let Möbius transformation T maps 0, -i, ∞ → 10,5-5i,5+5i. Image of Re(z)<0 is:", options: ["|w-5|<5","|w-5|>5","|w|<5","|w|>5"] },
+        { id: 16, text: "For the fixed point x_{n+1}=√(10/(4+x_n)) on [1,1.5], convergence is:", options: ["Always converges","Diverges for some x₀","Only if x₀=1","None"] },
+        { id: 17, text: "Let A be 4×4 rref, third column [0,1,0,0]ᵀ. Then for Ax=0 solution [α β γ 0]ᵀ, which is true?", options: ["γ=0 must hold","γ free","β must be 0","none"] },
+        { id: 18, text: "Family of surfaces u=xy+f(x²-y²) satisfies PDE:", options: ["y u_x + x u_y = x²+y²", "x u_x + y u_y = x²-y²", "y u_x + x u_y = 0", "x u_x - y u_y = 0"] },
+        { id: 19, text: "If f(z) analytic non-constant, then g(z)=u_x - i u_y is:", options: ["Analytic", "Not analytic", "Harmonic but not analytic", "Constant"] },
+        { id: 20, text: "Consider heat equation u_t = u_xx, u(0,t)=u(π,t)=0, u(x,0)=sin(4x)cos(3x). Then u(π/4,t) equals:", options: ["e^{-49t}/√2","e^{-t} sin(π/4)","e^{-49t} sin(π/4)","0"] },
     ];
 
-    // full answers for remaining up to 50 (just a quick mapping for consistency)
-    const EXTENDED_ANSWERS = {
-        1:"C",2:"C",3:"B",4:"D",5:"C",6:"A",7:"A",8:"A",9:"B",10:"D",11:"A",12:"C",13:"A",14:"C",15:"A",16:"A",17:"D",18:"A",19:"A",20:"C"
-    };
-    // combine solutions map
-    const SOLUTIONS_MAP = {};
-    QUESTIONS_DATA.forEach(q => { SOLUTIONS_MAP[q.id] = q.solution; });
-
-    // final questions list (ensure each has correct field)
     let masterQuestions = QUESTIONS_DATA.map(q => ({
         id: q.id,
         text: q.text,
-        options: q.options,
-        correctLetter: q.correct,
-        solution: q.solution
+        options: q.options
     }));
 
     // user answers state
     let userAnswers = {}; // { qid: selectedIndex }
-    let answerKeyVisible = false;
     let currentSectionIdx = 0;
 
     // Sections (tab groups)
@@ -416,21 +404,14 @@
     function indexFromLetter(letter) { return letter.charCodeAt(0) - 65; }
 
     function updateStatsUI() {
-        let totalCorrect = 0, totalWrong = 0, answeredTotal = 0;
+        let answeredTotal = 0;
         masterQuestions.forEach(q => {
-            const ansIdx = userAnswers[q.id];
-            if (ansIdx !== undefined) {
-                answeredTotal++;
-                const selectedLetter = letterFromIndex(ansIdx);
-                if (selectedLetter === q.correctLetter) totalCorrect++;
-                else totalWrong++;
-            }
+            if (userAnswers[q.id] !== undefined) answeredTotal++;
         });
         const unattempted = masterQuestions.length - answeredTotal;
-        const marks = totalCorrect * 2 - totalWrong * (2/3);
-        document.getElementById("scoreDisplay").innerText = marks.toFixed(1);
-        document.getElementById("correctCount").innerText = totalCorrect;
-        document.getElementById("wrongCount").innerText = totalWrong;
+        document.getElementById("scoreDisplay").innerText = "—";
+        document.getElementById("correctCount").innerText = "—";
+        document.getElementById("wrongCount").innerText = "—";
         document.getElementById("answeredCount").innerText = answeredTotal;
         document.getElementById("unattemptedCount").innerText = unattempted;
     }
@@ -442,19 +423,6 @@
         renderQuestions(); 
     }
 
-    function toggleAnswerKey() {
-        answerKeyVisible = !answerKeyVisible;
-        const btn = document.getElementById("toggleAnswerKeyBtn");
-        if (answerKeyVisible) {
-            btn.classList.add("active");
-            btn.innerText = "🔒 Hide answer key";
-        } else {
-            btn.classList.remove("active");
-            btn.innerText = "🔍 Show answer key";
-        }
-        renderQuestions();
-    }
-
     function renderQuestions() {
         const filtered = getFilteredQuestions();
         const container = document.getElementById("questionsContainer");
@@ -463,9 +431,6 @@
         filtered.forEach(q => {
             const selectedIdx = userAnswers[q.id];
             const isAnswered = selectedIdx !== undefined;
-            const selectedLetter = isAnswered ? letterFromIndex(selectedIdx) : null;
-            const correctLetter = q.correctLetter;
-
             html += `<div class="question-card">
                         <div class="card-header">
                             <span class="q-id">Q${q.id}</span>
@@ -474,17 +439,7 @@
                         <div class="options">`;
             q.options.forEach((opt, idx) => {
                 const letter = letterFromIndex(idx);
-                let additionalClass = "";
-                let disabledAttr = isAnswered ? "disabled" : "";
-                if (isAnswered && selectedIdx === idx) {
-                    additionalClass = (selectedLetter === correctLetter) ? "selected correct-highlight" : "selected wrong-highlight";
-                } else if (answerKeyVisible && letter === correctLetter && !isAnswered) {
-                    additionalClass = "correct-highlight";
-                } else if (isAnswered && letter === correctLetter && selectedIdx !== idx) {
-                    additionalClass = "correct-highlight";
-                } else {
-                    additionalClass = "";
-                }
+                let additionalClass = isAnswered && selectedIdx === idx ? "selected" : "";
                 if (isAnswered) additionalClass += " disabled";
                 html += `<div class="opt-btn ${additionalClass}" onclick="${isAnswered ? '' : `handleSelect(${q.id}, ${idx})`}">
                             <span class="opt-letter">${letter}</span>
@@ -493,19 +448,7 @@
             });
             html += `</div>`;
             if (isAnswered) {
-                const isCorrect = selectedLetter === correctLetter;
-                const fbClass = isCorrect ? "feedback-correct" : "feedback-wrong";
-                const fbMsg = isCorrect ? "✓ Correct! +2 marks" : `✗ Incorrect. Correct answer: ${correctLetter}. -0.67 marks.`;
-                const solText = SOLUTIONS_MAP[q.id] || `Explanation: ${correctLetter} is correct based on standard GATE solution.`;
-                html += `<div class="feedback-area show ${fbClass}">
-                            ${fbMsg}
-                            <div class="solution-detail">📖 ${solText}</div>
-                         </div>`;
-            } else if (answerKeyVisible) {
-                html += `<div class="feedback-area show feedback-correct" style="background:#fef9e3;">
-                            🔑 Answer key: ${correctLetter}<br>
-                            <span style="font-size:0.75rem;">Click option to attempt & see full solution</span>
-                         </div>`;
+                html += `<div class="feedback-area show">Saved. Use <a href="/gate-exam.html">GATE Exam</a> for scored results.</div>`;
             }
             html += `</div>`;
         });
@@ -527,8 +470,6 @@
 
     // attach global functions
     window.handleSelect = handleSelect;
-    window.toggleAnswerKey = toggleAnswerKey;
-    document.getElementById("toggleAnswerKeyBtn")?.addEventListener("click", toggleAnswerKey);
     renderTabs();
     renderQuestions();
 </script>

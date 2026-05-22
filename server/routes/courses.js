@@ -38,7 +38,7 @@ function allowedUpload(file) {
 
 const upload = multer({
   storage: diskStorage,
-  limits: { fileSize: 100 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (!allowedUpload(file)) {
       return cb(new Error(`Unsupported upload type for ${file.fieldname}`));

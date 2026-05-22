@@ -1,5 +1,4 @@
 (function () {
-  var STORAGE_KEY = "researchium_admin_token";
   var PAGE_KEYS = ["home", "about", "pricing", "live", "blog", "courses"];
   var PAGE_LABELS = {
     home: "Home",
@@ -14,19 +13,12 @@
   var dashEl = document.getElementById("admin-dash");
   var activeCourseTab = "youtube";
 
-  function getToken() {
-    return sessionStorage.getItem(STORAGE_KEY) || "";
-  }
-
-  function setToken(s) {
-    if (s) sessionStorage.setItem(STORAGE_KEY, s);
-    else sessionStorage.removeItem(STORAGE_KEY);
+  function apiFetch(url, opts) {
+    return fetch(url, Object.assign({ credentials: "same-origin" }, opts || {}));
   }
 
   function authHeaders(isJson) {
     var h = {};
-    var t = getToken();
-    if (t) h.Authorization = "Bearer " + t;
     if (isJson) h["Content-Type"] = "application/json";
     return h;
   }
@@ -44,7 +36,6 @@
   }
 
   function showLogin() {
-    setToken("");
     if (loginEl) loginEl.hidden = false;
     if (dashEl) dashEl.hidden = true;
   }
@@ -71,7 +62,6 @@
 
   async function handleAuthResponse(r) {
     if (r.status === 401) {
-      setToken("");
       showLogin();
       showToast("Session expired — sign in again.", true);
       return null;
@@ -86,7 +76,7 @@
     var password = document.getElementById("adminPassword").value;
     err.hidden = true;
     try {
-      var r = await fetch("/api/admin/login", {
+      var r = await apiFetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: username, password: password })
@@ -94,14 +84,13 @@
       var data = await r.json().catch(function () {
         return {};
       });
-      if (!r.ok || !data.token) {
+      if (!r.ok || !data.ok) {
         err.textContent =
           data.error ||
           "Invalid login ID or password.";
         err.hidden = false;
         return;
       }
-      setToken(data.token);
       document.getElementById("adminPassword").value = "";
       showDash();
       showToast("Signed in.");
@@ -123,13 +112,10 @@
   });
 
   document.getElementById("adminLogout")?.addEventListener("click", async function () {
-    var t = getToken();
-    if (t) {
-      try {
-        await fetch("/api/admin/logout", { method: "POST", headers: authHeaders() });
-      } catch (_) {
-        /* ignore */
-      }
+    try {
+      await apiFetch("/api/admin/logout", { method: "POST", headers: authHeaders() });
+    } catch (_) {
+      /* ignore */
     }
     showLogin();
     showToast("Signed out.");
@@ -180,7 +166,7 @@
     if (!wrap) return;
     wrap.innerHTML = '<p class="admin-muted">Loading…</p>';
     try {
-      var r = await fetch("/api/blog");
+      var r = await apiFetch("/api/blog");
       var posts = await r.json();
       if (!posts.length) {
         wrap.innerHTML = "<p>No posts yet.</p>";
@@ -220,7 +206,7 @@
     if (del) {
       var id = del.getAttribute("data-id");
       if (!id || !confirm("Delete this post?")) return;
-      var r = await handleAuthResponse(await fetch("/api/blog/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() }));
+      var r = await handleAuthResponse(await apiFetch("/api/blog/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() }));
       if (!r || !r.ok) return;
       showToast("Post deleted.");
       loadBlogTable();
@@ -248,7 +234,7 @@
       var exNew = document.getElementById("blogEditExtras");
       if (exNew) exNew.value = "{}";
     } else {
-      fetch("/api/blog/" + encodeURIComponent(id))
+      apiFetch("/api/blog/" + encodeURIComponent(id))
         .then(function (r) {
           return r.json();
         })
@@ -292,7 +278,7 @@
     };
     var url = id ? "/api/blog/" + encodeURIComponent(id) : "/api/blog";
     var method = id ? "PUT" : "POST";
-    var r0 = await fetch(url, { method, headers: authHeaders(true), body: JSON.stringify(body) });
+    var r0 = await apiFetch(url, { method, headers: authHeaders(true), body: JSON.stringify(body) });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       var err = await r0.json().catch(function () {
@@ -354,7 +340,7 @@
       out.hidden = true;
     }
     try {
-      var r0 = await fetch("/api/admin/import-playlist", {
+      var r0 = await apiFetch("/api/admin/import-playlist", {
         method: "POST",
         headers: authHeaders(true),
         body: JSON.stringify(body)
@@ -427,7 +413,7 @@
         fd.append("courseFile", f);
         var th = document.getElementById("admThumb").files[0];
         if (th) fd.append("thumb", th);
-        var r0 = await fetch("/api/courses", { method: "POST", headers: authHeaders(), body: fd });
+        var r0 = await apiFetch("/api/courses", { method: "POST", headers: authHeaders(), body: fd });
         var r = await handleAuthResponse(r0);
         if (!r || !r.ok) throw new Error((await r0.json().catch(function () { return {}; })).error || "Save failed");
       } else if (activeCourseTab === "youtube") {
@@ -436,7 +422,7 @@
           showToast("Valid YouTube URL required.", true);
           return;
         }
-        var r1 = await fetch("/api/courses", {
+        var r1 = await apiFetch("/api/courses", {
           method: "POST",
           headers: authHeaders(true),
           body: JSON.stringify({ type: "youtube", ytUrl, ...payloadBase })
@@ -449,7 +435,7 @@
           showToast("External URL required.", true);
           return;
         }
-        var r3 = await fetch("/api/courses", {
+        var r3 = await apiFetch("/api/courses", {
           method: "POST",
           headers: authHeaders(true),
           body: JSON.stringify({ type: "external", extUrl, ...payloadBase })
@@ -470,7 +456,7 @@
     if (!list) return;
     list.innerHTML = '<p class="admin-muted">Loading…</p>';
     try {
-      var r = await fetch("/api/courses");
+      var r = await apiFetch("/api/courses");
       var courses = await r.json();
       if (!courses.length) {
         list.innerHTML = "<p>No courses.</p>";
@@ -500,7 +486,7 @@
   document.getElementById("btnClearAllCourses")?.addEventListener("click", async function () {
     if (!confirm("Delete ALL courses from the catalog? This cannot be undone.")) return;
     var purgeHeaders = Object.assign({}, authHeaders(), { "X-Researchium-Confirm": "purge-all-courses" });
-    var r0 = await fetch("/api/courses", { method: "DELETE", headers: purgeHeaders });
+    var r0 = await apiFetch("/api/courses", { method: "DELETE", headers: purgeHeaders });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       showToast("Could not clear catalog.", true);
@@ -515,7 +501,7 @@
     if (!b) return;
     var id = b.getAttribute("data-id");
     if (!id || !confirm("Delete this course?")) return;
-    var r0 = await fetch("/api/courses/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() });
+    var r0 = await apiFetch("/api/courses/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) return;
     showToast("Course deleted.");
@@ -526,7 +512,7 @@
 
   async function loadLiveYtForm() {
     try {
-      var r = await fetch("/api/site");
+      var r = await apiFetch("/api/site");
       cachedSite = await r.json();
       var pl = cachedSite.youtubePlaylist || {};
       document.getElementById("ytHeading").value = pl.heading || "";
@@ -606,7 +592,7 @@
       }),
       liveSchedule: gatherSchedule()
     };
-    var r0 = await fetch("/api/site", { method: "PUT", headers: authHeaders(true), body: JSON.stringify(body) });
+    var r0 = await apiFetch("/api/site", { method: "PUT", headers: authHeaders(true), body: JSON.stringify(body) });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       showToast("Save failed.", true);
@@ -619,7 +605,7 @@
   function renderPageCopyEditor() {
     var host = document.getElementById("pageCopyEditor");
     if (!host) return;
-    fetch("/api/site")
+    apiFetch("/api/site")
       .then(function (r) {
         return r.json();
       })
@@ -667,7 +653,7 @@
         leadHtml: block.querySelector(".admin-page-lead")?.value ?? ""
       });
     });
-    var r0 = await fetch("/api/site", { method: "PUT", headers: authHeaders(true), body: JSON.stringify({ pageCopy }) });
+    var r0 = await apiFetch("/api/site", { method: "PUT", headers: authHeaders(true), body: JSON.stringify({ pageCopy }) });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       showToast("Save failed.", true);
@@ -695,7 +681,7 @@
     if (!wrap) return;
     wrap.innerHTML = '<p class="admin-muted">Loading…</p>';
     try {
-      var r = await fetch("/api/news");
+      var r = await apiFetch("/api/news");
       var items = await r.json();
       if (!items.length) {
         wrap.innerHTML = "<p>No news items yet.</p>";
@@ -732,7 +718,7 @@
     if (!wrap) return;
     wrap.innerHTML = '<p class="admin-muted">Loading…</p>';
     try {
-      var r = await fetch("/api/materials");
+      var r = await apiFetch("/api/materials");
       var items = await r.json();
       if (!items.length) {
         wrap.innerHTML = "<p>No materials yet.</p>";
@@ -777,7 +763,7 @@
     };
     var url = id ? "/api/news/" + encodeURIComponent(id) : "/api/news";
     var method = id ? "PUT" : "POST";
-    var r0 = await fetch(url, { method: method, headers: authHeaders(true), body: JSON.stringify(body) });
+    var r0 = await apiFetch(url, { method: method, headers: authHeaders(true), body: JSON.stringify(body) });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       showToast("Could not save news.", true);
@@ -797,7 +783,7 @@
     };
     var url = id ? "/api/materials/" + encodeURIComponent(id) : "/api/materials";
     var method = id ? "PUT" : "POST";
-    var r0 = await fetch(url, { method: method, headers: authHeaders(true), body: JSON.stringify(body) });
+    var r0 = await apiFetch(url, { method: method, headers: authHeaders(true), body: JSON.stringify(body) });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
       showToast("Could not save material.", true);
@@ -815,14 +801,14 @@
       var id = del.getAttribute("data-id");
       if (!id || !confirm("Delete this news item?")) return;
       var r = await handleAuthResponse(
-        await fetch("/api/news/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() })
+        await apiFetch("/api/news/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() })
       );
       if (!r || !r.ok) return;
       showToast("News deleted.");
       loadNewsTable();
     } else if (ed) {
       var nid = ed.getAttribute("data-id");
-      fetch("/api/news/" + encodeURIComponent(nid))
+      apiFetch("/api/news/" + encodeURIComponent(nid))
         .then(function (r) {
           return r.json();
         })
@@ -845,14 +831,14 @@
       var id = del.getAttribute("data-id");
       if (!id || !confirm("Delete this material?")) return;
       var r = await handleAuthResponse(
-        await fetch("/api/materials/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() })
+        await apiFetch("/api/materials/" + encodeURIComponent(id), { method: "DELETE", headers: authHeaders() })
       );
       if (!r || !r.ok) return;
       showToast("Material deleted.");
       loadMaterialsTable();
     } else if (ed) {
       var mid = ed.getAttribute("data-id");
-      fetch("/api/materials")
+      apiFetch("/api/materials")
         .then(function (r) {
           return r.json();
         })
@@ -877,7 +863,7 @@
     try {
       if (csirWrap) {
         var r1 = await handleAuthResponse(
-          await fetch("/api/admin/csir-leads", { headers: authHeaders() })
+          await apiFetch("/api/admin/csir-leads", { headers: authHeaders() })
         );
         if (!r1 || !r1.ok) {
           csirWrap.innerHTML = "<p>Could not load CSIR leads.</p>";
@@ -916,7 +902,7 @@
       }
       if (memberWrap) {
         var r2 = await handleAuthResponse(
-          await fetch("/api/admin/member-interest", { headers: authHeaders() })
+          await apiFetch("/api/admin/member-interest", { headers: authHeaders() })
         );
         if (!r2 || !r2.ok) {
           memberWrap.innerHTML = "<p>Could not load member interest.</p>";
@@ -952,13 +938,8 @@
   }
 
   async function bootAdmin() {
-    var t = getToken();
-    if (!t) {
-      showLogin();
-      return;
-    }
     try {
-      var r = await fetch("/api/admin/session", { headers: { Authorization: "Bearer " + t } });
+      var r = await apiFetch("/api/admin/session");
       if (r.ok) {
         showDash();
         return;
@@ -966,7 +947,6 @@
     } catch (_) {
       /* offline or wrong origin */
     }
-    setToken("");
     showLogin();
   }
 

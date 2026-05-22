@@ -17,7 +17,8 @@
     "sync:physics": "node server/scripts/import-demo-playlist.js physics",
     "sync:mathematics": "node server/scripts/import-demo-playlist.js mathematics",
     "import:math-science": "node server/scripts/import-mathematical-science-materials.js",
-    "sync:mock-offline": "node server/scripts/sync-offline-mock-data.js"
+    "sync:mock-offline": "node server/scripts/sync-offline-mock-data.js",
+    "migrate:gate-answers": "node server/scripts/split-gate-mcq-answers.js"
   },
   "dependencies": {
     "compression": "^1.8.1",

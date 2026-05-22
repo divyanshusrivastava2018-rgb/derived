@@ -2,7 +2,7 @@
  * Send contact form notifications via SMTP (Gmail recommended).
  * Set SMTP_USER + SMTP_PASS (Gmail app password) in .env for live email delivery.
  */
-const DEFAULT_TO = 'divyanshuranjan2020@gmail.com';
+const DEFAULT_TO = '';
 
 function contactToAddress() {
   return (process.env.CONTACT_TO_EMAIL || DEFAULT_TO).trim();

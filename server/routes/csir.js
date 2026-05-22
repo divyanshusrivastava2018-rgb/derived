@@ -164,8 +164,7 @@ async function handleContactSubmit(req, res) {
     message: 'Thank you! Your message was sent successfully.',
     contact: { id: entry.id },
     emailSent: Boolean(emailResult.sent),
-    redirectUrl: '/contact-thanks.html',
-    notifyEmail: contactMail.contactToAddress()
+    redirectUrl: '/contact-thanks.html'
   });
 }
 

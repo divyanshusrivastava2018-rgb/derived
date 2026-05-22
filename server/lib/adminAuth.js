@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const adminSessions = require('./adminSessions');
 
+const ADMIN_COOKIE = 'researchium_admin';
 const DEV_DEFAULT_SECRET = 'researchium-dev-secret';
 
 function getAdminSecret() {
@@ -80,9 +81,51 @@ function extractBearer(req) {
   return '';
 }
 
-/** Requires a valid session token from POST /api/admin/login. */
+function parseCookies(header) {
+  const out = {};
+  if (!header || typeof header !== 'string') return out;
+  for (const part of header.split(';')) {
+    const i = part.indexOf('=');
+    if (i <= 0) continue;
+    const k = part.slice(0, i).trim();
+    const v = part.slice(i + 1).trim();
+    if (k) out[k] = decodeURIComponent(v);
+  }
+  return out;
+}
+
+/** Bearer header (legacy) or httpOnly admin cookie. */
+function extractAdminToken(req) {
+  const bearer = extractBearer(req);
+  if (bearer) return bearer;
+  const cookies = parseCookies(req.headers.cookie);
+  const raw = cookies[ADMIN_COOKIE];
+  return raw && typeof raw === 'string' ? raw.trim() : '';
+}
+
+function adminCookieOptions(token) {
+  const secure = process.env.NODE_ENV === 'production';
+  const parts = [
+    `${ADMIN_COOKIE}=${encodeURIComponent(token)}`,
+    'Path=/',
+    'HttpOnly',
+    'SameSite=Strict',
+    `Max-Age=${Math.floor(adminSessions.TTL_MS / 1000)}`
+  ];
+  if (secure) parts.push('Secure');
+  return parts.join('; ');
+}
+
+function clearAdminCookieOptions() {
+  const secure = process.env.NODE_ENV === 'production';
+  const parts = [`${ADMIN_COOKIE}=`, 'Path=/', 'HttpOnly', 'SameSite=Strict', 'Max-Age=0'];
+  if (secure) parts.push('Secure');
+  return parts.join('; ');
+}
+
+/** Requires a valid session from POST /api/admin/login (cookie or Bearer). */
 function requireAdmin(req, res, next) {
-  const token = extractBearer(req);
+  const token = extractAdminToken(req);
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -94,6 +137,7 @@ function requireAdmin(req, res, next) {
 
 module.exports = {
   requireAdmin,
+  ADMIN_COOKIE,
   getAdminSecret,
   DEV_DEFAULT_SECRET,
   getAdminUsername,
@@ -101,5 +145,8 @@ module.exports = {
   getAcceptedLoginIds,
   authenticateAdminCredentials,
   timingSafeEqual,
-  extractBearer
+  extractBearer,
+  extractAdminToken,
+  adminCookieOptions,
+  clearAdminCookieOptions
 };

@@ -27,13 +27,17 @@ router.post('/', requireAdmin, jsonParser, (req, res) => {
     return res.status(400).json({ error: 'Title and content are required' });
   }
   const status = body.status === 'archive' ? 'archive' : 'current';
+  const imageRaw = typeof body.image === 'string' ? body.image.trim() : '';
+  if (imageRaw && !isSafeHttpUrl(imageRaw)) {
+    return res.status(400).json({ error: 'image must be a valid http(s) URL or empty' });
+  }
   const item = {
     id: nanoid(12),
     title,
     content,
     status,
     date: body.date ? new Date(body.date).toISOString() : new Date().toISOString(),
-    image: typeof body.image === 'string' ? body.image.trim() : ''
+    image: imageRaw
   };
   const items = newsStore.readAll();
   items.unshift(item);

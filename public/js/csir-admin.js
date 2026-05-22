@@ -1,29 +1,16 @@
 (function () {
-  var TOKEN_KEY = "researchium_admin_token";
-
   function esc(s) {
     var d = document.createElement("div");
     d.textContent = s == null ? "" : String(s);
     return d.innerHTML;
   }
 
-  function getToken() {
-    try {
-      return sessionStorage.getItem(TOKEN_KEY) || "";
-    } catch {
-      return "";
-    }
-  }
-
-  function setToken(t) {
-    try {
-      if (t) sessionStorage.setItem(TOKEN_KEY, t);
-      else sessionStorage.removeItem(TOKEN_KEY);
-    } catch (_) {}
+  function apiFetch(url, opts) {
+    return fetch(url, Object.assign({ credentials: "same-origin" }, opts || {}));
   }
 
   function authHeaders() {
-    return { Authorization: "Bearer " + getToken() };
+    return {};
   }
 
   function showLogin() {
@@ -52,9 +39,8 @@
     wrap.innerHTML = '<p class="csir-admin-muted">Loading…</p>';
 
     try {
-      var r = await fetch("/api/admin/csir-leads", { headers: authHeaders() });
+      var r = await apiFetch("/api/admin/csir-leads", { headers: authHeaders() });
       if (r.status === 401) {
-        setToken("");
         showLogin();
         return;
       }
@@ -123,20 +109,19 @@
     var pass = document.getElementById("csirAdminPass").value;
     if (err) err.hidden = true;
     try {
-      var r = await fetch("/api/admin/login", {
+      var r = await apiFetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: user, password: pass })
       });
       var data = await r.json();
-      if (!r.ok) {
+      if (!r.ok || !data.ok) {
         if (err) {
           err.textContent = data.error || "Sign in failed.";
           err.hidden = false;
         }
         return;
       }
-      setToken(data.token);
       document.getElementById("csirAdminPass").value = "";
       showDash();
       loadContacts();
@@ -150,28 +135,21 @@
 
   document.getElementById("csirAdminLogout")?.addEventListener("click", async function () {
     try {
-      await fetch("/api/admin/logout", { method: "POST", headers: authHeaders() });
+      await apiFetch("/api/admin/logout", { method: "POST", headers: authHeaders() });
     } catch (_) {}
-    setToken("");
     showLogin();
   });
 
   document.getElementById("csirAdminRefresh")?.addEventListener("click", loadContacts);
 
   async function boot() {
-    var t = getToken();
-    if (!t) {
-      showLogin();
-      return;
-    }
     try {
-      var r = await fetch("/api/admin/session", { headers: authHeaders() });
+      var r = await apiFetch("/api/admin/session");
       var data = await r.json();
       if (r.ok && data.ok) {
         showDash();
         loadContacts();
       } else {
-        setToken("");
         showLogin();
       }
     } catch {

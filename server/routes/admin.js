@@ -2,7 +2,9 @@ const express = require('express');
 const adminSessions = require('../lib/adminSessions');
 const {
   authenticateAdminCredentials,
-  extractBearer
+  extractAdminToken,
+  adminCookieOptions,
+  clearAdminCookieOptions
 } = require('../lib/adminAuth');
 
 const router = express.Router();
@@ -76,18 +78,20 @@ router.post('/login', jsonParser, (req, res) => {
   }
   clearRateLimit(req, username);
   const token = adminSessions.createSession();
+  res.setHeader('Set-Cookie', adminCookieOptions(token));
   res.json({ ok: true, token, expiresIn: 86400 });
 });
 
 router.post('/logout', (req, res) => {
-  const token = extractBearer(req);
+  const token = extractAdminToken(req);
   if (token) adminSessions.revokeSession(token);
+  res.setHeader('Set-Cookie', clearAdminCookieOptions());
   res.json({ ok: true });
 });
 
-/** Lets /admin.html verify the token before showing the dashboard (avoids stale sessionStorage). */
+/** Lets /admin.html verify the session before showing the dashboard. */
 router.get('/session', (req, res) => {
-  const token = extractBearer(req);
+  const token = extractAdminToken(req);
   if (!token) {
     return res.status(401).json({ ok: false });
   }

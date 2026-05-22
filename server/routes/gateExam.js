@@ -6,6 +6,14 @@ const gateMcqBank = require('../lib/gateMcqBank');
 const router = express.Router();
 const jsonParser = express.json({ limit: '256kb' });
 
+const startLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many exam starts. Try again later.' }
+});
+
 const submitLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 60,
@@ -64,7 +72,7 @@ router.get('/paper/:slug', (req, res) => {
   res.json(stripAnswers(paper));
 });
 
-router.post('/paper/:slug/start', jsonParser, (req, res) => {
+router.post('/paper/:slug/start', startLimiter, jsonParser, (req, res) => {
   const paper = gateMcqBank.getPaper(req.params.slug);
   if (!paper) return res.status(404).json({ error: 'Paper not found' });
   const sessionId = nanoid(20);
@@ -86,16 +94,16 @@ router.post('/paper/:slug/submit', submitLimiter, jsonParser, (req, res) => {
   const sessionId = typeof body.sessionId === 'string' ? body.sessionId.trim() : '';
   const responses = body.responses && typeof body.responses === 'object' ? body.responses : {};
 
-  let paper;
-  if (sessionId) {
-    const session = ACTIVE_SESSIONS.get(sessionId);
-    if (!session) return res.status(404).json({ error: 'Session expired. Start again.' });
-    paper = session.paper;
-    ACTIVE_SESSIONS.delete(sessionId);
-  } else {
-    paper = gateMcqBank.getPaper(req.params.slug);
-    if (!paper) return res.status(404).json({ error: 'Paper not found' });
+  if (!sessionId) {
+    return res.status(400).json({ error: 'sessionId is required. Start the paper first.' });
   }
+  const session = ACTIVE_SESSIONS.get(sessionId);
+  if (!session) return res.status(404).json({ error: 'Session expired. Start again.' });
+  if (session.slug !== req.params.slug) {
+    return res.status(400).json({ error: 'Session does not match this paper.' });
+  }
+  const paper = session.paper;
+  ACTIVE_SESSIONS.delete(sessionId);
 
   const result = gateMcqBank.scorePaper(paper, responses);
   res.json({ ok: true, ...result, year: paper.year, title: paper.title });

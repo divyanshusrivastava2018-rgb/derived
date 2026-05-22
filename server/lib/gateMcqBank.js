@@ -3,22 +3,81 @@ const path = require('path');
 const { formatMathText } = require('./mathLatex');
 
 const BANK_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-bank.json');
+const ANSWERS_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-answers.json');
 
-let cache = null;
-let cacheMtime = 0;
+let bankCache = null;
+let bankMtime = 0;
+let answersCache = null;
+let answersMtime = 0;
+
+function loadAnswersMap() {
+  if (!fs.existsSync(ANSWERS_FILE)) {
+    return migrateAnswersFromLegacyBank();
+  }
+  const stat = fs.statSync(ANSWERS_FILE);
+  if (answersCache && stat.mtimeMs === answersMtime) return answersCache;
+  const raw = fs.readFileSync(ANSWERS_FILE, 'utf8');
+  const parsed = JSON.parse(raw);
+  answersCache = parsed && parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : {};
+  answersMtime = stat.mtimeMs;
+  return answersCache;
+}
+
+/** If bank still has answerIndex (pre-migration), extract once and rewrite files. */
+function migrateAnswersFromLegacyBank() {
+  const bank = loadBankRaw();
+  const answers = {};
+  let migrated = false;
+  bank.questions = (bank.questions || []).map((q) => {
+    if (q && q.id != null && typeof q.answerIndex === 'number') {
+      answers[q.id] = q.answerIndex;
+      migrated = true;
+      const { answerIndex, ...rest } = q;
+      return rest;
+    }
+    return q;
+  });
+  if (migrated) {
+    fs.writeFileSync(BANK_FILE, JSON.stringify(bank, null, 2), 'utf8');
+    fs.writeFileSync(ANSWERS_FILE, JSON.stringify({ answers }, null, 2), { mode: 0o600 });
+    try {
+      fs.chmodSync(ANSWERS_FILE, 0o600);
+    } catch {
+      /* ignore */
+    }
+    bankCache = bank;
+    bankMtime = fs.statSync(BANK_FILE).mtimeMs;
+  }
+  answersCache = answers;
+  answersMtime = fs.existsSync(ANSWERS_FILE) ? fs.statSync(ANSWERS_FILE).mtimeMs : 0;
+  return answers;
+}
+
+function loadBankRaw() {
+  const stat = fs.statSync(BANK_FILE);
+  if (bankCache && stat.mtimeMs === bankMtime) return bankCache;
+  const raw = fs.readFileSync(BANK_FILE, 'utf8');
+  bankCache = JSON.parse(raw);
+  bankMtime = stat.mtimeMs;
+  return bankCache;
+}
 
 function loadBank() {
-  const stat = fs.statSync(BANK_FILE);
-  if (cache && stat.mtimeMs === cacheMtime) return cache;
-  const raw = fs.readFileSync(BANK_FILE, 'utf8');
-  cache = JSON.parse(raw);
-  cacheMtime = stat.mtimeMs;
-  return cache;
+  const bank = loadBankRaw();
+  const answers = loadAnswersMap();
+  return { bank, answers };
+}
+
+function answerIndexFor(q, answers) {
+  if (q && typeof q.answerIndex === 'number') return q.answerIndex;
+  if (q && q.id != null && answers[q.id] != null) return answers[q.id];
+  return undefined;
 }
 
 function paperTotals(paper, questionsById) {
   const byId = questionsById || {};
-  loadBank().questions.forEach((q) => {
+  const { bank } = loadBank();
+  bank.questions.forEach((q) => {
     if (!byId[q.id]) byId[q.id] = q;
   });
   let totalQuestions = 0;
@@ -36,7 +95,7 @@ function paperTotals(paper, questionsById) {
 }
 
 function listPapers() {
-  const bank = loadBank();
+  const { bank } = loadBank();
   const questionsById = {};
   bank.questions.forEach((q) => {
     questionsById[q.id] = q;
@@ -68,7 +127,7 @@ function letterToIndex(letter) {
 }
 
 function getPaper(slugOrYear) {
-  const bank = loadBank();
+  const { bank, answers } = loadBank();
   const key = String(slugOrYear || '').trim();
   const paper = bank.papers.find((p) => p.slug === key || String(p.year) === key);
   if (!paper) return null;
@@ -79,21 +138,23 @@ function getPaper(slugOrYear) {
   });
 
   const sections = paper.sections.map((sec) => {
-    const questions = sec.questionIds.map((qid, idx) => {
-      const q = questionsById[qid];
-      if (!q) return null;
-      return {
-        id: qid,
-        number: idx + 1,
-        sectionKey: sec.key,
-        sectionLabel: sec.label,
-        type: q.type || 'MCQ',
-        marks: q.marks,
-        negativeMarks: q.negativeMarks,
-        text: formatMathText(q.text),
-        options: (q.options || []).map(formatMathText)
-      };
-    }).filter(Boolean);
+    const questions = sec.questionIds
+      .map((qid, idx) => {
+        const q = questionsById[qid];
+        if (!q) return null;
+        return {
+          id: qid,
+          number: idx + 1,
+          sectionKey: sec.key,
+          sectionLabel: sec.label,
+          type: q.type || 'MCQ',
+          marks: q.marks,
+          negativeMarks: q.negativeMarks,
+          text: formatMathText(q.text),
+          options: (q.options || []).map(formatMathText)
+        };
+      })
+      .filter(Boolean);
 
     return {
       key: sec.key,
@@ -108,7 +169,8 @@ function getPaper(slugOrYear) {
   paper.sections.forEach((sec) => {
     sec.questionIds.forEach((qid) => {
       const q = questionsById[qid];
-      if (q) answerKey[qid] = q.answerIndex;
+      const idx = answerIndexFor(q, answers);
+      if (idx != null) answerKey[qid] = idx;
     });
   });
 
@@ -165,4 +227,4 @@ function scorePaper(paperData, responses) {
   };
 }
 
-module.exports = { loadBank, listPapers, getPaper, scorePaper, letterToIndex };
+module.exports = { listPapers, getPaper, scorePaper, letterToIndex };
