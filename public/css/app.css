@@ -1210,6 +1210,10 @@ body[data-page="courses"] .admin-catalog-hint a {
 .site-header-mount {
   min-height: 70px;
 }
+
+.site-header-mount:has(.navbar.et-nav .nav-menu) {
+  min-height: 76px;
+}
 .site-footer-extended {
   text-align: left;
   padding-top: 48px;
@@ -2622,8 +2626,7 @@ body[data-page="courses"] .admin-catalog-hint a {
   }
 }
 @media (max-width: 600px) {
-  .navbar:not(.nav-open) .nav-links,
-  .navbar:not(.nav-open) .nav-actions {
+  .navbar:not(.nav-open) .nav-menu {
     display: none;
   }
   .form-row {
