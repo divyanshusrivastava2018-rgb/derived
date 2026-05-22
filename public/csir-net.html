@@ -237,7 +237,7 @@
           <span>I have read and agree to the <a href="/about.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
         </label>
       </div>
-      <div id="csirHcaptchaMount" class="csir-hcaptcha-mount" hidden></div>
+      <div id="csirHcaptchaMount" class="csir-hcaptcha-mount" data-hcaptcha-mount="contact" hidden></div>
       <button type="submit" class="csir-contact-submit" id="csirContactSubmit">Send Message</button>
       <p id="csirContactMsg" class="csir-contact-msg" role="status"></p>
     </form>
@@ -260,6 +260,7 @@
     </select>
     <label for="doubtQuestion">Your question</label>
     <textarea id="doubtQuestion" name="question" required placeholder="Type your doubt here…"></textarea>
+    <div id="csirDoubtHcaptchaMount" class="csir-hcaptcha-mount" data-hcaptcha-mount="doubt" hidden></div>
     <button type="submit" id="csirDoubtSubmit" class="csir-btn-primary" style="width:100%">Get answer</button>
     <div id="csirDoubtAnswer" class="doubt-answer doubt-answer--empty" role="status" aria-live="polite"></div>
   </form>
@@ -278,8 +279,8 @@
         </div>
       </div>
     </footer>
-    <script defer src="/js/api-client.js"></script>
-    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/researchium-core.js"></script>
+    <script defer src="/js/researchium-chrome.js"></script>
     <script defer src="/js/csir-net.js"></script>
   </body>
 </html>

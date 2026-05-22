@@ -156,32 +156,41 @@
       .catch(function () {});
   }
 
-  var hcaptchaWidgetId = null;
+  var hcaptchaWidgetIds = {};
+
+  function hcaptchaTokenFor(key) {
+    var id = hcaptchaWidgetIds[key];
+    if (id == null || !window.hcaptcha) return "";
+    return window.hcaptcha.getResponse(id) || "";
+  }
 
   function initHcaptcha() {
-    var mount = document.getElementById("csirHcaptchaMount");
-    if (!mount) return;
+    var mounts = document.querySelectorAll("[data-hcaptcha-mount]");
+    if (!mounts.length) return;
     fetch(API + "/site/public")
       .then(function (r) {
         return r.ok ? r.json() : {};
       })
       .then(function (cfg) {
         if (!cfg || !cfg.hcaptchaSiteKey) return;
-        mount.hidden = false;
-        function render() {
+        function renderAll() {
           if (!window.hcaptcha) return;
-          hcaptchaWidgetId = window.hcaptcha.render(mount, {
-            sitekey: cfg.hcaptchaSiteKey
+          mounts.forEach(function (mount) {
+            var key = mount.getAttribute("data-hcaptcha-mount") || "default";
+            mount.hidden = false;
+            hcaptchaWidgetIds[key] = window.hcaptcha.render(mount, {
+              sitekey: cfg.hcaptchaSiteKey
+            });
           });
         }
         if (window.hcaptcha) {
-          render();
+          renderAll();
           return;
         }
         var script = document.createElement("script");
         script.src = "https://js.hcaptcha.com/1/api.js?render=explicit";
         script.async = true;
-        script.onload = render;
+        script.onload = renderAll;
         document.head.appendChild(script);
       })
       .catch(function () {});
@@ -210,9 +219,8 @@
         message: document.getElementById("contactMessage").value.trim(),
         privacyAccepted: true
       };
-      if (window.hcaptcha && hcaptchaWidgetId != null) {
-        payload.hcaptchaToken = window.hcaptcha.getResponse(hcaptchaWidgetId);
-      }
+      var contactToken = hcaptchaTokenFor("contact");
+      if (contactToken) payload.hcaptchaToken = contactToken;
       if (msg) {
         msg.textContent = "Sending…";
         msg.className = "csir-contact-msg";
@@ -293,6 +301,15 @@
         }
         return;
       }
+      var doubtToken = hcaptchaTokenFor("doubt");
+      if (hcaptchaWidgetIds.doubt != null && !doubtToken) {
+        if (out) {
+          out.textContent = "Please complete the captcha verification.";
+          out.className = "doubt-answer doubt-answer--error";
+        }
+        return;
+      }
+      if (doubtToken) payload.hcaptchaToken = doubtToken;
       if (btn) {
         btn.disabled = true;
         btn.textContent = "Finding answer…";

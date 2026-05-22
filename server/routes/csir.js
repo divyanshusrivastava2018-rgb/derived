@@ -4,6 +4,7 @@ const csirData = require('../lib/csirData');
 const csirLeadsStore = require('../lib/csirLeadsStore');
 const contactMail = require('../lib/contactMail');
 const doubtAssistant = require('../lib/doubtAssistant');
+const hcaptchaPolicy = require('../lib/hcaptchaPolicy');
 
 const router = express.Router();
 const jsonParser = express.json({ limit: '64kb' });
@@ -14,6 +15,14 @@ const postLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Try again later.' }
+});
+
+const doubtLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many doubt requests. Try again later.' }
 });
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,20 +92,6 @@ router.get('/faqs', (_req, res) => {
   res.json(csirData.faqs);
 });
 
-async function verifyHcaptcha(token) {
-  const secret = (process.env.HCAPTCHA_SECRET_KEY || '').trim();
-  if (!secret) return true;
-  if (!token) return false;
-  const params = new URLSearchParams({ secret, response: String(token) });
-  const res = await fetch('https://hcaptcha.com/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
-  });
-  const data = await res.json();
-  return Boolean(data && data.success);
-}
-
 async function handleContactSubmit(req, res) {
   const body = req.body || {};
   const name = String(body.name || '').trim();
@@ -111,12 +106,7 @@ async function handleContactSubmit(req, res) {
     return res.status(400).json({ error: 'Please accept the Privacy Policy to continue.' });
   }
 
-  if ((process.env.HCAPTCHA_SECRET_KEY || '').trim()) {
-    const captchaOk = await verifyHcaptcha(body.hcaptchaToken || body['h-captcha-response']);
-    if (!captchaOk) {
-      return res.status(400).json({ error: 'Please complete the captcha verification.' });
-    }
-  }
+  if (!(await hcaptchaPolicy.enforce(body, res))) return;
 
   if (!name || !email) {
     return res.status(400).json({ error: 'Name and email are required.' });
@@ -211,9 +201,12 @@ router.post('/subscribe', postLimiter, jsonParser, (req, res) => {
   });
 });
 
-router.post('/doubts', postLimiter, jsonParser, (req, res) => {
-  const question = String((req.body || {}).question || '').trim();
-  const subject = String((req.body || {}).subject || 'General').trim();
+router.post('/doubts', doubtLimiter, jsonParser, async (req, res) => {
+  const body = req.body || {};
+  if (!(await hcaptchaPolicy.enforce(body, res))) return;
+
+  const question = String(body.question || '').trim();
+  const subject = String(body.subject || 'General').trim();
 
   if (!question || question.length < 3) {
     return res.status(400).json({ error: 'Please enter a question (at least 3 characters).' });

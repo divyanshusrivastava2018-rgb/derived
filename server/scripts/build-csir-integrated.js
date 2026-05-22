@@ -60,8 +60,8 @@ ${mainContent}
         </div>
       </div>
     </footer>
-    <script defer src="/js/api-client.js"></script>
-    <script defer src="/js/site-shell.js"></script>
+    <script defer src="/js/researchium-core.js"></script>
+    <script defer src="/js/researchium-chrome.js"></script>
     <script defer src="/js/csir-net.js"></script>
   </body>
 </html>`;

@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Researchium — Learn. Research. Grow.</title>
-    <meta name="description" content="Researchium offers curated courses, live classes, and research writing guidance for exam prep, careers, and publication-ready skills." />
+    <meta name="description" content="Researchium offers curated courses, live classes, mock tests, and study materials for exam prep and research careers." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.derived.co.in/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Researchium — Learn. Research. Grow." />
-    <meta property="og:description" content="Researchium offers curated courses, live classes, and research writing guidance for exam prep, careers, and publication-ready skills." />
+    <meta property="og:description" content="Courses, live classes, GATE &amp; CSIR mocks, and study PDFs on one platform." />
     <meta property="og:url" content="https://www.derived.co.in/" />
     <meta property="og:site_name" content="Researchium" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -17,210 +17,299 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="/css/app.css" as="style" />
     <link rel="stylesheet" href="/css/app.css" />
-    <link rel="stylesheet" href="/css/eduthink-layout.css" />
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"EducationalOrganization","name":"Researchium","url":"https://www.derived.co.in/"}
     </script>
   </head>
-  <body data-page="home" data-cms-page="home" class="eduthink-home">
+  <body data-page="home" data-cms-page="home" class="platform-home">
     <header id="site-header" class="site-header-mount"></header>
 
+    <nav class="yo-quickstrip" aria-label="Quick links">
+      <div class="yo-quickstrip__inner">
+        <a href="/pricing.html">Subscription Plans</a>
+        <a href="/mcq-test.html">Mock Tests</a>
+        <a href="/study-materials.html">Free Study Material</a>
+        <a href="/live-classes.html">Live Classes</a>
+        <a href="/csir-net.html">CSIR UGC NET</a>
+        <a href="/blog.html">Blog</a>
+      </div>
+    </nav>
+
     <main>
-      <!-- B. Hero -->
-      <section class="et-hero">
-        <div class="et-container">
-          <div class="et-hero-grid">
-            <div class="et-hero-content">
-              <span class="et-badge" id="etHeroBadge">100% Online Learning</span>
-              <h1 id="etHeroTitle">
-                Learn smarter with <span class="et-text-primary">expert-led</span> courses
-              </h1>
-              <p class="et-hero-lead" id="etHeroLead">
-                Researchium connects self-paced courses, live teaching, and research writing — prep for JEE &amp; NEET, crack interviews, or publish with clarity.
-              </p>
-              <form class="et-hero-search" id="etHeroSearchForm" role="search">
-                <input
-                  type="search"
-                  id="etHeroSearchInput"
-                  placeholder="What do you want to learn today?"
-                  aria-label="Search courses"
-                />
-                <button type="submit">Search</button>
-              </form>
-              <div class="et-social-proof">
-                <div class="et-avatars" aria-hidden="true">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=a1" alt="" width="40" height="40" />
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=a2" alt="" width="40" height="40" />
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=a3" alt="" width="40" height="40" />
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=a4" alt="" width="40" height="40" />
-                </div>
-                <p><strong>2,500+</strong> learners trust Researchium</p>
-              </div>
-            </div>
-            <div class="et-hero-visual">
-              <div class="et-hero-img-wrap">
-                <img
-                  src="/images/hero-students.png"
-                  alt="Students collaborating while learning online"
-                  width="420"
-                  height="490"
-                  loading="eager"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Hero carousel -->
+      <section class="yo-hero" aria-label="Featured">
+        <div class="yo-hero__slides" id="yoHeroSlides"></div>
+        <div class="yo-hero__dots" id="yoHeroDots" aria-hidden="true"></div>
       </section>
 
-      <!-- C. Features -->
-      <section class="et-section et-section--muted" id="features">
-        <div class="et-container">
-          <div class="et-head">
-            <span class="et-label">Why choose us</span>
-            <h2>Everything you need to learn online</h2>
-            <p>Structured paths, live support, and tools built for exam prep and research careers.</p>
+      <!-- Live classes -->
+      <section class="yo-section yo-section--white" id="live-now">
+        <div class="yo-wrap">
+          <div class="yo-head yo-head--left">
+            <span class="yo-label">Happening now</span>
+            <h2>Live classes &amp; sessions</h2>
+            <p>Join educators for doubt labs, syllabus coverage, and exam strategy.</p>
           </div>
-          <div class="et-features-grid">
-            <a href="/courses.html" class="et-feature-card">
-              <div class="et-feature-icon et-feature-icon--blue" aria-hidden="true">📚</div>
-              <h3>Curated catalog</h3>
-              <p>Filter by category, level, and format — YouTube, uploads, and links in one grid.</p>
-              <span class="et-feature-meta">25+ categories</span>
-            </a>
-            <a href="/live-classes.html" class="et-feature-card">
-              <div class="et-feature-icon et-feature-icon--orange" aria-hidden="true">▶</div>
-              <h3>Live doubt labs</h3>
-              <p>Scheduled sessions with educators plus in-page playlist replay.</p>
-              <span class="et-feature-meta">Weekly live slots</span>
-            </a>
-            <a href="/blog.html" class="et-feature-card">
-              <div class="et-feature-icon et-feature-icon--teal" aria-hidden="true">✍️</div>
-              <h3>Research blog</h3>
-              <p>Methods, literature reviews, and publishing guides for serious students.</p>
-              <span class="et-feature-meta">Expert articles</span>
-            </a>
-            <a href="/pricing.html" class="et-feature-card">
-              <div class="et-feature-icon et-feature-icon--purple" aria-hidden="true">💳</div>
-              <h3>Flexible plans</h3>
-              <p>Start free, upgrade when you need live hours or mentor access.</p>
-              <span class="et-feature-meta">Transparent pricing</span>
-            </a>
-            <a href="/csir-net.html" class="et-feature-card">
-              <div class="et-feature-icon et-feature-icon--teal" aria-hidden="true">🔬</div>
-              <h3>CSIR UGC NET</h3>
-              <p>Live classes, full syllabus, mock tests, and educators for all five science streams.</p>
-              <span class="et-feature-meta" id="etCsirLearnerStat">NET coaching</span>
-            </a>
+          <div class="yo-live-row" id="yoLiveRow">
+            <p class="loading-banner">Loading schedule…</p>
           </div>
-        </div>
-      </section>
-
-      <section class="et-section et-section--white" id="csir-net-home">
-        <div class="et-container">
-          <div class="et-head-row">
-            <div class="et-head et-head--left">
-              <span class="et-label">CSIR UGC NET</span>
-              <h2>Crack CSIR-UGC NET with Researchium</h2>
-              <p id="etCsirHomeLead">Focused NET prep — live batches, exam-pattern mocks, and AI doubt support.</p>
-            </div>
-            <a href="/csir-net.html" class="et-link-btn">Explore CSIR NET program →</a>
-          </div>
-          <div class="et-features-grid" id="etCsirHomeStats">
-            <div class="et-feature-card" style="pointer-events:none">
-              <div class="et-feature-icon et-feature-icon--blue" aria-hidden="true">👥</div>
-              <h3 id="etCsirStatLearners">50K+</h3>
-              <p>Learners preparing with us</p>
-            </div>
-            <div class="et-feature-card" style="pointer-events:none">
-              <div class="et-feature-icon et-feature-icon--orange" aria-hidden="true">👨‍🏫</div>
-              <h3 id="etCsirStatEducators">500+</h3>
-              <p>Expert NET educators</p>
-            </div>
-            <div class="et-feature-card" style="pointer-events:none">
-              <div class="et-feature-icon et-feature-icon--purple" aria-hidden="true">📚</div>
-              <h3>5 subjects</h3>
-              <p>Life, Chemical, Math, Physical &amp; Earth Science</p>
-            </div>
-          </div>
-          <p class="et-channel-cta" style="margin-top:1.5rem;text-align:center">
-            <a href="/csir-net.html" class="btn-gold u-inline-block">Start CSIR NET prep</a>
-            <a href="/pricing.html" class="btn-ghost u-inline-block u-rounded-pill" style="margin-left:.75rem">View plans</a>
+          <p style="margin-top:1.25rem;text-align:center">
+            <a href="/live-classes.html" class="yo-link">Full live schedule →</a>
           </p>
         </div>
       </section>
 
-      <!-- D. Courses -->
-      <section class="et-section et-section--white">
-        <div class="et-container">
-          <div class="et-head-row">
-            <div class="et-head et-head--left">
-              <span class="et-label">Popular courses</span>
-              <h2>Explore our latest courses</h2>
-              <p>Hand-picked from your catalog — powered by the live API.</p>
-            </div>
-            <a href="/courses.html" class="et-link-btn">View all courses →</a>
+      <!-- Explore products -->
+      <section class="yo-section yo-section--muted" id="explore-products">
+        <div class="yo-wrap">
+          <div class="yo-head">
+            <span class="yo-label">Explore</span>
+            <h2>Everything you need to prepare</h2>
+            <p>PDFs, mocks, live classes, and quizzes — pick your path.</p>
           </div>
-          <div class="et-courses-grid" id="etCoursesGrid">
+          <div class="yo-products">
+            <a href="/study-materials.html" class="yo-product-card">
+              <div class="yo-product-card__icon yo-product-card__icon--pdf" aria-hidden="true">📄</div>
+              <h3>Study PDFs</h3>
+              <p>Download topic-wise notes and previous-year material.</p>
+              <span class="yo-product-card__btn">View library →</span>
+            </a>
+            <a href="/mcq-test.html" class="yo-product-card">
+              <div class="yo-product-card__icon yo-product-card__icon--mock" aria-hidden="true">📝</div>
+              <h3>Mock tests</h3>
+              <p>GATE, JEE, UPSC-style quizzes with instant feedback.</p>
+              <span class="yo-product-card__btn">Attempt mock →</span>
+            </a>
+            <a href="/live-classes.html" class="yo-product-card">
+              <div class="yo-product-card__icon yo-product-card__icon--live" aria-hidden="true">▶</div>
+              <h3>Live classes</h3>
+              <p>See upcoming sessions and replay on demand.</p>
+              <span class="yo-product-card__btn">View schedule →</span>
+            </a>
+            <a href="/mcq-test.html" class="yo-product-card">
+              <div class="yo-product-card__icon yo-product-card__icon--quiz" aria-hidden="true">✓</div>
+              <h3>Practice quizzes</h3>
+              <p>Short topic tests to sharpen accuracy daily.</p>
+              <span class="yo-product-card__btn">Start quiz →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Benefits band -->
+      <section class="yo-section yo-section--white">
+        <div class="yo-wrap">
+          <div class="yo-benefits-band">
+            <div>
+              <div class="yo-head yo-head--left" style="margin-bottom:1.5rem">
+                <span class="yo-label">Why Researchium</span>
+                <h2>Join thousands practising daily</h2>
+                <p>Live + recorded learning, structured materials, and exam-ready mocks.</p>
+              </div>
+              <div class="yo-benefits-grid">
+                <div class="yo-benefit-pill"><span>▶</span> Live + Recorded</div>
+                <div class="yo-benefit-pill"><span>📄</span> Downloadable PDFs</div>
+                <div class="yo-benefit-pill"><span>🎯</span> Daily practice</div>
+                <div class="yo-benefit-pill"><span>📊</span> Full mocks</div>
+                <div class="yo-benefit-pill"><span>💬</span> Doubt support</div>
+                <div class="yo-benefit-pill"><span>📈</span> Progress tracking</div>
+              </div>
+              <p style="margin-top:1.5rem">
+                <a href="/pricing.html" class="yo-btn-primary">Start your preparation</a>
+              </p>
+            </div>
+            <div class="yo-app-mock" aria-hidden="true">
+              <div class="yo-app-mock__icon">📱</div>
+              <p><strong>Learn anywhere</strong></p>
+              <p style="font-size:0.875rem;opacity:0.9">Courses, mocks &amp; materials on desktop and mobile.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Popular courses -->
+      <section class="yo-section yo-section--muted">
+        <div class="yo-wrap">
+          <div class="yo-head-row">
+            <div class="yo-head yo-head--left" style="margin-bottom:0">
+              <span class="yo-label">Catalog</span>
+              <h2>Popular courses</h2>
+              <p>Hand-picked from your live course library.</p>
+            </div>
+            <a href="/courses.html" class="yo-link">View all →</a>
+          </div>
+          <div class="yo-courses-grid" id="yoCoursesGrid">
             <p class="loading-banner">Loading courses…</p>
           </div>
         </div>
       </section>
 
-      <!-- E. Scholar Science YouTube -->
-      <section class="et-section et-section--muted" id="youtube-channel">
-        <div class="et-container">
-          <div class="et-head">
-            <span class="et-label">YouTube channel</span>
-            <h2>Learn with Scholar Science</h2>
-            <p>Follow @MathswithDivyanshuSir for JEE, NEET, and science lessons — synced with our course catalog.</p>
+      <!-- CSIR NET highlight -->
+      <section class="yo-section yo-section--white" id="csir-net-home">
+        <div class="yo-wrap">
+          <div class="yo-head-row">
+            <div class="yo-head yo-head--left" style="margin-bottom:0">
+              <span class="yo-label">CSIR UGC NET</span>
+              <h2>Focused NET preparation</h2>
+              <p id="etCsirHomeLead">Live batches, syllabus-aligned mocks, and AI doubt support for all five science streams.</p>
+            </div>
+            <a href="/csir-net.html" class="yo-link">Explore program →</a>
           </div>
-          <a
-            class="et-channel-card"
-            href="https://www.youtube.com/@MathswithDivyanshuSir"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/images/scholar-science-channel.png"
-              alt="Scholar Science YouTube channel — @MathswithDivyanshuSir"
-              width="1200"
-              height="400"
-              loading="lazy"
-            />
-          </a>
-          <p class="et-channel-cta">
-            <a href="/live-classes.html" class="et-link-btn">Watch live classes &amp; playlists →</a>
+          <div class="yo-benefits-grid" style="max-width:720px">
+            <div class="yo-benefit-pill"><span>👥</span> <span id="etCsirStatLearners">50K+</span> learners</div>
+            <div class="yo-benefit-pill"><span>👨‍🏫</span> <span id="etCsirStatEducators">500+</span> educators</div>
+            <div class="yo-benefit-pill"><span>📚</span> 5 NET subjects</div>
+            <div class="yo-benefit-pill"><span>🔬</span> JRF &amp; Lectureship paths</div>
+          </div>
+          <p style="margin-top:1.5rem;text-align:center">
+            <a href="/csir-net.html" class="yo-btn-primary">Start CSIR NET prep</a>
+            <a href="/pricing.html" class="yo-btn-outline" style="margin-left:0.75rem;color:var(--yo-primary);border-color:var(--yo-primary)">View plans</a>
           </p>
         </div>
       </section>
 
-      <!-- F. Testimonials -->
-      <section class="et-section et-section--white">
-        <div class="et-container">
-          <div class="et-head">
-            <span class="et-label">Testimonials</span>
-            <h2>What our learners say</h2>
-            <p>Real feedback from students using Researchium every day.</p>
+      <!-- YouTube -->
+      <section class="yo-section yo-section--muted" id="youtube-channel">
+        <div class="yo-wrap">
+          <div class="yo-head">
+            <span class="yo-label">YouTube</span>
+            <h2>Catch us on YouTube</h2>
+            <p>Free lessons and playlists synced with our course catalog.</p>
           </div>
-          <div class="et-testimonials-wrap">
-            <div class="et-testimonial-card" id="etTestimonialCard"></div>
-            <div class="et-testimonial-nav">
-              <button type="button" class="et-testimonial-arrow" id="etTestPrev" aria-label="Previous">←</button>
-              <div class="et-testimonial-dots" id="etTestimonialDots"></div>
-              <button type="button" class="et-testimonial-arrow" id="etTestNext" aria-label="Next">→</button>
+          <div class="yo-yt-grid">
+            <a
+              class="yo-yt-card"
+              href="https://www.youtube.com/@MathswithDivyanshuSir"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="yo-yt-card__logo" aria-hidden="true">▶</div>
+              <div>
+                <h3>Scholar Science</h3>
+                <p>JEE, NEET &amp; science — @MathswithDivyanshuSir</p>
+              </div>
+            </a>
+            <a class="yo-yt-card" href="/live-classes.html">
+              <div class="yo-yt-card__logo" aria-hidden="true">📺</div>
+              <div>
+                <h3>Live playlists</h3>
+                <p>Replay class recordings on Researchium</p>
+              </div>
+            </a>
+            <a class="yo-yt-card" href="/watch.html">
+              <div class="yo-yt-card__logo" aria-hidden="true">🎬</div>
+              <div>
+                <h3>Video library</h3>
+                <p>Course videos &amp; curated watch lists</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Success stories -->
+      <section class="yo-section yo-section--white">
+        <div class="yo-wrap">
+          <div class="yo-head">
+            <span class="yo-label">Community</span>
+            <h2>What learners say</h2>
+            <p>Feedback from students using Researchium every day.</p>
+          </div>
+          <div class="yo-stories-track" id="yoStoriesTrack"></div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="yo-section yo-section--muted">
+        <div class="yo-wrap">
+          <div class="yo-head">
+            <span class="yo-label">Get started</span>
+            <h2>How to learn with Researchium</h2>
+          </div>
+          <div class="yo-steps">
+            <div class="yo-step">
+              <div class="yo-step__num">1</div>
+              <h3>Choose your goal</h3>
+              <p>JEE, GATE, CSIR NET, UPSC, or research skills.</p>
+            </div>
+            <div class="yo-step">
+              <div class="yo-step__num">2</div>
+              <h3>Pick a plan</h3>
+              <p>Free catalog or subscription for live &amp; pro content.</p>
+            </div>
+            <div class="yo-step">
+              <div class="yo-step__num">3</div>
+              <h3>Enroll securely</h3>
+              <p>Complete checkout from the pricing page.</p>
+            </div>
+            <div class="yo-step">
+              <div class="yo-step__num">4</div>
+              <h3>Open your courses</h3>
+              <p>Access materials, mocks, and live links in one dashboard.</p>
+            </div>
+            <div class="yo-step">
+              <div class="yo-step__num">5</div>
+              <h3>Start learning</h3>
+              <p>Watch, practise, and track progress toward your exam.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- CTA -->
-      <section class="et-section et-section--muted">
-        <div class="et-container">
-          <div class="et-cta-strip">
-            <h2>Ready to start learning?</h2>
-            <p>Join thousands of learners — browse free courses or unlock Pro for live classes.</p>
-            <a href="/signin.html" class="btn-ghost">Sign in</a>
-            <a href="/pricing.html" class="btn-white">Get started free</a>
+      <!-- FAQ -->
+      <section class="yo-section yo-section--white" id="faq">
+        <div class="yo-wrap">
+          <div class="yo-head">
+            <span class="yo-label">FAQ</span>
+            <h2>Common questions</h2>
+          </div>
+          <div class="yo-faq">
+            <details>
+              <summary>What is Researchium?</summary>
+              <div class="yo-faq__body">
+                Researchium is an online learning platform for exam preparation and research skills — courses, live
+                classes, study PDFs, and mock tests in one place.
+              </div>
+            </details>
+            <details>
+              <summary>Who can use Researchium?</summary>
+              <div class="yo-faq__body">
+                Aspirants preparing for JEE, NEET, GATE, CSIR UGC NET, UPSC, and learners building research or coding
+                skills benefit from our catalog.
+              </div>
+            </details>
+            <details>
+              <summary>What is included in a subscription?</summary>
+              <div class="yo-faq__body">
+                Plans may include live class access, premium course uploads, mock test packs, and downloadable study
+                materials. See <a href="/pricing.html">pricing</a> for current tiers.
+              </div>
+            </details>
+            <details>
+              <summary>Are mock tests included?</summary>
+              <div class="yo-faq__body">
+                Yes — topic quizzes, category mocks, and GATE Mathematics full papers with timed exam mode and scoring.
+              </div>
+            </details>
+            <details>
+              <summary>How do I contact support?</summary>
+              <div class="yo-faq__body">
+                Use the <a href="/signin.html">contact form</a> or CSIR NET page for program-specific questions. We
+                respond by email when SMTP is configured on the server.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="yo-hero" style="min-height:auto">
+        <div class="yo-wrap" style="padding:3rem 1rem;text-align:center">
+          <h2 style="color:#fff;font-size:1.75rem;margin-bottom:0.75rem">Ready to start learning?</h2>
+          <p class="yo-hero__lead" style="margin:0 auto 1.5rem">Browse free courses or unlock Pro for live classes and premium uploads.</p>
+          <div class="yo-hero__actions" style="justify-content:center">
+            <a href="/pricing.html" class="yo-btn-primary">Get Subscription</a>
+            <a href="/courses.html" class="yo-btn-outline">Browse courses</a>
           </div>
         </div>
       </section>
@@ -228,21 +317,21 @@
 
     <footer class="site-footer site-footer-extended">
       <div id="site-footer-main"></div>
-      <div class="et-container">
+      <div class="yo-wrap">
         <div class="footer-bar">
           <span>© 2026 Researchium Learning Pvt. Ltd. All rights reserved.</span>
           <div class="footer-bar-links">
-            <a href="/about.html">Privacy Policy</a>
-            <a href="/about.html">Terms of Service</a>
+            <a href="/about.html">Privacy</a>
+            <a href="/about.html">Terms</a>
           </div>
         </div>
       </div>
     </footer>
 
-    <script defer src="/js/api-client.js"></script>    <script defer src="/js/cms-hero.js"></script>
-    <script defer src="/js/site-data.js"></script>
-    <script defer src="/js/site-shell.js"></script>
-    <script defer src="/js/home-eduthink.js"></script>
+    <script defer src="/js/researchium-core.js"></script>
+    <script defer src="/js/researchium-chrome.js"></script>
+    <script defer src="/js/cms-hero.js"></script>
+    <script defer src="/js/home-platform.js"></script>
     <script defer src="/js/gtag-lazy.js"></script>
   </body>
 </html>

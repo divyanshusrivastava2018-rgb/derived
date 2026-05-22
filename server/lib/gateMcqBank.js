@@ -227,4 +227,11 @@ function scorePaper(paperData, responses) {
   };
 }
 
-module.exports = { listPapers, getPaper, scorePaper, letterToIndex };
+module.exports = {
+  listPapers,
+  getPaper,
+  scorePaper,
+  letterToIndex,
+  loadBank,
+  answerIndexFor
+};

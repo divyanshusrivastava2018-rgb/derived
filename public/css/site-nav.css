@@ -1,0 +1,336 @@
+/* Researchium header — Yes Officer–style: search + subscription + quick strip */
+
+.site-header-mount {
+  min-height: 0;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: #fff;
+  border-bottom: 1px solid var(--ac-border, #e2e8f0);
+  box-shadow: 0 1px 4px rgba(30, 27, 75, 0.06);
+}
+
+.site-nav {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.site-nav__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  min-height: 64px;
+}
+
+.site-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fh, "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--ac-text, #1a202c);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.site-nav__brand em {
+  font-style: normal;
+  color: var(--yo-primary, #6d28d9);
+}
+
+.site-nav__icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.site-nav__search {
+  flex: 1;
+  min-width: 0;
+  max-width: 420px;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .site-nav__search {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--yo-bg, #f4f6fb);
+    border: 1px solid var(--ac-border);
+    border-radius: 999px;
+    padding: 0.2rem 0.25rem 0.2rem 1rem;
+  }
+}
+
+.site-nav__search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  color: var(--ac-text);
+  outline: none;
+}
+
+.site-nav__search input::placeholder {
+  color: var(--ac-muted);
+}
+
+.site-nav__search button {
+  flex-shrink: 0;
+  padding: 0.45rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--yo-primary);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.site-nav__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  margin-left: auto;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.site-nav__toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--ac-text);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.site-nav--open .site-nav__toggle span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-nav--open .site-nav__toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-nav--open .site-nav__toggle span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.site-nav__actions-top {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .site-nav__actions-top {
+    margin-left: 0;
+  }
+}
+
+.site-nav__sub {
+  display: none;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--yo-primary-dark), var(--yo-primary));
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav__sub:hover {
+  filter: brightness(1.08);
+}
+
+@media (min-width: 480px) {
+  .site-nav__sub {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.site-nav__signin {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ac-text);
+  text-decoration: none;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.site-nav__signin:hover {
+  color: var(--yo-primary);
+}
+
+.site-nav__panel {
+  display: none;
+  padding-bottom: 1rem;
+  border-top: 1px solid var(--ac-border);
+}
+
+.site-nav--open .site-nav__panel {
+  display: block;
+}
+
+.site-nav__search--mobile {
+  display: flex;
+  margin: 0.75rem 0;
+  background: var(--yo-bg);
+  border: 1px solid var(--ac-border);
+  border-radius: 999px;
+  padding: 0.2rem 0.25rem 0.2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .site-nav__search--mobile {
+    display: none;
+  }
+}
+
+.site-nav__search--mobile input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  padding: 0.55rem 0;
+  outline: none;
+}
+
+.site-nav__search--mobile button {
+  padding: 0.45rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--yo-primary);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.site-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 1025px) {
+  .site-nav__panel {
+    display: none !important;
+  }
+
+  .site-nav__list--desktop {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    padding: 0.5rem 0 0.65rem;
+    border-top: 1px solid var(--ac-border);
+  }
+}
+
+.site-nav__list--desktop {
+  display: none;
+}
+
+.site-nav__link {
+  display: block;
+  padding: 0.55rem 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ac-text);
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.site-nav__link:hover,
+.site-nav__link--active {
+  color: var(--yo-primary);
+  background: rgba(109, 40, 217, 0.08);
+}
+
+.site-nav__cta {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--yo-primary);
+  border-radius: 999px;
+  text-decoration: none;
+  text-align: center;
+}
+
+@media (min-width: 1025px) {
+  .site-nav__cta {
+    display: none;
+  }
+}
+
+/* Page offset: header is two rows on desktop */
+body.site-page {
+  padding-top: 72px;
+}
+
+body.eduthink-home:not(.platform-home) {
+  padding-top: 0;
+}
+
+@media (min-width: 1025px) {
+  body.site-page {
+    padding-top: 118px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .site-nav__toggle {
+    display: flex;
+  }
+
+  body.site-page {
+    padding-top: 64px;
+  }
+
+  body.site-nav-lock {
+    overflow: hidden;
+  }
+}
+
+/* Quick strip sits below fixed header on home */
+.platform-home .yo-quickstrip {
+  position: sticky;
+  top: 64px;
+  z-index: 150;
+}
+
+@media (min-width: 1025px) {
+  .platform-home .yo-quickstrip {
+    top: 118px;
+  }
+}

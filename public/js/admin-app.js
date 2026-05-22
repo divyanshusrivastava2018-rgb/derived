@@ -10,8 +10,31 @@
   };
 
   var loginEl = document.getElementById("admin-login");
+  var appEl = document.getElementById("wpAdminApp");
   var dashEl = document.getElementById("admin-dash");
   var activeCourseTab = "youtube";
+
+  var PANEL_MAP = {
+    overview: "panel-overview",
+    blog: "panel-blog",
+    videos: "panel-videos",
+    liveyt: "panel-liveyt",
+    pages: "panel-pages",
+    news: "panel-news",
+    materials: "panel-materials",
+    leads: "panel-leads"
+  };
+
+  var BREADCRUMB = {
+    overview: "Home › Dashboard",
+    blog: "Home › Posts",
+    videos: "Home › Courses",
+    liveyt: "Home › Live & media",
+    pages: "Home › Pages",
+    news: "Home › News",
+    materials: "Home › Materials",
+    leads: "Home › People"
+  };
 
   function apiFetch(url, opts) {
     return fetch(url, Object.assign({ credentials: "same-origin" }, opts || {}));
@@ -37,7 +60,7 @@
 
   function showLogin() {
     if (loginEl) loginEl.hidden = false;
-    if (dashEl) dashEl.hidden = true;
+    if (appEl) appEl.hidden = true;
   }
 
   async function loadLoginHint() {
@@ -48,16 +71,54 @@
     info.textContent = "Credentials are configured on the server (not stored in this page).";
   }
 
+  function switchPanel(tab) {
+    var title = "Dashboard";
+    document.querySelectorAll(".adm-nav-item[data-tab], .wp-nav-item[data-tab]").forEach(function (btn) {
+      var t = btn.getAttribute("data-tab");
+      var on = t === tab;
+      btn.classList.toggle("is-active", on);
+      if (on && btn.getAttribute("data-title")) title = btn.getAttribute("data-title");
+    });
+    document.querySelectorAll(".admin-panel").forEach(function (p) {
+      p.hidden = true;
+    });
+    var panelId = PANEL_MAP[tab] || PANEL_MAP.overview;
+    var panel = document.getElementById(panelId);
+    if (panel) panel.hidden = false;
+    var titleEl = document.getElementById("wpPageTitle");
+    var crumbEl = document.getElementById("wpBreadcrumb");
+    if (titleEl) titleEl.textContent = title;
+    if (crumbEl) crumbEl.textContent = BREADCRUMB[tab] || BREADCRUMB.overview;
+    if (tab === "leads") loadLeadsTables();
+    if (tab === "overview") loadOverviewStats();
+  }
+
   function showDash() {
     if (loginEl) loginEl.hidden = true;
-    if (dashEl) dashEl.hidden = false;
+    if (appEl) appEl.hidden = false;
+    switchPanel("overview");
     loadBlogTable();
     loadCourseList();
     loadLiveYtForm();
     renderPageCopyEditor();
     loadNewsTable();
     loadMaterialsTable();
-    loadLeadsTables();
+  }
+
+  async function loadOverviewStats() {
+    if (!window.AdminDashboard) return;
+    try {
+      var r = await handleAuthResponse(
+        await apiFetch("/api/admin/dashboard", { headers: authHeaders() })
+      );
+      if (!r || !r.ok) return;
+      var data = await r.json();
+      window.AdminDashboard.render(data);
+      var dot = document.getElementById("admNotifDot");
+      if (dot) dot.hidden = !(data.stats && data.stats.newLeadsWeek > 0);
+    } catch (_) {
+      showToast("Could not load dashboard stats.", true);
+    }
   }
 
   async function handleAuthResponse(r) {
@@ -92,6 +153,12 @@
         return;
       }
       document.getElementById("adminPassword").value = "";
+      var label = document.getElementById("wpAdminUserLabel");
+      if (label) label.textContent = username || "Administrator";
+      var av = document.getElementById("admAvatarInitials");
+      if (av && username) {
+        av.textContent = username.slice(0, 2).toUpperCase();
+      }
       showDash();
       showToast("Signed in.");
     } catch {
@@ -121,32 +188,42 @@
     showToast("Signed out.");
   });
 
-  document.querySelectorAll(".admin-tab").forEach(function (btn) {
+  document.querySelectorAll(".adm-nav-item[data-tab], .wp-nav-item[data-tab]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var tab = btn.getAttribute("data-tab");
-      document.querySelectorAll(".admin-tab").forEach(function (b) {
-        b.classList.toggle("active", b === btn);
-      });
-      document.querySelectorAll(".admin-panel").forEach(function (p) {
-        p.hidden = true;
-      });
-      var map = {
-        blog: "panel-blog",
-        videos: "panel-videos",
-        liveyt: "panel-liveyt",
-        pages: "panel-pages",
-        news: "panel-news",
-        materials: "panel-materials",
-        leads: "panel-leads"
-      };
-      if (tab === "leads") loadLeadsTables();
-      var id = map[tab];
-      if (id) {
-        var el = document.getElementById(id);
-        if (el) el.hidden = false;
-      }
+      switchPanel(btn.getAttribute("data-tab"));
+      var sidebar = document.getElementById("admSidebar");
+      if (sidebar) sidebar.classList.remove("is-open");
     });
   });
+
+  document.querySelectorAll(".adm-quick-action[data-goto], .wp-quick-action[data-goto], .adm-card-action[data-goto]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      switchPanel(btn.getAttribute("data-goto"));
+    });
+  });
+
+  document.getElementById("admRefreshDash")?.addEventListener("click", function () {
+    loadOverviewStats();
+    showToast("Dashboard refreshed.");
+  });
+
+  document.getElementById("admNotifClose")?.addEventListener("click", function () {
+    document.getElementById("admNotifPanel")?.classList.remove("is-open");
+  });
+
+  document.querySelectorAll(".wp-people-tab").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var tab = btn.getAttribute("data-people-tab");
+      document.querySelectorAll(".wp-people-tab").forEach(function (b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+      var contacts = document.getElementById("peoplePanelContacts");
+      var signups = document.getElementById("peoplePanelSignups");
+      if (contacts) contacts.hidden = tab !== "contacts";
+      if (signups) signups.hidden = tab !== "signups";
+    });
+  });
+
 
   function esc(s) {
     var d = document.createElement("div");
@@ -854,6 +931,96 @@
     }
   });
 
+  function peopleAvatar(name, email) {
+    var seed = (name || email || "?").trim();
+    return seed.charAt(0).toUpperCase();
+  }
+
+  function formatPeopleDate(iso) {
+    if (!iso) return "—";
+    try {
+      return new Date(iso).toLocaleString(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    } catch {
+      return iso;
+    }
+  }
+
+  function renderPeopleList(leads) {
+    if (!leads.length) {
+      return '<p class="admin-muted">No contacts yet.</p>';
+    }
+    return (
+      '<ul class="wp-people-list">' +
+      leads
+        .map(function (l) {
+          var initial = peopleAvatar(l.name, l.email);
+          var subj = l.subject || l.plan || "General inquiry";
+          var msg = l.message
+            ? String(l.message).slice(0, 120) + (l.message.length > 120 ? "…" : "")
+            : "";
+          return (
+            '<li class="wp-people-row">' +
+            '<div class="wp-people-avatar">' +
+            esc(initial) +
+            "</div>" +
+            '<div class="wp-people-info"><strong>' +
+            esc(l.name || "Unknown") +
+            "</strong>" +
+            "<span>" +
+            esc(l.email || "") +
+            (l.phone ? " · " + esc(l.phone) : "") +
+            "</span>" +
+            (msg ? "<span>" + esc(msg) + "</span>" : "") +
+            "</div>" +
+            '<div class="wp-people-meta">' +
+            esc(formatPeopleDate(l.createdAt)) +
+            "<br />" +
+            esc(subj) +
+            "</div>" +
+            '<span class="wp-role-badge wp-role-badge--contact">' +
+            esc(l.type || "contact") +
+            "</span></li>"
+          );
+        })
+        .join("") +
+      "</ul>"
+    );
+  }
+
+  function renderSignupsList(rows) {
+    if (!rows.length) {
+      return '<p class="admin-muted">No sign-ups yet.</p>';
+    }
+    return (
+      '<ul class="wp-people-list">' +
+      rows
+        .map(function (row) {
+          var initial = peopleAvatar("", row.email);
+          return (
+            '<li class="wp-people-row">' +
+            '<div class="wp-people-avatar">' +
+            esc(initial) +
+            "</div>" +
+            '<div class="wp-people-info"><strong>' +
+            esc(row.email) +
+            "</strong>" +
+            "<span>Source: " +
+            esc(row.source || "signin") +
+            "</span></div>" +
+            '<div class="wp-people-meta">' +
+            esc(formatPeopleDate(row.createdAt)) +
+            "</div>" +
+            '<span class="wp-role-badge wp-role-badge--interest">Subscriber</span></li>"
+          );
+        })
+        .join("") +
+      "</ul>"
+    );
+  }
+
   async function loadLeadsTables() {
     var csirWrap = document.getElementById("csirLeadsTableWrap");
     var memberWrap = document.getElementById("memberInterestTableWrap");
@@ -866,38 +1033,9 @@
           await apiFetch("/api/admin/csir-leads", { headers: authHeaders() })
         );
         if (!r1 || !r1.ok) {
-          csirWrap.innerHTML = "<p>Could not load CSIR leads.</p>";
+          csirWrap.innerHTML = "<p>Could not load contacts.</p>";
         } else {
-          var leads = await r1.json();
-          if (!leads.length) {
-            csirWrap.innerHTML = "<p>No CSIR leads yet.</p>";
-          } else {
-            var rows1 = leads
-              .map(function (l) {
-                return (
-                  "<tr><td>" +
-                  esc(l.type || "—") +
-                  "</td><td>" +
-                  esc(l.name) +
-                  "</td><td>" +
-                  esc(l.email) +
-                  "</td><td>" +
-                  esc(l.phone || "—") +
-                  "</td><td>" +
-                  esc(l.subject || l.plan || "—") +
-                  "</td><td>" +
-                  esc(l.message ? String(l.message).slice(0, 80) + (l.message.length > 80 ? "…" : "") : "—") +
-                  "</td><td>" +
-                  esc(l.createdAt) +
-                  "</td></tr>"
-                );
-              })
-              .join("");
-            csirWrap.innerHTML =
-              '<table class="admin-table"><thead><tr><th>Type</th><th>Name</th><th>Email</th><th>Mobile</th><th>Subject</th><th>Message</th><th>Created</th></tr></thead><tbody>' +
-              rows1 +
-              "</tbody></table>";
-          }
+          csirWrap.innerHTML = renderPeopleList(await r1.json());
         }
       }
       if (memberWrap) {
@@ -905,35 +1043,14 @@
           await apiFetch("/api/admin/member-interest", { headers: authHeaders() })
         );
         if (!r2 || !r2.ok) {
-          memberWrap.innerHTML = "<p>Could not load member interest.</p>";
+          memberWrap.innerHTML = "<p>Could not load sign-ups.</p>";
         } else {
-          var interest = await r2.json();
-          if (!interest.length) {
-            memberWrap.innerHTML = "<p>No sign-in interest emails yet.</p>";
-          } else {
-            var rows2 = interest
-              .map(function (row) {
-                return (
-                  "<tr><td>" +
-                  esc(row.email) +
-                  "</td><td>" +
-                  esc(row.source) +
-                  "</td><td>" +
-                  esc(row.createdAt) +
-                  "</td></tr>"
-                );
-              })
-              .join("");
-            memberWrap.innerHTML =
-              '<table class="admin-table"><thead><tr><th>Email</th><th>Source</th><th>Created</th></tr></thead><tbody>' +
-              rows2 +
-              "</tbody></table>";
-          }
+          memberWrap.innerHTML = renderSignupsList(await r2.json());
         }
       }
     } catch {
-      if (csirWrap) csirWrap.innerHTML = "<p>Failed to load leads.</p>";
-      if (memberWrap) memberWrap.innerHTML = "<p>Failed to load interest.</p>";
+      if (csirWrap) csirWrap.innerHTML = "<p>Failed to load contacts.</p>";
+      if (memberWrap) memberWrap.innerHTML = "<p>Failed to load sign-ups.</p>";
     }
   }
 

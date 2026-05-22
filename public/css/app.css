@@ -1,100 +1,9 @@
-/* Theme: Eduthink-style eLearning — primary blue, coral accent, light surfaces */
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
-@import url("eduthink-layout.css");
+/* Researchium page styles — tokens, nav, layout imported below */
+@import url("rm-variables.css");
+@import url("site-nav.css");
+@import url("yo-platform.css");
+@import url("rm-layout.css");
 
-:root {
-  --ac-primary: #2b6cb0;
-  --ac-primary-light: #4299e1;
-  --ac-accent: #ed8936;
-  --ac-page: #f7fafc;
-  --ac-surface: #ffffff;
-  --ac-surface-muted: #f7fafc;
-  --ac-surface-elevated: #edf2f7;
-  --ac-border: #e2e8f0;
-  --ac-text: #1a202c;
-  --ac-muted: #4a5568;
-  --ac-footer: #1a202c;
-  --ac-footer-muted: #a0aec0;
-  --on-primary: #ffffff;
-
-  --ac-primary-rgb: 43, 108, 176;
-  --ac-primary-light-rgb: 66, 153, 225;
-  --ac-accent-rgb: 237, 137, 54;
-
-  --fh: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
-  --fb: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
-  --r: 12px;
-  --tr: all 0.3s ease-in-out;
-  --shadow-sm: 0 1px 2px rgba(26, 32, 44, 0.06);
-  --shadow-card: 0 4px 6px -1px rgba(26, 32, 44, 0.08), 0 2px 4px -2px rgba(26, 32, 44, 0.06);
-  --shadow-lg: 0 10px 25px -5px rgba(43, 108, 176, 0.18);
-
-  /* Legacy names — used across existing rules */
-  --navy: var(--ac-page);
-  --navy-2: var(--ac-surface-muted);
-  --navy-3: var(--ac-surface);
-  --navy-4: var(--ac-surface-elevated);
-  --gold: var(--ac-primary);
-  --gold-light: var(--ac-primary-light);
-  --white: #ffffff;
-  --muted: var(--ac-muted);
-  --red: #ef4444;
-  --green: #059669;
-}
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  background: var(--ac-page);
-  color: var(--ac-muted);
-  font-family: var(--fb);
-  font-size: 16px;
-  line-height: 1.625;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.logo,
-.page-hero h1,
-.home-hero h1 {
-  color: var(--ac-text);
-  letter-spacing: -0.02em;
-}
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--ac-border);
-  box-shadow: var(--shadow-sm);
-}
-.nav-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 28px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
 .logo {
   font-family: var(--fh);
   font-size: 22px;
@@ -110,59 +19,6 @@ a {
 .logo-icon {
   color: var(--ac-accent);
   font-size: 20px;
-}
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 28px;
-}
-.nav-links a {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-  transition: var(--tr);
-}
-.nav-links a:hover,
-.nav-links a.nav-active {
-  color: var(--ac-primary);
-}
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.btn-ghost {
-  padding: 9px 20px;
-  border: 2px solid var(--ac-primary);
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ac-primary);
-  font-family: var(--fb);
-  cursor: pointer;
-  transition: var(--tr);
-  background: transparent;
-}
-.btn-ghost:hover {
-  background: rgba(var(--ac-primary-rgb), 0.08);
-}
-.btn-gold {
-  padding: 10px 22px;
-  background: linear-gradient(135deg, var(--ac-primary) 0%, var(--ac-primary-light) 100%);
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--on-primary);
-  font-family: var(--fb);
-  cursor: pointer;
-  border: none;
-  transition: var(--tr);
-  box-shadow: 0 4px 14px rgba(var(--ac-primary-rgb), 0.35);
-}
-.btn-gold:hover {
-  background: linear-gradient(135deg, var(--ac-primary-light) 0%, var(--ac-primary) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(var(--ac-primary-rgb), 0.4);
 }
 
 .page-hero {
@@ -1208,11 +1064,7 @@ body[data-page="courses"] .admin-catalog-hint a {
 }
 
 .site-header-mount {
-  min-height: 70px;
-}
-
-.site-header-mount:has(.navbar.et-nav .nav-menu) {
-  min-height: 76px;
+  min-height: 0;
 }
 .site-footer-extended {
   text-align: left;
@@ -2626,9 +2478,7 @@ body[data-page="courses"] .admin-catalog-hint a {
   }
 }
 @media (max-width: 600px) {
-  .navbar:not(.nav-open) .nav-menu {
-    display: none;
-  }
+  /* Mobile nav: see /css/site-nav.css */
   .form-row {
     grid-template-columns: 1fr;
   }

@@ -1,0 +1,703 @@
+/* Yes Officer–inspired platform UI — layout & components (Researchium content only) */
+
+.platform-home {
+  padding-top: 64px;
+  background: var(--yo-bg, #f4f6fb);
+}
+
+@media (min-width: 1025px) {
+  .platform-home {
+    padding-top: 118px;
+  }
+}
+
+/* —— Hero carousel —— */
+.yo-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 42%, #7c3aed 100%);
+  color: #fff;
+  min-height: 420px;
+}
+
+.yo-hero__slides {
+  position: relative;
+  min-height: 420px;
+}
+
+.yo-hero__slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.yo-hero__slide.is-active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.yo-hero__inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4rem;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .yo-hero__inner {
+    grid-template-columns: 1.1fr 0.9fr;
+    padding: 4rem 2rem 4.5rem;
+  }
+}
+
+.yo-hero__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.yo-hero h1 {
+  color: #fff;
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.yo-hero__lead {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 36rem;
+  margin-bottom: 1.5rem;
+}
+
+.yo-hero__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.yo-hero__stat strong {
+  font-size: 1.5rem;
+  color: #fde68a;
+}
+
+.yo-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.yo-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.yo-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.yo-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 1.35rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.yo-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.yo-hero__visual {
+  display: flex;
+  justify-content: center;
+}
+
+.yo-hero__visual img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.yo-hero__dots {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.yo-hero__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  padding: 0;
+}
+
+.yo-hero__dot.is-active {
+  background: #fbbf24;
+  width: 28px;
+  border-radius: 999px;
+}
+
+/* —— Quick links strip (below header) —— */
+.yo-quickstrip {
+  background: #fff;
+  border-bottom: 1px solid var(--ac-border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.yo-quickstrip__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.65rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.yo-quickstrip a {
+  flex-shrink: 0;
+  padding: 0.45rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ac-text);
+  background: var(--yo-bg);
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.yo-quickstrip a:hover {
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--yo-primary);
+}
+
+/* —— Section shell —— */
+.yo-section {
+  padding: 3.5rem 0;
+}
+
+.yo-section--white {
+  background: #fff;
+}
+
+.yo-section--muted {
+  background: var(--yo-bg);
+}
+
+.yo-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .yo-wrap {
+    padding: 0 1.5rem;
+  }
+}
+
+.yo-head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.yo-head--left {
+  text-align: left;
+}
+
+.yo-head h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--ac-text);
+  margin-bottom: 0.5rem;
+}
+
+.yo-head p {
+  color: var(--ac-muted);
+  font-size: 1rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.yo-head--left p {
+  margin: 0;
+}
+
+.yo-label {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--yo-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* —— Live classes row —— */
+.yo-live-row {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.yo-live-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.yo-live-card:hover {
+  box-shadow: var(--shadow-card);
+  transform: translateY(-3px);
+}
+
+.yo-live-card__thumb {
+  height: 120px;
+  background: linear-gradient(145deg, #ede9fe, #c4b5fd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.yo-live-card__body {
+  padding: 0.85rem 1rem;
+}
+
+.yo-live-card__tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #dc2626;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.yo-live-card h3 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ac-text);
+  margin-bottom: 0.2rem;
+}
+
+.yo-live-card p {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+}
+
+/* —— Product explore grid —— */
+.yo-products {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+  .yo-products {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.yo-product-card {
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.yo-product-card:hover {
+  border-color: var(--yo-primary-light);
+  box-shadow: var(--shadow-lg);
+}
+
+.yo-product-card__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+
+.yo-product-card__icon--pdf {
+  background: #fef3c7;
+}
+.yo-product-card__icon--mock {
+  background: #dbeafe;
+}
+.yo-product-card__icon--live {
+  background: #fce7f3;
+}
+.yo-product-card__icon--quiz {
+  background: #d1fae5;
+}
+
+.yo-product-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: var(--ac-text);
+}
+
+.yo-product-card p {
+  font-size: 0.8125rem;
+  color: var(--ac-muted);
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.yo-product-card__btn {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--yo-primary);
+}
+
+/* —— Benefits + CTA band —— */
+.yo-benefits-band {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .yo-benefits-band {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.yo-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.yo-benefit-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ac-text);
+}
+
+.yo-benefit-pill span:first-child {
+  font-size: 1.1rem;
+}
+
+.yo-app-mock {
+  background: linear-gradient(160deg, #4c1d95, #7c3aed);
+  border-radius: 20px;
+  padding: 2rem;
+  color: #fff;
+  text-align: center;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.yo-app-mock__icon {
+  font-size: 4rem;
+}
+
+/* —— YouTube channels —— */
+.yo-yt-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .yo-yt-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .yo-yt-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.yo-yt-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease;
+}
+
+.yo-yt-card:hover {
+  box-shadow: var(--shadow-card);
+}
+
+.yo-yt-card__logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #fee2e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.yo-yt-card h3 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ac-text);
+}
+
+.yo-yt-card p {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+}
+
+/* —— Success stories (card carousel) —— */
+.yo-stories-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scroll-snap-type: x mandatory;
+}
+
+.yo-story-card {
+  flex: 0 0 min(320px, 85vw);
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.yo-story-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.yo-story-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yo-story-card__name {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--ac-text);
+}
+
+.yo-story-card__handle {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+}
+
+.yo-story-card blockquote {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ac-muted);
+  font-style: normal;
+}
+
+/* —— How it works steps —— */
+.yo-steps {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .yo-steps {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.yo-step {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 14px;
+}
+
+.yo-step__num {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: var(--yo-primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yo-step h3 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.yo-step p {
+  font-size: 0.75rem;
+  color: var(--ac-muted);
+  line-height: 1.45;
+}
+
+/* —— FAQ —— */
+.yo-faq {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.yo-faq details {
+  background: #fff;
+  border: 1px solid var(--ac-border);
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.yo-faq summary {
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  color: var(--ac-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.yo-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.yo-faq details[open] summary {
+  border-bottom: 1px solid var(--ac-border);
+}
+
+.yo-faq__body {
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--ac-muted);
+  line-height: 1.55;
+}
+
+/* Courses grid reuse */
+.yo-courses-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.yo-courses-grid .et-course-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.yo-courses-grid .loading-banner {
+  grid-column: 1 / -1;
+}
+
+.yo-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.yo-link {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--yo-primary);
+}
+
+.yo-link:hover {
+  text-decoration: underline;
+}

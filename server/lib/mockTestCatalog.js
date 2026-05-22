@@ -175,13 +175,15 @@ let gateQuizById = null;
 
 function loadGateQuizById() {
   if (gateQuizById) return gateQuizById;
-  const bank = JSON.parse(fs.readFileSync(GATE_BANK_FILE, 'utf8'));
+  const { bank, answers } = gateMcqBank.loadBank();
   gateQuizById = {};
-  bank.questions.forEach((q) => {
+  (bank.questions || []).forEach((q) => {
+    const answerIndex = gateMcqBank.answerIndexFor(q, answers);
+    if (typeof answerIndex !== 'number') return;
     const item = formatQuizItem({
       question: q.text,
       options: q.options,
-      answerIndex: q.answerIndex
+      answerIndex
     });
     gateQuizById[q.id] = item;
   });

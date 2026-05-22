@@ -79,7 +79,7 @@ router.post('/login', jsonParser, (req, res) => {
   clearRateLimit(req, username);
   const token = adminSessions.createSession();
   res.setHeader('Set-Cookie', adminCookieOptions(token));
-  res.json({ ok: true, token, expiresIn: 86400 });
+  res.json({ ok: true, expiresIn: 86400 });
 });
 
 router.post('/logout', (req, res) => {
