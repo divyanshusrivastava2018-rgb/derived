@@ -161,6 +161,41 @@
     });
   }
 
+  function apiFailMessage(fail) {
+    if (!fail) return "";
+    if (Err.formatErrMessage) return Err.formatErrMessage(fail);
+    if (fail.error) return String(fail.error);
+    return "Request failed";
+  }
+
+  function isSessionOrRoute404(fail) {
+    if (!fail || fail.status !== 404) return false;
+    var msg = apiFailMessage(fail).toLowerCase();
+    return (
+      msg.indexOf("session") >= 0 ||
+      msg.indexOf("expired") >= 0 ||
+      msg.indexOf("not found") >= 0 ||
+      msg.indexOf("api") >= 0
+    );
+  }
+
+  function postGateSubmit(responses, allowRetry) {
+    return gateFetch(gateSubmitPath(), {
+      method: "POST",
+      body: { sessionId: sessionId || "", responses: responses }
+    }).catch(function (fail) {
+      if (!allowRetry) throw fail;
+      if (!isSessionOrRoute404(fail) && (!fail || fail.status !== 404)) throw fail;
+      sessionId = "";
+      return ensureGateSession().then(function () {
+        return gateFetch(gateSubmitPath(), {
+          method: "POST",
+          body: { sessionId: sessionId, responses: responses }
+        });
+      });
+    });
+  }
+
   function showView(id) {
     VIEWS.forEach(function (v) {
       var el = $(v);
@@ -647,10 +682,7 @@
 
     ensureGateSession()
       .then(function () {
-        return gateFetch(gateSubmitPath(), {
-          method: "POST",
-          body: { sessionId: sessionId, responses: responses }
-        });
+        return postGateSubmit(responses, true);
       })
       .then(function (j) {
         if ($("resultTitle")) $("resultTitle").textContent = paper.title + " — Submitted";
@@ -702,7 +734,12 @@
         }
       })
       .catch(function (err) {
-        showGateAlert(err, "Submission failed");
+        var msg = Err.formatErrMessage ? Err.formatErrMessage(err) : errorToMessage(err, "");
+        if (gatePracticeOnly && msg.toLowerCase().indexOf("api") >= 0) {
+          msg =
+            "Scoring needs the live API. Start the server (npm start) and open this site from the same host, not static files only.";
+        }
+        showGateAlert(msg || "Submission failed. Refresh the page and try again.", "Submission failed");
       });
   }
 

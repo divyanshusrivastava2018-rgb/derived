@@ -43,7 +43,10 @@
           case 403:
             return "Access denied. You may not have permission for this action.";
           case 404:
-            return "The page or resource could not be found (404).";
+            return (
+              "Exam submit API was not found (404). Ensure the Node server is running and nginx proxies /api to it. " +
+              "If you already started the test, refresh and try again."
+            );
           case 408:
             return "The request timed out. Check your internet connection and retry.";
           case 429:

@@ -90,20 +90,29 @@ router.post('/paper/:slug/start', startLimiter, jsonParser, (req, res) => {
 });
 
 router.post('/paper/:slug/submit', submitLimiter, jsonParser, (req, res) => {
+  const slug = String(req.params.slug || '').trim();
   const body = req.body || {};
   const sessionId = typeof body.sessionId === 'string' ? body.sessionId.trim() : '';
   const responses = body.responses && typeof body.responses === 'object' ? body.responses : {};
 
-  if (!sessionId) {
-    return res.status(400).json({ error: 'sessionId is required. Start the paper first.' });
+  let paper = null;
+  const session = sessionId ? ACTIVE_SESSIONS.get(sessionId) : null;
+
+  if (session) {
+    if (session.slug !== slug) {
+      return res.status(400).json({ error: 'Session does not match this paper.' });
+    }
+    paper = session.paper;
+    ACTIVE_SESSIONS.delete(sessionId);
+  } else {
+    /* Session lost (server restart, load balancer, or long break) — still score if paper exists. */
+    paper = gateMcqBank.getPaper(slug);
+    if (!paper) {
+      return res.status(404).json({
+        error: 'Exam session expired or paper not found. Refresh the page and start the mock again.'
+      });
+    }
   }
-  const session = ACTIVE_SESSIONS.get(sessionId);
-  if (!session) return res.status(404).json({ error: 'Session expired. Start again.' });
-  if (session.slug !== req.params.slug) {
-    return res.status(400).json({ error: 'Session does not match this paper.' });
-  }
-  const paper = session.paper;
-  ACTIVE_SESSIONS.delete(sessionId);
 
   const result = gateMcqBank.scorePaper(paper, responses);
   res.json({ ok: true, ...result, year: paper.year, title: paper.title });

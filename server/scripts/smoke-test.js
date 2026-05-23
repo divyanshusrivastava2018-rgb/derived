@@ -256,6 +256,20 @@ async function main() {
       fail(`GATE submit should include sections[]`);
     }
 
+    res = await req('POST', '/api/mcq/gate/paper/2018/start', { body: {} });
+    const gateResponses2 = {};
+    (res.json.paper.sections || []).forEach((sec) => {
+      (sec.questions || []).forEach((q) => {
+        gateResponses2[q.id] = -1;
+      });
+    });
+    res = await req('POST', '/api/mcq/gate/paper/2018/submit', {
+      body: { sessionId: 'expired-fake-session', responses: gateResponses2 }
+    });
+    if (res.status !== 200 || typeof res.json.score !== 'number') {
+      fail(`GATE submit should score without valid session (stateless fallback)`);
+    }
+
     res = await req('GET', '/mock-analysis.html');
     if (res.status !== 200 || !res.text.includes('mock-analysis.js')) {
       fail(`/mock-analysis.html should be served`);
