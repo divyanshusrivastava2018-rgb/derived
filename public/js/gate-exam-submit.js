@@ -30,6 +30,57 @@
     alert((title || "Error") + "\n\n" + errMsg(err));
   }
 
+  function normalizeSubmitError(msg, status) {
+    var m = String(msg || "").trim();
+    var lower = m.toLowerCase();
+    if (
+      status === 404 ||
+      lower.indexOf("page could not be found") >= 0 ||
+      lower.indexOf("exam submit api was not found") >= 0 ||
+      (lower.indexOf("not found") >= 0 && lower.indexOf("paper not found") < 0 && lower.indexOf("question not found") < 0)
+    ) {
+      var apiHost = "";
+      try {
+        apiHost = new URL(apiBase() + "/healthz", window.location.origin).origin;
+      } catch {
+        apiHost = "the exam API host";
+      }
+      return (
+        "Exam scoring is unavailable (404). The page loaded, but " +
+        apiHost +
+        " did not respond.\n\n" +
+        "Use the live site at https://www.derived.co.in with the Node server running, " +
+        "or run npm start locally and open http://localhost:3000/gate-exam.html"
+      );
+    }
+  }
+
+  function parseResponseBody(res, text) {
+    var body = text == null ? "" : String(text).trim();
+    if (!body) {
+      if (res.status === 404) {
+        throw new Error(normalizeSubmitError("", 404));
+      }
+      throw new Error("Server returned an empty response (status " + res.status + ").");
+    }
+    if (body.charAt(0) === "<") {
+      if (res.status === 404) {
+        throw new Error(normalizeSubmitError("The page could not be found", 404));
+      }
+      throw new Error(
+        "API returned HTML instead of JSON. Ensure the Node server is running and /api is proxied correctly."
+      );
+    }
+    try {
+      return JSON.parse(body);
+    } catch {
+      if (res.status === 404) {
+        throw new Error(normalizeSubmitError(body, 404));
+      }
+      throw new Error("Server returned an unexpected response (status " + res.status + ").");
+    }
+  }
+
   function apiFetch(url, options) {
     var opts = Object.assign(
       {
@@ -52,28 +103,22 @@
         throw new Error(msg);
       })
       .then(function (res) {
-        return res
-          .json()
-          .catch(function () {
-            if (res.status === 404) {
-              throw new Error(
-                "Exam submit API was not found (404). Make sure the Node server is running and nginx proxies /api to it."
-              );
-            }
-            throw new Error("Server returned an unexpected response (status " + res.status + ").");
-          })
-          .then(function (json) {
-            if (!res.ok) {
-              var serverMsg =
-                json && json.error != null
-                  ? errMsg(json.error)
-                  : json && json.message != null
-                    ? errMsg(json.message)
-                    : "";
-              throw new Error(serverMsg || "Request failed with status " + res.status + ".");
-            }
-            return json;
-          });
+        return res.text().then(function (text) {
+          var json = parseResponseBody(res, text);
+          if (!res.ok) {
+            var serverMsg =
+              json && json.error != null
+                ? errMsg(json.error)
+                : json && json.message != null
+                  ? errMsg(json.message)
+                  : "";
+            var friendly = normalizeSubmitError(serverMsg, res.status) || serverMsg;
+            var err = new Error(friendly || "Request failed with status " + res.status + ".");
+            err.status = res.status;
+            throw err;
+          }
+          return json;
+        });
       });
   }
 
@@ -87,7 +132,7 @@
             "The exam server did not respond in time. Check your connection or try refreshing the page."
           )
         );
-      }, 5000);
+      }, 8000);
 
       var opts = controller ? { signal: controller.signal, method: "GET" } : { method: "GET" };
 
@@ -124,18 +169,28 @@
     });
   }
 
-  function isRecoverableSubmitError(msg) {
+  function ensureSession(slug, sessionId) {
+    var sid = String(sessionId || "").trim();
+    if (sid) return Promise.resolve(sid);
+    return startNewSession(slug);
+  }
+
+  function isRecoverableSubmitError(msg, status) {
     var m = String(msg || "").toLowerCase();
-    return (
-      m.indexOf("not found") >= 0 ||
-      m.indexOf("session") >= 0 ||
-      m.indexOf("expired") >= 0 ||
-      m.indexOf("404") >= 0
-    );
+    if (status === 403 && (m.indexOf("session") >= 0 || m.indexOf("start the examination") >= 0)) {
+      return true;
+    }
+    if (m.indexOf("session expired") >= 0 || m.indexOf("invalid session") >= 0) {
+      return true;
+    }
+    if (m.indexOf("session") >= 0 && m.indexOf("required") >= 0) {
+      return true;
+    }
+    return false;
   }
 
   /**
-   * @param {{ slug: string, sessionId?: string, responses: object, onSuccess?: Function, onError?: Function, onLoading?: Function }} options
+   * @param {{ slug: string, sessionId?: string, responses: object, onSuccess?: Function, onError?: Function, onLoading?: Function, onSessionId?: Function }} options
    */
   function submitExam(options) {
     var opts = options || {};
@@ -149,6 +204,7 @@
         showErr(msg, "Submission failed");
       };
     var onLoading = opts.onLoading || function () {};
+    var onSessionId = opts.onSessionId || function () {};
 
     if (!slug) {
       onError("No paper selected. Please refresh and try again.");
@@ -159,7 +215,13 @@
 
     checkApiHealth()
       .then(function () {
-        return doSubmit(slug, sessionId, responses);
+        return ensureSession(slug, sessionId);
+      })
+      .then(function (activeSessionId) {
+        if (activeSessionId && activeSessionId !== sessionId) {
+          onSessionId(activeSessionId);
+        }
+        return doSubmit(slug, activeSessionId, responses);
       })
       .then(function (result) {
         onLoading(false);
@@ -167,10 +229,12 @@
       })
       .catch(function (firstErr) {
         var msg = errMsg(firstErr);
+        var status = firstErr && firstErr.status;
 
-        if (isRecoverableSubmitError(msg)) {
+        if (isRecoverableSubmitError(msg, status)) {
           startNewSession(slug)
             .then(function (newSessionId) {
+              onSessionId(newSessionId);
               return doSubmit(slug, newSessionId, responses);
             })
             .then(function (result) {
@@ -179,15 +243,7 @@
             })
             .catch(function (retryErr) {
               onLoading(false);
-              var retryMsg = errMsg(retryErr);
-              if (/not found|404/i.test(retryMsg)) {
-                onError(
-                  "The submit endpoint could not be found (404).\n\n" +
-                    "This usually means the Node server is not running or nginx is not proxying /api to it."
-                );
-              } else {
-                onError(retryMsg);
-              }
+              onError(errMsg(retryErr));
             });
           return;
         }
@@ -200,6 +256,7 @@
   window.GateExamSubmit = {
     submitExam: submitExam,
     checkApiHealth: checkApiHealth,
-    startNewSession: startNewSession
+    startNewSession: startNewSession,
+    ensureSession: ensureSession
   };
 })();

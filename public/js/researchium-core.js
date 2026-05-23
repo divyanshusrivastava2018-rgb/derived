@@ -9,7 +9,22 @@
 
   var meta = document.querySelector('meta[name="researchium-api-base"]');
   var configured = (meta && meta.getAttribute("content")) || window.RESEARCHIUM_API_BASE || "";
-  var API_BASE = String(configured).replace(/\/$/, "");
+
+  function inferApiBase() {
+    if (configured && String(configured).trim()) return String(configured).trim();
+    try {
+      var host = window.location.hostname || "";
+      if (host === "localhost" || host === "127.0.0.1") return "";
+      if (host.endsWith(".github.io") || host === "github.io") {
+        return "https://www.derived.co.in";
+      }
+    } catch {
+      /* ignore */
+    }
+    return "";
+  }
+
+  var API_BASE = String(inferApiBase()).replace(/\/$/, "");
 
   function apiUrl(path) {
     var p = path.charAt(0) === "/" ? path : "/" + path;

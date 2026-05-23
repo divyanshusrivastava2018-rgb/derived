@@ -759,6 +759,9 @@
       slug: String(year).trim(),
       sessionId: sessionId,
       responses: responses,
+      onSessionId: function (newId) {
+        sessionId = newId || "";
+      },
       onLoading: function (loading) {
         if (submitBtn) submitBtn.disabled = !!loading;
         if (confirmBtn) confirmBtn.disabled = !!loading;
@@ -770,9 +773,15 @@
         onSubmitSuccess(j);
       },
       onError: function (msg) {
-        if (gatePracticeOnly && String(msg).toLowerCase().indexOf("api") >= 0) {
+        var text = String(msg || "");
+        if (
+          gatePracticeOnly ||
+          /page could not be found|exam scoring is unavailable|404|submit api|unavailable/i.test(text)
+        ) {
           showGateAlert(
-            "Scoring needs the live API. Start the server (npm start) and open this site from the same host, not static files only.",
+            text.indexOf("Exam scoring is unavailable") >= 0
+              ? text
+              : "Scoring needs the live API. Open https://www.derived.co.in/gate-exam.html or run npm start locally (http://localhost:3000).",
             "Submission failed"
           );
           return;

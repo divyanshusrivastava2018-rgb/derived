@@ -28,6 +28,12 @@ CORS_ORIGIN=https://www.derived.co.in
 
 Ensure nginx (or your proxy) does **not** serve `server/data/` — only `public/` and `/api` to Node.
 
+If you deploy **static files to GitHub Pages**, the exam UI must call the live API on `https://www.derived.co.in`. The client auto-detects `*.github.io` and sets the API base. Add your Pages origin to `CORS_ORIGIN` on the server:
+
+```bash
+CORS_ORIGIN=https://www.derived.co.in,https://YOUR_USER.github.io
+```
+
 ## AI solver
 
 `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` are server-only. Solutions are rate-limited per IP and per `reviewToken` (max 60 questions per attempt).
