@@ -155,6 +155,20 @@
 
     <!-- Step 3: Examination -->
     <div id="view-exam" class="gate-screen gate-hidden">
+      <div id="gateScoreStrip" class="gate-score-strip gate-hidden" aria-live="polite">
+        <div class="gate-score-strip__head">
+          <div>
+            <p class="gate-score-strip__title" id="gateScoreTitle">Examination submitted</p>
+            <p class="gate-score-strip__sub" id="gateScoreSub"></p>
+          </div>
+          <p class="gate-score-strip__pct" id="gateScorePct">—</p>
+        </div>
+        <div class="gate-score-cards" id="gateScoreCards"></div>
+        <div class="gate-score-strip__foot">
+          <span class="gate-score-strip__hint">Review each question below — correct answers are highlighted.</span>
+          <a href="/mock-analysis.html" class="gate-btn-nav" id="gateLinkAnalysis">Detailed analysis</a>
+        </div>
+      </div>
       <div class="gate-exam-toolbar">
         <div class="gate-exam-toolbar-left">
           <span class="gate-exam-subject-tab" id="examPaperTitle">MA Mathematics</span>
@@ -175,6 +189,7 @@
             <p class="gate-q-text"><strong id="qNumber">Question No. 1</strong></p>
             <p class="gate-q-body" id="qText"></p>
             <div class="gate-options" id="qOptions"></div>
+            <div id="qSolution" class="gate-solution-panel gate-hidden" role="region" aria-label="Solution"></div>
           </div>
           <div class="gate-exam-actions">
             <div class="gate-exam-actions-left">
@@ -255,6 +270,7 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
     <script src="/js/math-render.js"></script>
+    <script src="/js/researchium-errors.js"></script>
     <script src="/js/researchium-core.js"></script>
     <script src="/js/gate-exam.js"></script>
   </body>

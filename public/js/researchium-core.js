@@ -1,8 +1,11 @@
 /**
  * Researchium client core — API client + cached site config (from scratch).
+ * Error helpers: /js/researchium-errors.js (load before this file on GATE exam).
  */
 (function () {
   "use strict";
+
+  var Err = window.ResearchiumErrors || {};
 
   var meta = document.querySelector('meta[name="researchium-api-base"]');
   var configured = (meta && meta.getAttribute("content")) || window.RESEARCHIUM_API_BASE || "";
@@ -27,23 +30,6 @@
     if (apiPath.indexOf("/api/mcq/gate/papers") === 0) return "/data/offline-gate-papers.json";
     if (apiPath.indexOf("/api/platform/overview") === 0) return "/data/offline-platform-overview.json";
     return null;
-  }
-
-  function formatApiError(value) {
-    if (value == null || value === "") return "";
-    if (typeof value === "string") return value;
-    if (typeof value === "object") {
-      if (typeof value.error === "string") return value.error;
-      if (value.error != null) return formatApiError(value.error);
-      if (typeof value.message === "string") return value.message;
-      if (value.message != null) return formatApiError(value.message);
-      try {
-        return JSON.stringify(value);
-      } catch {
-        return "Request failed";
-      }
-    }
-    return String(value);
   }
 
   function fetchOffline(apiPath) {
@@ -78,22 +64,43 @@
       options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(options.body);
     }
-    return fetch(url, options).then(function (r) {
-      return r.json().then(function (json) {
-        if (!r.ok) {
-          var err = new Error(
-            formatApiError(json && json.error) ||
-              formatApiError(json && json.message) ||
-              r.statusText ||
-              "Request failed"
-          );
-          err.status = r.status;
-          err.body = json;
-          throw err;
-        }
-        return json;
+    return fetch(url, options)
+      .catch(function (networkErr) {
+        var msg = Err.errorToMessage
+          ? Err.errorToMessage(networkErr)
+          : networkErr.message || "Network error";
+        throw new Error(msg);
+      })
+      .then(function (r) {
+        return r.text().then(function (text) {
+          var json = null;
+          if (text && text.trim().charAt(0) === "{") {
+            try {
+              json = JSON.parse(text);
+            } catch (parseErr) {
+              json = null;
+            }
+          }
+          if (!r.ok) {
+            var fail = Err.httpFailPayload
+              ? Err.httpFailPayload(r.status, json)
+              : { status: r.status, error: json && json.error, message: json && json.message };
+            var err = new Error(
+              Err.formatErrMessage ? Err.formatErrMessage(fail) : r.statusText || "Request failed"
+            );
+            err.status = r.status;
+            err.body = json;
+            throw err;
+          }
+          if (json != null) return json;
+          if (text && text.trim().charAt(0) === "<") {
+            throw new Error(
+              "API returned HTML instead of JSON. Ensure the Node server is running and /api is proxied correctly."
+            );
+          }
+          return text ? JSON.parse(text) : {};
+        });
       });
-    });
   }
 
   var healthPromise = null;

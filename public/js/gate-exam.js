@@ -1,4 +1,11 @@
+/**
+ * GATE CBT mock — uses ResearchiumErrors (researchium-errors.js) + ResearchiumApi (researchium-core.js).
+ */
 (function () {
+  "use strict";
+
+  var Err = window.ResearchiumErrors || {};
+
   var params = new URLSearchParams(window.location.search);
   var year = params.get("year") || params.get("paper") || "2024";
   var candidate = params.get("name") || "Candidate";
@@ -6,6 +13,9 @@
   var paper = null;
   var sessionId = "";
   var gatePracticeOnly = false;
+  var reviewMode = false;
+  var reviewById = {};
+  var submitResult = null;
   var allQuestions = [];
   var currentIndex = 0;
   var currentSectionKey = "";
@@ -33,35 +43,14 @@
     return d.innerHTML;
   }
 
-  /** Turn API / Error values into readable text (never "[object Object]"). */
-  function formatErrMessage(value) {
-    if (value == null || value === "") return "";
-    if (typeof value === "string") return value;
-    if (value instanceof Error) {
-      var em = value.message;
-      if (em && em !== "[object Object]") return em;
-      return formatErrMessage(value.body || value.cause);
-    }
-    if (typeof value === "object") {
-      if (typeof value.error === "string") return value.error;
-      if (value.error != null) return formatErrMessage(value.error);
-      if (typeof value.message === "string") return value.message;
-      if (value.message != null && typeof value.message !== "object") {
-        return String(value.message);
-      }
-      if (value.message != null) return formatErrMessage(value.message);
-      try {
-        return JSON.stringify(value);
-      } catch (stringifyErr) {
-        return "Something went wrong. Please try again.";
-      }
-    }
-    return String(value);
+  function formatErrMessage(err) {
+    if (Err.formatErrMessage) return Err.formatErrMessage(err);
+    return err && err.message ? String(err.message) : "Something went wrong. Please try again.";
   }
 
   function errorToMessage(err, fallback) {
-    var msg = formatErrMessage(err);
-    if (msg && msg !== "[object Object]") return msg;
+    var msg = Err.formatErrMessage ? Err.formatErrMessage(err) : formatErrMessage(err);
+    if (msg && msg.indexOf("unknown error") === -1) return msg;
     return fallback || "Something went wrong. Please try again.";
   }
 
@@ -105,11 +94,16 @@
       return r.text().then(function (text) {
         var json = parseApiBody(r, text);
         if (!r.ok) {
-          var apiMsg = formatErrMessage(json && json.error) || formatErrMessage(json && json.message);
-          throw new Error(apiMsg || "Request failed (" + r.status + ")");
+          var fail = Err.httpFailPayload
+            ? Err.httpFailPayload(r.status, json)
+            : { status: r.status, error: json && json.error, message: json && json.message };
+          throw fail;
         }
         return json;
       });
+    }).catch(function (networkErr) {
+      if (networkErr && networkErr.status) throw networkErr;
+      throw new Error(Err.errorToMessage ? Err.errorToMessage(networkErr) : "Network error");
     });
   }
 
@@ -203,12 +197,91 @@
   }
 
   function statusOf(qid) {
+    if (reviewMode && reviewById[qid]) {
+      var rs = reviewById[qid].status;
+      if (rs === "correct") return "review-correct";
+      if (rs === "incorrect") return "review-wrong";
+      return "review-skipped";
+    }
     var s = state[qid];
     if (!s) return "not-visited";
     if (!s.visited) return "not-visited";
     if (s.answer !== null && s.answer >= 0) return s.marked ? "answered-marked" : "answered";
     if (s.marked) return "marked";
     return "not-answered";
+  }
+
+  function optionText(q, index) {
+    if (!q || !q.options || index < 0 || index >= q.options.length) return "—";
+    return "(" + (index + 1) + ") " + String(q.options[index]);
+  }
+
+  function renderScoreStrip(result) {
+    var strip = $("gateScoreStrip");
+    if (!strip || !result) return;
+    strip.classList.remove("gate-hidden");
+    if ($("gateScoreTitle")) {
+      $("gateScoreTitle").textContent = (paper && paper.title) || "GATE Mock — Submitted";
+    }
+    if ($("gateScoreSub")) {
+      $("gateScoreSub").textContent =
+        "Score " + result.score + " / " + result.maxMarks + " · " + candidate;
+    }
+    if ($("gateScorePct")) $("gateScorePct").textContent = String(result.percentage) + "%";
+    var cards = $("gateScoreCards");
+    if (cards) {
+      var items = [
+        { label: "Marks", value: result.score + "/" + result.maxMarks },
+        { label: "Correct", value: result.correct },
+        { label: "Wrong", value: result.wrong },
+        { label: "Skipped", value: result.unattempted },
+        { label: "Attempted", value: result.attempted != null ? result.attempted : result.correct + result.wrong },
+        { label: "Total Qs", value: result.total }
+      ];
+      cards.innerHTML = items
+        .map(function (it) {
+          return (
+            '<div class="gate-score-card"><span class="gate-score-card__val">' +
+            escText(String(it.value)) +
+            '</span><span class="gate-score-card__lbl">' +
+            escText(it.label) +
+            "</span></div>"
+          );
+        })
+        .join("");
+    }
+    var link = $("gateLinkAnalysis");
+    if (link) link.style.display = result.review && result.review.length ? "" : "none";
+  }
+
+  function enterReviewMode(result) {
+    submitResult = result;
+    reviewMode = true;
+    reviewById = {};
+    (result.review || []).forEach(function (row) {
+      if (row && row.id != null) reviewById[row.id] = row;
+    });
+
+    allQuestions.forEach(function (q) {
+      var row = reviewById[q.id];
+      if (!row) return;
+      if (!state[q.id]) state[q.id] = { visited: true, answer: null, marked: false };
+      state[q.id].visited = true;
+      state[q.id].marked = false;
+      if (row.selected != null && row.selected >= 0) state[q.id].answer = row.selected;
+      else state[q.id].answer = null;
+    });
+
+    if (timerHandle) clearInterval(timerHandle);
+    var timerEl = $("examTimer");
+    if (timerEl) timerEl.textContent = "Submitted — review mode";
+
+    var examView = $("view-exam");
+    if (examView) examView.classList.add("gate-review-mode");
+
+    renderScoreStrip(result);
+    showView("view-exam");
+    goToQuestion(0);
   }
 
   function formatTime(sec) {
@@ -361,34 +434,105 @@
     renderPaletteStats();
   }
 
+  function renderSolutionPanel(q, row) {
+    var panel = $("qSolution");
+    if (!panel) return;
+    if (!reviewMode || !row) {
+      panel.classList.add("gate-hidden");
+      panel.innerHTML = "";
+      return;
+    }
+
+    var status = row.status || "skipped";
+    panel.classList.remove("gate-hidden", "gate-solution--correct", "gate-solution--incorrect", "gate-solution--skipped");
+    panel.classList.add(
+      status === "correct"
+        ? "gate-solution--correct"
+        : status === "incorrect"
+          ? "gate-solution--incorrect"
+          : "gate-solution--skipped"
+    );
+
+    var statusLabel =
+      status === "correct" ? "Correct" : status === "incorrect" ? "Incorrect" : "Not attempted";
+    var yourIdx = row.selected;
+    var correctIdx = row.correctIndex;
+    var marksLine =
+      row.marksAwarded > 0
+        ? "+" + row.marksAwarded + " marks"
+        : row.marksAwarded < 0
+          ? row.marksAwarded + " marks (negative marking)"
+          : status === "skipped"
+            ? "0 marks (unattempted)"
+            : "0 marks";
+
+    var math = window.ResearchiumMath;
+    var yourRaw =
+      yourIdx != null && yourIdx >= 0 ? q.options[yourIdx] : null;
+    var correctRaw =
+      correctIdx != null && correctIdx >= 0 ? q.options[correctIdx] : null;
+
+    function fmtOpt(raw, idx) {
+      if (raw == null) return "Not attempted";
+      var label = "(" + (idx + 1) + ") ";
+      if (math) return label + math.toMathHtml(raw);
+      return escText(label + String(raw));
+    }
+
+    panel.innerHTML =
+      "<strong>Solution · " +
+      escText(statusLabel) +
+      " (" +
+      escText(marksLine) +
+      ")</strong>" +
+      "<p><strong>Your answer:</strong> <span class=\"math-content\">" +
+      (yourRaw != null ? fmtOpt(yourRaw, yourIdx) : "Not attempted") +
+      "</span></p>" +
+      "<p><strong>Correct answer:</strong> <span class=\"math-content\">" +
+      (correctRaw != null ? fmtOpt(correctRaw, correctIdx) : "—") +
+      "</span></p>";
+
+    if (math) {
+      math.enhanceRoot(panel).catch(function () {
+        if (math.applyFallback) math.applyFallback(panel);
+      });
+    }
+  }
+
   function renderQuestion() {
     var q = allQuestions[currentIndex];
     if (!q) return;
-    state[q.id].visited = true;
+    if (!reviewMode) state[q.id].visited = true;
     currentSectionKey = q.sectionKey;
 
     $("qNumber").textContent = "Question No. " + q.number;
     var math = window.ResearchiumMath;
     var opts = $("qOptions");
     var sel = state[q.id].answer;
+    var row = reviewById[q.id];
 
-    $("qMarksLine").textContent =
-      "Marks for correct answer: " +
-      q.marks +
-      " | Negative Marks: " +
-      q.negativeMarks;
+    $("qMarksLine").textContent = reviewMode
+      ? "Review mode — correct option highlighted in green"
+      : "Marks for correct answer: " + q.marks + " | Negative Marks: " + q.negativeMarks;
 
     if (opts) {
       opts.innerHTML = q.options
         .map(function (op, i) {
           var checked = sel === i ? " checked" : "";
-          var opHtml = math ? math.toMathHtml(op) : op;
+          var opHtml = math ? math.toMathHtml(op) : escText(op);
           var a11y = math ? math.latexToAccessibleText(op) : op;
+          var cls = "gate-opt-neutral";
+          if (reviewMode && row && row.correctIndex === i) cls = "gate-opt-correct";
+          else if (reviewMode && row && row.selected === i && row.status === "incorrect") cls = "gate-opt-wrong";
+          var disabled = reviewMode ? " disabled" : "";
           return (
-            '<label><input type="radio" name="gateOpt" value="' +
+            '<label class="' +
+            cls +
+            '"><input type="radio" name="gateOpt" value="' +
             i +
             '"' +
             checked +
+            disabled +
             ' aria-label="Option ' +
             (i + 1) +
             ": " +
@@ -408,11 +552,17 @@
       return Promise.resolve();
     }
 
+    function afterContent() {
+      typesetOptions().then(function () {
+        renderSolutionPanel(q, row);
+      });
+    }
+
     if (math && $("qText")) {
-      math.setMathHtml($("qText"), q.text).then(typesetOptions);
+      math.setMathHtml($("qText"), q.text).then(afterContent);
     } else {
       if ($("qText")) $("qText").textContent = q.text;
-      typesetOptions();
+      afterContent();
     }
 
     renderSectionTabs();
@@ -427,6 +577,7 @@
   }
 
   function saveCurrentAnswer() {
+    if (reviewMode) return;
     var q = allQuestions[currentIndex];
     if (!q) return;
     var picked = document.querySelector('input[name="gateOpt"]:checked');
@@ -437,31 +588,11 @@
   }
 
   function showGateAlert(message, title) {
-    var text = errorToMessage(message, "Something went wrong. Please try again.");
-    var modal = $("gateAlertModal");
-    var textEl = $("gateAlertText");
-    var titleEl = $("gateAlertTitle");
-    var okBtn = $("btnAlertOk");
-    if (!modal) {
-      window.alert(text);
+    if (Err.showErrorModal) {
+      Err.showErrorModal(message, title || "Notice");
       return;
     }
-    if (titleEl) titleEl.textContent = title || "Notice";
-    if (textEl) textEl.textContent = text;
-    modal.classList.remove("gate-hidden");
-    function close() {
-      modal.classList.add("gate-hidden");
-      if (okBtn) okBtn.removeEventListener("click", close);
-      document.removeEventListener("keydown", onKey);
-    }
-    function onKey(e) {
-      if (e.key === "Escape" || e.key === "Enter") close();
-    }
-    if (okBtn) {
-      okBtn.addEventListener("click", close);
-      okBtn.focus();
-    }
-    document.addEventListener("keydown", onKey);
+    window.alert(errorToMessage(message, "Something went wrong. Please try again."));
   }
 
   function confirmSubmitExam() {
@@ -522,11 +653,14 @@
         });
       })
       .then(function (j) {
-        showView("view-result");
-        $("resultTitle").textContent = paper.title + " — Submitted";
-        $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
-        $("resultDetail").textContent =
-          "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
+        if ($("resultTitle")) $("resultTitle").textContent = paper.title + " — Submitted";
+        if ($("resultScore")) {
+          $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
+        }
+        if ($("resultDetail")) {
+          $("resultDetail").textContent =
+            "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
+        }
         if (j.review && j.review.length) {
           try {
             var analysisPayload = {
@@ -554,6 +688,9 @@
           } catch (storageErr) {
             /* private mode / quota */
           }
+          enterReviewMode(j);
+        } else {
+          showView("view-result");
         }
         if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
           window.ResearchiumProgress.record({
@@ -565,13 +702,7 @@
         }
       })
       .catch(function (err) {
-        showGateAlert(
-          errorToMessage(
-            err,
-            "Could not submit. Ensure the Node server is running (npm start) and try again."
-          ),
-          "Submission failed"
-        );
+        showGateAlert(err, "Submission failed");
       });
   }
 
@@ -646,6 +777,7 @@
       renderQuestion();
     });
     $("btnSubmitExam").addEventListener("click", function () {
+      if (reviewMode) return;
       submitExam(false);
     });
     $("btnCloseWindow").addEventListener("click", function () {
