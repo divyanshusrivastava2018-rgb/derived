@@ -701,7 +701,7 @@
         retry.addEventListener("click", function () {
           box.style.display = "none";
           loadPaper().catch(function (err) {
-            showGateLoadError(err && err.message ? err.message : null);
+            showGateLoadError(err);
           });
         });
       }
@@ -757,6 +757,6 @@
   showView("view-login");
 
   loadPaper().catch(function (err) {
-    showGateLoadError(err && err.message ? err.message : null);
+    showGateLoadError(err);
   });
 })();
