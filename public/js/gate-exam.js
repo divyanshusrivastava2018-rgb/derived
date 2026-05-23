@@ -33,6 +33,38 @@
     return d.innerHTML;
   }
 
+  /** Turn API / Error values into readable text (never "[object Object]"). */
+  function formatErrMessage(value) {
+    if (value == null || value === "") return "";
+    if (typeof value === "string") return value;
+    if (value instanceof Error) {
+      var em = value.message;
+      if (em && em !== "[object Object]") return em;
+      return formatErrMessage(value.body || value.cause);
+    }
+    if (typeof value === "object") {
+      if (typeof value.error === "string") return value.error;
+      if (value.error != null) return formatErrMessage(value.error);
+      if (typeof value.message === "string") return value.message;
+      if (value.message != null && typeof value.message !== "object") {
+        return String(value.message);
+      }
+      if (value.message != null) return formatErrMessage(value.message);
+      try {
+        return JSON.stringify(value);
+      } catch (stringifyErr) {
+        return "Something went wrong. Please try again.";
+      }
+    }
+    return String(value);
+  }
+
+  function errorToMessage(err, fallback) {
+    var msg = formatErrMessage(err);
+    if (msg && msg !== "[object Object]") return msg;
+    return fallback || "Something went wrong. Please try again.";
+  }
+
   function apiUrl(path) {
     if (window.ResearchiumApi && window.ResearchiumApi.url) {
       return window.ResearchiumApi.url(path);
@@ -73,7 +105,8 @@
       return r.text().then(function (text) {
         var json = parseApiBody(r, text);
         if (!r.ok) {
-          throw new Error((json && json.error) || "Request failed (" + r.status + ")");
+          var apiMsg = formatErrMessage(json && json.error) || formatErrMessage(json && json.message);
+          throw new Error(apiMsg || "Request failed (" + r.status + ")");
         }
         return json;
       });
@@ -404,16 +437,17 @@
   }
 
   function showGateAlert(message, title) {
+    var text = errorToMessage(message, "Something went wrong. Please try again.");
     var modal = $("gateAlertModal");
     var textEl = $("gateAlertText");
     var titleEl = $("gateAlertTitle");
     var okBtn = $("btnAlertOk");
     if (!modal) {
-      window.alert(message);
+      window.alert(text);
       return;
     }
     if (titleEl) titleEl.textContent = title || "Notice";
-    if (textEl) textEl.textContent = message || "";
+    if (textEl) textEl.textContent = text;
     modal.classList.remove("gate-hidden");
     function close() {
       modal.classList.add("gate-hidden");
@@ -532,8 +566,10 @@
       })
       .catch(function (err) {
         showGateAlert(
-          (err && err.message) ||
-            "Could not submit. Ensure the Node server is running (npm start) and try again.",
+          errorToMessage(
+            err,
+            "Could not submit. Ensure the Node server is running (npm start) and try again."
+          ),
           "Submission failed"
         );
       });
@@ -556,7 +592,10 @@
 
     $("linkVerifyPhoto").addEventListener("click", function (e) {
       e.preventDefault();
-      alert("This is a practice session. Contact your test administrator if your details are incorrect.");
+      showGateAlert(
+        "This is a practice session. Contact your test administrator if your details are incorrect.",
+        "Candidate details"
+      );
     });
 
     $("btnToPaperInstr").addEventListener("click", function () {
@@ -570,7 +609,10 @@
     });
     $("btnBeginExam").addEventListener("click", function () {
       if (!allQuestions.length) {
-        alert("This examination could not be loaded. Return to the mock test series and try again.");
+        showGateAlert(
+          "This examination could not be loaded. Return to the mock test series and try again.",
+          "Cannot start exam"
+        );
         return;
       }
       showView("view-exam");
@@ -630,9 +672,10 @@
   }
 
   function showGateLoadError(message) {
-    var msg =
-      message ||
-      "Could not load this examination. Start the server with npm start, or run npm run prepare:gate on deploy.";
+    var msg = errorToMessage(
+      message,
+      "Could not load this examination. Start the server with npm start, or run npm run prepare:gate on deploy."
+    );
     var login = $("view-login");
     var main = login && login.querySelector(".gate-login-main");
     var box = $("gateLoadError");

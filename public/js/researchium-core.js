@@ -29,6 +29,23 @@
     return null;
   }
 
+  function formatApiError(value) {
+    if (value == null || value === "") return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") {
+      if (typeof value.error === "string") return value.error;
+      if (value.error != null) return formatApiError(value.error);
+      if (typeof value.message === "string") return value.message;
+      if (value.message != null) return formatApiError(value.message);
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return "Request failed";
+      }
+    }
+    return String(value);
+  }
+
   function fetchOffline(apiPath) {
     var rel = offlinePath(apiPath);
     if (!rel) return Promise.reject(new Error("No offline data"));
@@ -64,7 +81,12 @@
     return fetch(url, options).then(function (r) {
       return r.json().then(function (json) {
         if (!r.ok) {
-          var err = new Error((json && json.error) || r.statusText || "Request failed");
+          var err = new Error(
+            formatApiError(json && json.error) ||
+              formatApiError(json && json.message) ||
+              r.statusText ||
+              "Request failed"
+          );
           err.status = r.status;
           err.body = json;
           throw err;
