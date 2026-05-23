@@ -1,0 +1,64 @@
+.gate-solutions-page {
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+.gate-solutions-main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+.gate-solutions-empty {
+  text-align: center;
+  padding: 48px 24px;
+  background: #fff;
+  border: 2px solid #666;
+  max-width: 480px;
+  margin: 40px auto;
+}
+.gate-solutions-empty h1 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.gate-solutions-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #4c1d95, #6d28d9);
+  color: #fff;
+  border-radius: 8px;
+}
+.gate-solutions-page-title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.gate-solutions-page-sub {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.92;
+}
+.gate-solutions-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gate-solutions-toolbar__actions .gate-btn-nav {
+  background: #fff;
+  color: #4c1d95;
+  border-color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+}
+.gate-solutions-body {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px 14px 24px;
+}
+.gate-solutions-body #gateSolution {
+  padding: 0;
+}

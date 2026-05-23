@@ -165,8 +165,11 @@
         </div>
         <div class="gate-score-cards" id="gateScoreCards"></div>
         <div class="gate-score-strip__foot">
-          <span class="gate-score-strip__hint">Review each question below — correct answers are highlighted.</span>
-          <a href="/mock-analysis.html" class="gate-btn-nav" id="gateLinkAnalysis">Detailed analysis</a>
+          <span class="gate-score-strip__hint">Review each question below — correct answers are highlighted. Full solutions open on a separate page.</span>
+          <div class="gate-score-strip__actions">
+            <a href="/gate-solutions.html" class="gate-btn-nav" id="btnOpenSolutions" hidden>View all solutions</a>
+            <button type="button" class="gate-btn-nav" id="btnBackToMocks">Back to mock tests</button>
+          </div>
         </div>
       </div>
       <div class="gate-exam-toolbar">
@@ -215,7 +218,10 @@
           <p class="gate-palette-section" id="paletteSectionLabel">Section</p>
           <p class="gate-palette-hint">Choose a Question</p>
           <div class="gate-q-grid" id="questionPalette"></div>
-          <button type="button" class="gate-btn-submit-exam" id="btnSubmitExam">Submit Examination</button>
+          <button type="button" class="gate-btn-submit-exam" id="btnSubmitExam">
+            <span class="gate-submit-spinner gate-hidden" id="submitSpinner" aria-hidden="true"></span>
+            Submit Examination
+          </button>
         </aside>
       </div>
     </div>
@@ -227,9 +233,9 @@
         <h2 id="resultTitle">Result</h2>
         <p id="resultScore" class="gate-result-score"></p>
         <p id="resultDetail" class="gate-result-detail"></p>
-        <div class="gate-result-actions" style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
-          <a href="/mock-analysis.html" class="gate-btn-begin" id="btnViewAnalysis" style="display:none;text-decoration:none;text-align:center">View detailed analysis</a>
-          <button type="button" class="gate-btn-nav" id="btnCloseWindow">Back to Mock Test Series</button>
+        <div class="gate-result-actions">
+          <button type="button" class="gate-btn-begin gate-result-actions__primary" id="btnViewAnalysis" hidden>View all solutions</button>
+          <button type="button" class="gate-btn-nav gate-result-actions__secondary" id="btnCloseWindow">Back to Mock Test Series</button>
         </div>
       </div>
     </div>
@@ -267,12 +273,14 @@
 
     <footer class="gate-app-footer">© Researchium Learning · Mock assessment interface (design inspired by standard CBT portals)</footer>
 
+    <!-- GATE: errors + submit + solution modules; wiring in gate-exam.js -->
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
     <script src="/js/math-render.js"></script>
     <script src="/js/researchium-errors.js"></script>
     <script src="/js/researchium-core.js"></script>
     <script src="/js/gate-exam-submit.js"></script>
+    <script src="/js/gate-exam-solution.js"></script>
     <script src="/js/gate-exam.js"></script>
   </body>
 </html>

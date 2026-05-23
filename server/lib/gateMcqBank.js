@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { formatMathText } = require('./mathLatex');
+const { buildSolutionDetail } = require('./gateSolutionBuilder');
 
 const BANK_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-bank.json');
 const ANSWERS_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-answers.json');
@@ -10,8 +11,30 @@ let bankCache = null;
 let bankMtime = 0;
 let answersCache = null;
 let answersMtime = 0;
+let answersEnvKey = '';
+
+function loadAnswersFromEnv() {
+  const raw = (process.env.GATE_ANSWERS_JSON || '').trim();
+  if (!raw) return null;
+  if (answersCache && answersEnvKey === raw) return answersCache;
+  try {
+    const parsed = JSON.parse(raw);
+    const map = parsed && parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : parsed;
+    if (!map || typeof map !== 'object') return null;
+    answersCache = map;
+    answersEnvKey = raw;
+    answersMtime = 0;
+    return answersCache;
+  } catch {
+    console.warn('[gateMcqBank] GATE_ANSWERS_JSON is not valid JSON.');
+    return null;
+  }
+}
 
 function loadAnswersMap() {
+  const fromEnv = loadAnswersFromEnv();
+  if (fromEnv) return fromEnv;
+
   if (!fs.existsSync(ANSWERS_FILE)) {
     return migrateAnswersFromLegacyBank();
   }
@@ -275,6 +298,12 @@ function scorePaper(paperData, responses) {
     else if (status === 'incorrect') sec.wrong += 1;
     else sec.skipped += 1;
 
+    const solutionDetail =
+      expected != null && expected >= 0
+        ? buildSolutionDetail(q, expected)
+        : { explanation: '', optionExplanations: [] };
+    const letters = ['A', 'B', 'C', 'D'];
+
     review.push({
       id: q.id,
       number: q.number,
@@ -285,8 +314,17 @@ function scorePaper(paperData, responses) {
       status,
       selected,
       correctIndex: expected != null ? expected : -1,
+      correctOption: expected != null && expected >= 0 ? letters[expected] || String(expected + 1) : '',
       marks: q.marks,
-      marksAwarded
+      negativeMarks: q.negativeMarks,
+      marksAwarded,
+      explanation: solutionDetail.explanation,
+      optionExplanations: solutionDetail.optionExplanations || [],
+      understanding: solutionDetail.understanding || '',
+      solutionText: solutionDetail.solutionText || '',
+      keyConcept: solutionDetail.keyConcept || '',
+      correctAnswerLine: solutionDetail.correctAnswerLine || '',
+      solutionSource: solutionDetail.solutionSource || 'fallback'
     });
   });
 

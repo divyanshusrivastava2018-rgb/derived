@@ -7,6 +7,8 @@ server/data/csir-leads.json
 server/data/member-interest.json
 server/data/learner-progress.json
 server/data/gate-mcq-answers.json
+server/data/gate-mcq-answers.seed.json
+server/data/gate-solution-cache/
 *.log
 .DS_Store
 *known_hosts*

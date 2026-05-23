@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GATE Solutions — Researchium</title>
+    <link rel="stylesheet" href="/css/gate-exam.css" />
+    <link rel="stylesheet" href="/css/gate-solutions.css" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" as="style" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/math-content.css" />
+  </head>
+  <body class="gate-solutions-page">
+    <header class="gate-app-header">
+      <span class="gate-app-brand">Researchium · GATE Solutions</span>
+      <span class="gate-app-ver">Post-examination review</span>
+    </header>
+
+    <main class="gate-solutions-main">
+      <div id="solutionsEmpty" class="gate-solutions-empty gate-hidden">
+        <h1>No results to show</h1>
+        <p>Complete a GATE mock examination first, then return here for step-by-step solutions.</p>
+        <a href="/mcq-test.html#mock-test-series" class="gate-btn-begin">Go to mock tests</a>
+      </div>
+      <div id="solutionsContent" class="gate-hidden">
+        <div class="gate-solutions-toolbar">
+          <div>
+            <h1 id="solPageTitle" class="gate-solutions-page-title">Examination solutions</h1>
+            <p id="solPageSub" class="gate-solutions-page-sub"></p>
+          </div>
+          <div class="gate-solutions-toolbar__actions">
+            <a id="solLinkReview" href="#" class="gate-btn-nav">Review in exam layout</a>
+            <a href="/mcq-test.html#mock-test-series" class="gate-btn-nav">Mock test series</a>
+          </div>
+        </div>
+        <div id="solutionsBody" class="gate-solutions-body"></div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script src="/js/math-render.js"></script>
+    <script src="/js/researchium-errors.js"></script>
+    <script src="/js/researchium-core.js"></script>
+    <script src="/js/gate-exam-solution.js"></script>
+    <script src="/js/gate-solutions.js"></script>
+  </body>
+</html>

@@ -246,10 +246,32 @@
         })
         .join("");
     }
-    var link = $("gateLinkAnalysis");
-    if (link) link.style.display = result.review && result.review.length ? "" : "none";
+    var openSol = $("btnOpenSolutions");
+    if (openSol) openSol.hidden = !(result.review && result.review.length);
   }
 
+  function navigateToSolutions() {
+    window.location.assign("/gate-solutions.html");
+  }
+
+  function resultFromStoredPayload(data) {
+    var s = data.summary || {};
+    return {
+      title: data.title,
+      score: s.score,
+      maxMarks: s.maxMarks,
+      correct: s.correct,
+      wrong: s.wrong,
+      unattempted: s.unattempted,
+      total: s.total,
+      attempted: s.attempted,
+      percentage: s.percentage,
+      sections: data.sections || [],
+      review: data.review || []
+    };
+  }
+
+  /** Exam-layout review only (palette + per-question summary). Full solutions live on gate-solutions.html. */
   function enterReviewMode(result) {
     submitResult = result;
     reviewMode = true;
@@ -273,11 +295,34 @@
     if (timerEl) timerEl.textContent = "Submitted — review mode";
 
     var examView = $("view-exam");
-    if (examView) examView.classList.add("gate-review-mode");
+    if (examView) {
+      examView.classList.add("gate-review-mode");
+      examView.classList.remove("gate-integrated-review", "gate-solutions-collapsed");
+    }
+
+    var hint = document.querySelector(".gate-score-strip__hint");
+    if (hint) {
+      hint.textContent =
+        "Review each question below. Open the solutions page for step-by-step explanations.";
+    }
 
     renderScoreStrip(result);
     showView("view-exam");
     goToQuestion(0);
+  }
+
+  function tryRestoreReviewMode() {
+    if (params.get("review") !== "1") return;
+    try {
+      var raw = sessionStorage.getItem("researchium_mock_analysis");
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      if (!data || data.type !== "gate" || !Array.isArray(data.review) || !data.review.length) return;
+      if (data.paperSlug && String(data.paperSlug) !== String(year)) return;
+      enterReviewMode(resultFromStoredPayload(data));
+    } catch {
+      /* ignore */
+    }
   }
 
   function formatTime(sec) {
@@ -475,18 +520,24 @@
       return escText(label + String(raw));
     }
 
+    var detailHtml =
+      window.GateExamSolution && window.GateExamSolution.formatInlinePanel
+        ? window.GateExamSolution.formatInlinePanel(row, q)
+        : "";
+
     panel.innerHTML =
       "<strong>Solution · " +
       escText(statusLabel) +
       " (" +
       escText(marksLine) +
       ")</strong>" +
-      "<p><strong>Your answer:</strong> <span class=\"math-content\">" +
-      (yourRaw != null ? fmtOpt(yourRaw, yourIdx) : "Not attempted") +
-      "</span></p>" +
-      "<p><strong>Correct answer:</strong> <span class=\"math-content\">" +
-      (correctRaw != null ? fmtOpt(correctRaw, correctIdx) : "—") +
-      "</span></p>";
+      (detailHtml ||
+        "<p><strong>Your answer:</strong> <span class=\"math-content\">" +
+        (yourRaw != null ? fmtOpt(yourRaw, yourIdx) : "Not attempted") +
+        "</span></p>" +
+        "<p><strong>Correct answer:</strong> <span class=\"math-content\">" +
+        (correctRaw != null ? fmtOpt(correctRaw, correctIdx) : "—") +
+        "</span></p>");
 
     if (math) {
       math.enhanceRoot(panel).catch(function () {
@@ -640,12 +691,17 @@
       $("resultDetail").textContent =
         "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
     }
-    if (j.review && j.review.length) {
+    submitResult = j;
+    var hasReview = !!(j.review && j.review.length);
+    if (hasReview) {
       try {
         var analysisPayload = {
           type: "gate",
           title: j.title || paper.title,
           completedAt: new Date().toISOString(),
+          paperSlug: String(year).trim(),
+          reviewToken: j.reviewToken || "",
+          aiSolver: !!j.aiSolver,
           backUrl:
             "/gate-exam.html?year=" + encodeURIComponent(year) + "&name=" + encodeURIComponent(candidate),
           summary: {
@@ -662,15 +718,15 @@
           review: j.review
         };
         sessionStorage.setItem("researchium_mock_analysis", JSON.stringify(analysisPayload));
-        var btnAnalysis = $("btnViewAnalysis");
-        if (btnAnalysis) btnAnalysis.style.display = "";
       } catch (storageErr) {
         /* private mode / quota */
       }
-      enterReviewMode(j);
-    } else {
-      showView("view-result");
+      navigateToSolutions();
+      return;
     }
+    var btnAnalysis = $("btnViewAnalysis");
+    if (btnAnalysis) btnAnalysis.hidden = true;
+    showView("view-result");
     if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
       window.ResearchiumProgress.record({
         type: "gate_submit",
@@ -697,12 +753,18 @@
     }
 
     var submitBtn = $("btnSubmitExam");
+    var submitSpinner = $("submitSpinner");
+    var confirmBtn = $("btnSubmitConfirm");
     window.GateExamSubmit.submitExam({
       slug: String(year).trim(),
       sessionId: sessionId,
       responses: responses,
       onLoading: function (loading) {
         if (submitBtn) submitBtn.disabled = !!loading;
+        if (confirmBtn) confirmBtn.disabled = !!loading;
+        if (submitSpinner) {
+          submitSpinner.classList.toggle("gate-hidden", !loading);
+        }
       },
       onSuccess: function (j) {
         onSubmitSuccess(j);
@@ -794,9 +856,19 @@
       if (reviewMode) return;
       submitExam(false);
     });
+    var backMocks = $("btnBackToMocks");
+    if (backMocks) {
+      backMocks.addEventListener("click", function () {
+        window.location.assign("/mcq-test.html#mock-test-series");
+      });
+    }
     $("btnCloseWindow").addEventListener("click", function () {
       window.location.assign("/mcq-test.html#mock-test-series");
     });
+    var analysisBtn = $("btnViewAnalysis");
+    if (analysisBtn) {
+      analysisBtn.addEventListener("click", navigateToSolutions);
+    }
     $("btnCalculator").addEventListener("click", function () {
       $("gateCalcModal").classList.remove("gate-hidden");
     });
@@ -902,7 +974,11 @@
   bindEvents();
   showView("view-login");
 
-  loadPaper().catch(function (err) {
-    showGateLoadError(err);
-  });
+  loadPaper()
+    .then(function () {
+      tryRestoreReviewMode();
+    })
+    .catch(function (err) {
+      showGateLoadError(err);
+    });
 })();

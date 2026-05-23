@@ -4,8 +4,10 @@
  */
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const { nanoid } = require('nanoid');
 const gateMcqBank = require('../lib/gateMcqBank');
+const { buildSolutionDetailAsync } = require('../lib/gateSolutionBuilder');
+const gateQuestionSolver = require('../lib/gateQuestionSolver');
+const gateExamSession = require('../lib/gateExamSession');
 
 const router = express.Router();
 const jsonParser = express.json({ limit: '256kb' });
@@ -26,18 +28,13 @@ const submitLimiter = rateLimit({
   message: { error: 'Too many submissions. Try again later.' }
 });
 
-/** In-memory sessions — use Redis/DB if you run multiple Node instances. */
-const ACTIVE_SESSIONS = new Map();
-const SESSION_TTL_MS = 3 * 60 * 60 * 1000;
-
-function cleanupSessions() {
-  const now = Date.now();
-  for (const [id, s] of ACTIVE_SESSIONS) {
-    if (!s || now > s.expiresAt) ACTIVE_SESSIONS.delete(id);
-  }
-}
-
-setInterval(cleanupSessions, 10 * 60 * 1000).unref?.();
+const solveLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many solution requests. Try again later.' }
+});
 
 function stripAnswers(paper) {
   return {
@@ -67,13 +64,20 @@ function stripAnswers(paper) {
   };
 }
 
-/** Always JSON errors (never HTML) for the browser error helper. */
 function jsonError(res, status, message) {
   return res.status(status).json({ error: message });
 }
 
+function productionMode() {
+  return process.env.NODE_ENV === 'production';
+}
+
 router.get('/healthz', (_req, res) => {
-  res.json({ ok: true, service: 'gate-mcq', ts: Date.now() });
+  const body = { ok: true, service: 'gate-mcq', ts: Date.now() };
+  if (!productionMode()) {
+    body.aiSolver = gateQuestionSolver.isConfigured();
+  }
+  res.json(body);
 });
 
 router.get('/papers', (_req, res) => {
@@ -92,13 +96,7 @@ router.post('/paper/:slug/start', startLimiter, jsonParser, (req, res) => {
   const paper = gateMcqBank.getPaper(slug);
   if (!paper) return jsonError(res, 404, 'Paper not found.');
 
-  const sessionId = nanoid(20);
-  ACTIVE_SESSIONS.set(sessionId, {
-    slug: paper.slug,
-    paper,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + SESSION_TTL_MS
-  });
+  const sessionId = gateExamSession.createSession(paper);
 
   res.json({
     ok: true,
@@ -111,36 +109,100 @@ router.post('/paper/:slug/submit', submitLimiter, jsonParser, (req, res) => {
   const slug = String(req.params.slug || '').trim();
   const body = req.body || {};
   const sessionId = typeof body.sessionId === 'string' ? body.sessionId.trim() : '';
-  const responses = body.responses && typeof body.responses === 'object' ? body.responses : {};
+  const rawResponses = body.responses && typeof body.responses === 'object' ? body.responses : {};
 
-  let paper = null;
-  const session = sessionId ? ACTIVE_SESSIONS.get(sessionId) : null;
+  let scoringPaper = gateExamSession.consumeSession(sessionId, slug);
 
-  if (session) {
-    if (session.slug !== slug) {
+  if (!scoringPaper) {
+    if (!gateExamSession.allowStatelessSubmit()) {
       return jsonError(
         res,
-        400,
-        'Session does not match this paper. Please start the exam again.'
+        403,
+        'A valid exam session is required. Start the examination again before submitting.'
       );
     }
-    paper = session.paper;
-    ACTIVE_SESSIONS.delete(sessionId);
-  } else {
-    paper = gateMcqBank.getPaper(slug);
+    const paper = gateMcqBank.getPaper(slug);
     if (!paper) {
-      return jsonError(
-        res,
-        404,
-        'Exam session not found and paper "' +
-          slug +
-          '" does not exist. Please refresh and start the mock exam again.'
-      );
+      return jsonError(res, 404, 'Paper not found. Refresh and start the mock exam again.');
     }
+    scoringPaper = {
+      year: paper.year,
+      slug: paper.slug,
+      title: paper.title,
+      subject: paper.subject,
+      subjectLabel: paper.subjectLabel,
+      sections: paper.sections,
+      answerKey: paper.answerKey
+    };
   }
 
-  const result = gateMcqBank.scorePaper(paper, responses);
-  res.json({ ok: true, ...result, year: paper.year, title: paper.title });
+  const responses = gateExamSession.validateResponses(rawResponses, scoringPaper);
+  const result = gateMcqBank.scorePaper(scoringPaper, responses);
+  const reviewToken = gateExamSession.issueReviewToken(slug);
+
+  const payload = {
+    ok: true,
+    ...result,
+    year: scoringPaper.year,
+    title: scoringPaper.title,
+    reviewToken
+  };
+  if (!productionMode()) {
+    payload.aiSolver = gateQuestionSolver.isConfigured();
+  }
+  res.json(payload);
+});
+
+router.post('/paper/:slug/solve-question', solveLimiter, jsonParser, async (req, res) => {
+  const slug = String(req.params.slug || '').trim();
+  const body = req.body || {};
+  const questionId = String(body.questionId || '').trim();
+  const reviewToken = typeof body.reviewToken === 'string' ? body.reviewToken.trim() : '';
+  const difficulty = gateExamSession.sanitizeDifficulty(body.difficulty);
+
+  if (!questionId) return jsonError(res, 400, 'questionId is required.');
+  if (!reviewToken) {
+    return jsonError(res, 403, 'Submit the examination first to unlock step-by-step solutions.');
+  }
+  if (!gateExamSession.validateReviewToken(reviewToken, slug)) {
+    return jsonError(res, 403, 'Review access expired or invalid. Submit the exam again.');
+  }
+  if (!gateExamSession.consumeSolveSlot(reviewToken, slug)) {
+    return jsonError(res, 429, 'Solution limit reached for this attempt.');
+  }
+
+  const paper = gateMcqBank.getPaper(slug);
+  if (!paper) return jsonError(res, 404, 'Paper not found.');
+
+  let question = null;
+  let correctIndex = -1;
+  for (const sec of paper.sections) {
+    for (const q of sec.questions) {
+      if (q.id === questionId) {
+        question = q;
+        correctIndex = paper.answerKey[q.id];
+        break;
+      }
+    }
+    if (question) break;
+  }
+
+  if (!question) return jsonError(res, 404, 'Question not found on this paper.');
+
+  try {
+    const detail = await buildSolutionDetailAsync(question, correctIndex, {
+      subject: paper.subjectLabel || paper.title,
+      difficulty
+    });
+    const out = { ok: true, questionId, ...detail };
+    if (!productionMode()) {
+      out.aiConfigured = gateQuestionSolver.isConfigured();
+    }
+    res.json(out);
+  } catch (err) {
+    console.error('[gateExam] solve-question', questionId, err.message);
+    return jsonError(res, 500, 'Could not generate solution. Try again shortly.');
+  }
 });
 
 module.exports = router;

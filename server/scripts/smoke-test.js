@@ -254,11 +254,43 @@ async function main() {
     if (res.status !== 200 || !res.json || typeof res.json.score !== 'number') {
       fail(`GATE submit expected score`);
     }
+    if (!res.json.reviewToken || typeof res.json.reviewToken !== 'string') {
+      fail(`GATE submit should return reviewToken`);
+    }
+    const gateReviewToken = res.json.reviewToken;
     if (!Array.isArray(res.json.review) || res.json.review.length < 1) {
       fail(`GATE submit should include review[]`);
     }
     if (!Array.isArray(res.json.sections) || res.json.sections.length < 1) {
       fail(`GATE submit should include sections[]`);
+    }
+    const firstReview = res.json.review[0] || {};
+    if (!firstReview.explanation || !Array.isArray(firstReview.optionExplanations)) {
+      fail(`GATE review should include explanation and optionExplanations[]`);
+    }
+    if (typeof firstReview.solutionSource !== 'string') {
+      fail(`GATE review should include solutionSource`);
+    }
+
+    res = await req('POST', '/api/mcq/gate/paper/2018/solve-question', {
+      body: { questionId: firstReview.id }
+    });
+    if (res.status !== 403) {
+      fail(`GATE solve-question without reviewToken should return 403`);
+    }
+
+    res = await req('POST', '/api/mcq/gate/paper/2018/solve-question', {
+      body: { questionId: firstReview.id, reviewToken: gateReviewToken, difficulty: 'brief' }
+    });
+    if (res.status !== 200 || !res.json || !res.json.ok || !res.json.explanation) {
+      fail(`GATE solve-question should return ok and explanation`);
+    }
+
+    res = await req('POST', '/api/mcq/gate/paper/2018/solve-question', {
+      body: { questionId: firstReview.id, reviewToken: gateReviewToken, difficulty: 'not-a-valid-mode' }
+    });
+    if (res.status !== 200 || !res.json || !res.json.ok) {
+      fail(`GATE solve-question should accept invalid difficulty by falling back to standard`);
     }
 
     res = await req('POST', '/api/mcq/gate/paper/2018/start', { body: {} });
@@ -272,7 +304,28 @@ async function main() {
       body: { sessionId: 'expired-fake-session', responses: gateResponses2 }
     });
     if (res.status !== 200 || typeof res.json.score !== 'number') {
-      fail(`GATE submit should score without valid session (stateless fallback)`);
+      fail(`GATE submit should score without valid session in development (stateless fallback)`);
+    }
+
+    res = await req('POST', '/api/mcq/gate/paper/2018/start', { body: {} });
+    if (res.status !== 200 || !res.json.sessionId) {
+      fail(`GATE start for response validation should return sessionId`);
+    }
+    const validateSession = res.json.sessionId;
+    const validateResponses = {};
+    (res.json.paper.sections || []).forEach((sec) => {
+      (sec.questions || []).forEach((q) => {
+        validateResponses[q.id] = -1;
+      });
+    });
+    res = await req('POST', '/api/mcq/gate/paper/2018/submit', {
+      body: {
+        sessionId: validateSession,
+        responses: Object.assign({}, validateResponses, { fakeQuestionId: 0, ma1: 99 })
+      }
+    });
+    if (res.status !== 200 || typeof res.json.score !== 'number') {
+      fail(`GATE submit should ignore unknown response keys`);
     }
 
     res = await req('GET', '/mock-analysis.html');
@@ -283,6 +336,23 @@ async function main() {
     res = await req('GET', '/gate-exam.html');
     if (res.status !== 200 || !res.text.includes('gate-exam-submit.js')) {
       fail(`/gate-exam.html should load gate-exam-submit.js`);
+    }
+    if (!res.text.includes('gate-exam-solution.js')) {
+      fail(`/gate-exam.html should load gate-exam-solution.js`);
+    }
+    if (res.text.includes('id="solutionPanel"')) {
+      fail(`/gate-exam.html should not embed inline solutions panel`);
+    }
+    if (!res.text.includes('btnOpenSolutions')) {
+      fail(`/gate-exam.html should link to dedicated solutions page`);
+    }
+
+    res = await req('GET', '/gate-solutions.html');
+    if (res.status !== 200 || !res.text.includes('gate-solutions.js')) {
+      fail(`/gate-solutions.html should load gate-solutions.js`);
+    }
+    if (!res.text.includes('gate-exam-solution.js')) {
+      fail(`/gate-solutions.html should load gate-exam-solution.js`);
     }
 
     res = await req('POST', '/api/admin/login', {
