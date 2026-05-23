@@ -280,6 +280,11 @@ async function main() {
       fail(`/mock-analysis.html should be served`);
     }
 
+    res = await req('GET', '/gate-exam.html');
+    if (res.status !== 200 || !res.text.includes('gate-exam-submit.js')) {
+      fail(`/gate-exam.html should load gate-exam-submit.js`);
+    }
+
     res = await req('POST', '/api/admin/login', {
       body: { username: 'wrong', password: 'wrong' }
     });

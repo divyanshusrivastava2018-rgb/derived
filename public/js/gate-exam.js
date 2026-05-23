@@ -111,28 +111,8 @@
     return "/api/mcq/gate/paper/" + encodeURIComponent(year) + "/start";
   }
 
-  function gateSubmitPath() {
-    return "/api/mcq/gate/paper/" + encodeURIComponent(year) + "/submit";
-  }
-
   function gatePaperPath() {
     return "/api/mcq/gate/paper/" + encodeURIComponent(year);
-  }
-
-  function gateHealthPath() {
-    return "/api/mcq/gate/healthz";
-  }
-
-  function checkGateApiReachable() {
-    return gateFetch(gateHealthPath(), { method: "GET" }).then(function (j) {
-      if (!j || j.ok !== true) {
-        throw {
-          status: 503,
-          error: "GATE exam API is not ready. Ensure the Node server is running."
-        };
-      }
-      return j;
-    });
   }
 
   function loadOfflinePaper() {
@@ -174,41 +154,6 @@
       gatePracticeOnly = false;
       if (!sessionId) throw new Error("Could not start exam session.");
       return sessionId;
-    });
-  }
-
-  function apiFailMessage(fail) {
-    if (!fail) return "";
-    if (Err.formatErrMessage) return Err.formatErrMessage(fail);
-    if (fail.error) return String(fail.error);
-    return "Request failed";
-  }
-
-  function isSessionOrRoute404(fail) {
-    if (!fail || fail.status !== 404) return false;
-    var msg = apiFailMessage(fail).toLowerCase();
-    return (
-      msg.indexOf("session") >= 0 ||
-      msg.indexOf("expired") >= 0 ||
-      msg.indexOf("not found") >= 0 ||
-      msg.indexOf("api") >= 0
-    );
-  }
-
-  function postGateSubmit(responses, allowRetry) {
-    return gateFetch(gateSubmitPath(), {
-      method: "POST",
-      body: { sessionId: sessionId || "", responses: responses }
-    }).catch(function (fail) {
-      if (!allowRetry) throw fail;
-      if (!isSessionOrRoute404(fail) && (!fail || fail.status !== 404)) throw fail;
-      sessionId = "";
-      return ensureGateSession().then(function () {
-        return gateFetch(gateSubmitPath(), {
-          method: "POST",
-          body: { sessionId: sessionId, responses: responses }
-        });
-      });
     });
   }
 
@@ -686,6 +631,56 @@
     });
   }
 
+  function onSubmitSuccess(j) {
+    if ($("resultTitle")) $("resultTitle").textContent = paper.title + " — Submitted";
+    if ($("resultScore")) {
+      $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
+    }
+    if ($("resultDetail")) {
+      $("resultDetail").textContent =
+        "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
+    }
+    if (j.review && j.review.length) {
+      try {
+        var analysisPayload = {
+          type: "gate",
+          title: j.title || paper.title,
+          completedAt: new Date().toISOString(),
+          backUrl:
+            "/gate-exam.html?year=" + encodeURIComponent(year) + "&name=" + encodeURIComponent(candidate),
+          summary: {
+            score: j.score,
+            maxMarks: j.maxMarks,
+            correct: j.correct,
+            wrong: j.wrong,
+            unattempted: j.unattempted,
+            total: j.total,
+            attempted: j.attempted != null ? j.attempted : j.correct + j.wrong,
+            percentage: j.percentage
+          },
+          sections: j.sections || [],
+          review: j.review
+        };
+        sessionStorage.setItem("researchium_mock_analysis", JSON.stringify(analysisPayload));
+        var btnAnalysis = $("btnViewAnalysis");
+        if (btnAnalysis) btnAnalysis.style.display = "";
+      } catch (storageErr) {
+        /* private mode / quota */
+      }
+      enterReviewMode(j);
+    } else {
+      showView("view-result");
+    }
+    if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
+      window.ResearchiumProgress.record({
+        type: "gate_submit",
+        label: (paper.title || "GATE mock") + " " + year,
+        score: j.score,
+        total: j.maxMarks
+      });
+    }
+  }
+
   function runSubmitExam() {
     saveCurrentAnswer();
     if (timerHandle) clearInterval(timerHandle);
@@ -696,70 +691,33 @@
       responses[q.id] = s && s.answer !== null ? s.answer : -1;
     });
 
-    checkGateApiReachable()
-      .then(function () {
-        return ensureGateSession();
-      })
-      .then(function () {
-        return postGateSubmit(responses, true);
-      })
-      .then(function (j) {
-        if ($("resultTitle")) $("resultTitle").textContent = paper.title + " — Submitted";
-        if ($("resultScore")) {
-          $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
-        }
-        if ($("resultDetail")) {
-          $("resultDetail").textContent =
-            "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
-        }
-        if (j.review && j.review.length) {
-          try {
-            var analysisPayload = {
-              type: "gate",
-              title: j.title || paper.title,
-              completedAt: new Date().toISOString(),
-              backUrl:
-                "/gate-exam.html?year=" + encodeURIComponent(year) + "&name=" + encodeURIComponent(candidate),
-              summary: {
-                score: j.score,
-                maxMarks: j.maxMarks,
-                correct: j.correct,
-                wrong: j.wrong,
-                unattempted: j.unattempted,
-                total: j.total,
-                attempted: j.attempted != null ? j.attempted : j.correct + j.wrong,
-                percentage: j.percentage
-              },
-              sections: j.sections || [],
-              review: j.review
-            };
-            sessionStorage.setItem("researchium_mock_analysis", JSON.stringify(analysisPayload));
-            var btnAnalysis = $("btnViewAnalysis");
-            if (btnAnalysis) btnAnalysis.style.display = "";
-          } catch (storageErr) {
-            /* private mode / quota */
-          }
-          enterReviewMode(j);
-        } else {
-          showView("view-result");
-        }
-        if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
-          window.ResearchiumProgress.record({
-            type: "gate_submit",
-            label: (paper.title || "GATE mock") + " " + year,
-            score: j.score,
-            total: j.maxMarks
-          });
-        }
-      })
-      .catch(function (err) {
-        var msg = Err.formatErrMessage ? Err.formatErrMessage(err) : errorToMessage(err, "");
-        if (gatePracticeOnly && msg.toLowerCase().indexOf("api") >= 0) {
-          msg =
-            "Scoring needs the live API. Start the server (npm start) and open this site from the same host, not static files only.";
+    if (!window.GateExamSubmit || !window.GateExamSubmit.submitExam) {
+      showGateAlert("Submit module did not load. Refresh the page.", "Submission failed");
+      return;
+    }
+
+    var submitBtn = $("btnSubmitExam");
+    window.GateExamSubmit.submitExam({
+      slug: String(year).trim(),
+      sessionId: sessionId,
+      responses: responses,
+      onLoading: function (loading) {
+        if (submitBtn) submitBtn.disabled = !!loading;
+      },
+      onSuccess: function (j) {
+        onSubmitSuccess(j);
+      },
+      onError: function (msg) {
+        if (gatePracticeOnly && String(msg).toLowerCase().indexOf("api") >= 0) {
+          showGateAlert(
+            "Scoring needs the live API. Start the server (npm start) and open this site from the same host, not static files only.",
+            "Submission failed"
+          );
+          return;
         }
         showGateAlert(msg || "Submission failed. Refresh the page and try again.", "Submission failed");
-      });
+      }
+    });
   }
 
   function submitExam(auto) {
