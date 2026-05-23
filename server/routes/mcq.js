@@ -192,7 +192,11 @@ router.post('/generate', generateLimiter, jsonParser, (req, res) => {
     createdAt: Date.now(),
     expiresAt: Date.now() + TEST_TTL_MS,
     topic: resolvedTopic,
-    answers: picked.map((q) => q.answerIndex)
+    answers: picked.map((q) => q.answerIndex),
+    questions: picked.map((q) => ({
+      question: q.question,
+      options: q.options || []
+    }))
   });
   res.json({
     ok: true,
@@ -222,12 +226,69 @@ router.post('/submit', submitLimiter, jsonParser, (req, res) => {
     return Number.isInteger(v) ? v : Number(v);
   });
   let score = 0;
-  for (let i = 0; i < expected.length; i += 1) {
-    if (normalized[i] === expected[i]) score += 1;
-  }
+  let correct = 0;
+  let wrong = 0;
+  let unattempted = 0;
+  const storedQs = test.questions || [];
+  const review = expected.map((exp, i) => {
+    const ans = normalized[i];
+    const q = storedQs[i] || {};
+    let status = 'skipped';
+    let selected = -1;
+    if (Number.isInteger(ans) && ans >= 0) {
+      selected = ans;
+      if (ans === exp) {
+        status = 'correct';
+        correct += 1;
+        score += 1;
+      } else {
+        status = 'incorrect';
+        wrong += 1;
+      }
+    } else {
+      unattempted += 1;
+    }
+    return {
+      id: `q${i + 1}`,
+      number: i + 1,
+      sectionLabel: test.topic,
+      text: q.question || '',
+      options: q.options || [],
+      status,
+      selected,
+      correctIndex: exp,
+      marks: 1,
+      marksAwarded: status === 'correct' ? 1 : 0
+    };
+  });
+  ACTIVE_TESTS.delete(testId);
   const total = expected.length;
   const percentage = total > 0 ? Math.round((score * 100) / total) : 0;
-  return res.json({ ok: true, score, total, percentage, topic: test.topic });
+  const sections = [
+    {
+      key: 'practice',
+      label: test.topic,
+      total,
+      correct,
+      wrong,
+      skipped: unattempted,
+      accuracy: percentage
+    }
+  ];
+  return res.json({
+    ok: true,
+    score,
+    total,
+    maxMarks: total,
+    percentage,
+    topic: test.topic,
+    correct,
+    wrong,
+    unattempted,
+    attempted: correct + wrong,
+    sections,
+    review
+  });
 });
 
 module.exports = router;

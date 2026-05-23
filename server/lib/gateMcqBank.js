@@ -199,22 +199,70 @@ function scorePaper(paperData, responses) {
     sec.questions.forEach((q) => allQuestions.push(q));
   });
 
+  const sectionMap = new Map();
+  const review = [];
+
   allQuestions.forEach((q) => {
     maxMarks += q.marks;
     const ans = responses[q.id];
     const expected = answerKey[q.id];
-    if (ans === undefined || ans === null || ans < 0) {
-      unattempted += 1;
-      return;
-    }
-    if (ans === expected) {
-      score += q.marks;
-      correct += 1;
+    let status = 'skipped';
+    let selected = -1;
+    let marksAwarded = 0;
+
+    if (ans !== undefined && ans !== null && ans >= 0) {
+      selected = ans;
+      if (expected != null && ans === expected) {
+        status = 'correct';
+        score += q.marks;
+        marksAwarded = q.marks;
+        correct += 1;
+      } else {
+        status = 'incorrect';
+        score -= q.negativeMarks;
+        marksAwarded = -(q.negativeMarks || 0);
+        wrong += 1;
+      }
     } else {
-      score -= q.negativeMarks;
-      wrong += 1;
+      unattempted += 1;
     }
+
+    const secKey = q.sectionKey || 'default';
+    if (!sectionMap.has(secKey)) {
+      sectionMap.set(secKey, {
+        key: secKey,
+        label: q.sectionLabel || secKey,
+        total: 0,
+        correct: 0,
+        wrong: 0,
+        skipped: 0
+      });
+    }
+    const sec = sectionMap.get(secKey);
+    sec.total += 1;
+    if (status === 'correct') sec.correct += 1;
+    else if (status === 'incorrect') sec.wrong += 1;
+    else sec.skipped += 1;
+
+    review.push({
+      id: q.id,
+      number: q.number,
+      sectionKey: secKey,
+      sectionLabel: q.sectionLabel || secKey,
+      text: q.text,
+      options: q.options || [],
+      status,
+      selected,
+      correctIndex: expected != null ? expected : -1,
+      marks: q.marks,
+      marksAwarded
+    });
   });
+
+  const sections = [...sectionMap.values()].map((s) => ({
+    ...s,
+    accuracy: s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0
+  }));
 
   return {
     score: Math.round(score * 100) / 100,
@@ -223,7 +271,10 @@ function scorePaper(paperData, responses) {
     wrong,
     unattempted,
     total: allQuestions.length,
-    percentage: maxMarks > 0 ? Math.round((score / maxMarks) * 1000) / 10 : 0
+    attempted: correct + wrong,
+    percentage: maxMarks > 0 ? Math.round((score / maxMarks) * 1000) / 10 : 0,
+    sections,
+    review
   };
 }
 

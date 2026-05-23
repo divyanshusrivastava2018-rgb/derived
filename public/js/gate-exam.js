@@ -323,6 +323,42 @@
         $("resultScore").textContent = "Score: " + j.score + " / " + j.maxMarks + " (" + j.percentage + "%)";
         $("resultDetail").textContent =
           "Correct: " + j.correct + " · Wrong: " + j.wrong + " · Unattempted: " + j.unattempted;
+        if (j.review && j.review.length) {
+          try {
+            var analysisPayload = {
+              type: "gate",
+              title: j.title || paper.title,
+              completedAt: new Date().toISOString(),
+              backUrl:
+                "/gate-exam.html?year=" + encodeURIComponent(year) + "&name=" + encodeURIComponent(candidate),
+              summary: {
+                score: j.score,
+                maxMarks: j.maxMarks,
+                correct: j.correct,
+                wrong: j.wrong,
+                unattempted: j.unattempted,
+                total: j.total,
+                attempted: j.attempted != null ? j.attempted : j.correct + j.wrong,
+                percentage: j.percentage
+              },
+              sections: j.sections || [],
+              review: j.review
+            };
+            sessionStorage.setItem("researchium_mock_analysis", JSON.stringify(analysisPayload));
+            var btnAnalysis = $("btnViewAnalysis");
+            if (btnAnalysis) btnAnalysis.style.display = "";
+          } catch (storageErr) {
+            /* private mode / quota */
+          }
+        }
+        if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
+          window.ResearchiumProgress.record({
+            type: "gate_submit",
+            label: (paper.title || "GATE mock") + " " + year,
+            score: j.score,
+            total: j.maxMarks
+          });
+        }
       })
       .catch(function () {
         alert("Could not submit. Check your connection and try again.");

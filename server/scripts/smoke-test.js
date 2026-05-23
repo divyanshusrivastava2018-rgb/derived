@@ -136,6 +136,22 @@ async function main() {
       fail(`/api/home/summary expected 200 + learnerCount`);
     }
 
+    res = await req('GET', '/api/platform/overview');
+    if (res.status !== 200 || !res.json || !Array.isArray(res.json.features) || res.json.features.length < 1) {
+      fail(`/api/platform/overview expected features array`);
+    }
+
+    res = await req('POST', '/api/platform/progress', {
+      body: {
+        learnerId: 'lr_smoke_test_12345678',
+        type: 'quiz_submit',
+        label: 'Smoke quiz'
+      }
+    });
+    if (res.status !== 201 || !res.json || !res.json.ok) {
+      fail(`POST /api/platform/progress should succeed`);
+    }
+
     res = await req('GET', '/');
     if (res.status !== 200 || !res.text.includes('home-platform.js') || !res.text.includes('Researchium')) {
       fail(`/ should serve Researchium homepage`);
@@ -203,6 +219,46 @@ async function main() {
     });
     if (res.status !== 200 || !res.json || typeof res.json.score !== 'number') {
       fail(`/api/mcq/submit expected score response`);
+    }
+    if (!Array.isArray(res.json.review) || res.json.review.length === 0) {
+      fail(`/api/mcq/submit should include review[] for analysis page`);
+    }
+    if ('answerIndex' in (res.json.review[0] || {})) {
+      fail(`/api/mcq/submit review must not expose answerIndex field name`);
+    }
+
+    res = await req('GET', '/api/mcq/mock-tests');
+    if (res.status !== 200 || !res.json || !Array.isArray(res.json.tokens) || res.json.tokens.length === 0) {
+      fail(`/api/mcq/mock-tests expected tokens`);
+    }
+
+    res = await req('POST', '/api/mcq/gate/paper/2018/start', { body: {} });
+    if (res.status !== 200 || !res.json || !res.json.sessionId) {
+      fail(`GATE start should return sessionId`);
+    }
+    const gateSession = res.json.sessionId;
+    const gateResponses = {};
+    (res.json.paper.sections || []).forEach((sec) => {
+      (sec.questions || []).forEach((q) => {
+        gateResponses[q.id] = -1;
+      });
+    });
+    res = await req('POST', '/api/mcq/gate/paper/2018/submit', {
+      body: { sessionId: gateSession, responses: gateResponses }
+    });
+    if (res.status !== 200 || !res.json || typeof res.json.score !== 'number') {
+      fail(`GATE submit expected score`);
+    }
+    if (!Array.isArray(res.json.review) || res.json.review.length < 1) {
+      fail(`GATE submit should include review[]`);
+    }
+    if (!Array.isArray(res.json.sections) || res.json.sections.length < 1) {
+      fail(`GATE submit should include sections[]`);
+    }
+
+    res = await req('GET', '/mock-analysis.html');
+    if (res.status !== 200 || !res.text.includes('mock-analysis.js')) {
+      fail(`/mock-analysis.html should be served`);
     }
 
     res = await req('POST', '/api/admin/login', {

@@ -1,4 +1,5 @@
 const express = require('express');
+const { getBenefitBySlug } = require('../lib/platformFeatures');
 
 const router = express.Router();
 
@@ -66,6 +67,10 @@ router.get('/', (_req, res) => {
 });
 
 router.get('/:slug', (req, res) => {
+  const platformFeature = getBenefitBySlug(req.params.slug);
+  if (platformFeature) {
+    return res.json(platformFeature);
+  }
   const feature = WHY_FEATURES.find((x) => x.slug === req.params.slug);
   if (!feature) {
     return res.status(404).json({ error: 'Feature not found' });

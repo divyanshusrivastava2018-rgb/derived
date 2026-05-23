@@ -25,6 +25,7 @@
     if (apiPath.indexOf("/api/materials") === 0) return "/data/offline-materials.json";
     if (apiPath.indexOf("/api/mcq/mock-tests") === 0) return "/data/offline-mock-tests.json";
     if (apiPath.indexOf("/api/mcq/gate/papers") === 0) return "/data/offline-gate-papers.json";
+    if (apiPath.indexOf("/api/platform/overview") === 0) return "/data/offline-platform-overview.json";
     return null;
   }
 
@@ -163,5 +164,39 @@
       }
       siteInflight = null;
     }
+  };
+
+  var LEARNER_KEY = "researchium_learner_id";
+
+  function getLearnerId() {
+    try {
+      var id = localStorage.getItem(LEARNER_KEY);
+      if (!id) {
+        id =
+          "lr_" +
+          Math.random().toString(36).slice(2, 10) +
+          Date.now().toString(36).slice(-6);
+        localStorage.setItem(LEARNER_KEY, id);
+      }
+      return id;
+    } catch {
+      return "lr_anonymous";
+    }
+  }
+
+  function recordProgress(payload) {
+    var body = Object.assign({ learnerId: getLearnerId() }, payload || {});
+    return fetch(apiUrl("/api/platform/progress"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).catch(function () {
+      return null;
+    });
+  }
+
+  window.ResearchiumProgress = {
+    getLearnerId: getLearnerId,
+    record: recordProgress
   };
 })();

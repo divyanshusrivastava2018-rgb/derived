@@ -1,0 +1,54 @@
+{
+  "headline": "Join thousands practising daily",
+  "subhead": "Live + recorded learning, structured materials, and exam-ready mocks.",
+  "learnerCount": 2400,
+  "features": [
+    {
+      "slug": "live-recorded",
+      "icon": "▶",
+      "title": "Live + Recorded",
+      "stat": "Available",
+      "href": "/why-feature.html?slug=live-recorded"
+    },
+    {
+      "slug": "downloadable-pdfs",
+      "icon": "📄",
+      "title": "Downloadable PDFs",
+      "stat": "Available",
+      "href": "/why-feature.html?slug=downloadable-pdfs"
+    },
+    {
+      "slug": "daily-practice",
+      "icon": "🎯",
+      "title": "Daily practice",
+      "stat": "Available",
+      "href": "/why-feature.html?slug=daily-practice"
+    },
+    {
+      "slug": "full-mocks",
+      "icon": "📊",
+      "title": "Full mocks",
+      "stat": "Available",
+      "href": "/why-feature.html?slug=full-mocks"
+    },
+    {
+      "slug": "doubt-support",
+      "icon": "💬",
+      "title": "Doubt support",
+      "stat": "Available",
+      "href": "/why-feature.html?slug=doubt-support"
+    },
+    {
+      "slug": "progress-tracking",
+      "icon": "📈",
+      "title": "Progress tracking",
+      "stat": "Your activity",
+      "href": "/why-feature.html?slug=progress-tracking"
+    }
+  ],
+  "learnAnywhere": {
+    "icon": "📱",
+    "title": "Learn anywhere",
+    "summary": "Courses, mocks & materials on desktop and mobile."
+  }
+}

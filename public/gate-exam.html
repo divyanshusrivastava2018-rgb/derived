@@ -212,7 +212,10 @@
         <h2 id="resultTitle">Result</h2>
         <p id="resultScore" class="gate-result-score"></p>
         <p id="resultDetail" class="gate-result-detail"></p>
-        <button type="button" class="gate-btn-begin" id="btnCloseWindow">Back to Mock Test Series</button>
+        <div class="gate-result-actions" style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+          <a href="/mock-analysis.html" class="gate-btn-begin" id="btnViewAnalysis" style="display:none;text-decoration:none;text-align:center">View detailed analysis</a>
+          <button type="button" class="gate-btn-nav" id="btnCloseWindow">Back to Mock Test Series</button>
+        </div>
       </div>
     </div>
 

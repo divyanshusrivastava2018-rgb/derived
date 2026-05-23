@@ -303,9 +303,53 @@
 
     req
       .then(function (j) {
-        if (resultEl)
-          resultEl.textContent =
-            "Score: " + j.score + " / " + j.total + " (" + j.percentage + "%)";
+        if (resultEl) {
+          resultEl.innerHTML =
+            "Score: " +
+            esc(String(j.score)) +
+            " / " +
+            esc(String(j.total)) +
+            " (" +
+            esc(String(j.percentage)) +
+            "%)";
+          if (j.review && j.review.length) {
+            try {
+              sessionStorage.setItem(
+                "researchium_mock_analysis",
+                JSON.stringify({
+                  type: "quiz",
+                  title: (j.topic || currentTopic || "Practice") + " — Mock",
+                  completedAt: new Date().toISOString(),
+                  backUrl: "/mcq-test.html#mock-test-series",
+                  summary: {
+                    score: j.score,
+                    maxMarks: j.maxMarks != null ? j.maxMarks : j.total,
+                    correct: j.correct,
+                    wrong: j.wrong,
+                    unattempted: j.unattempted,
+                    total: j.total,
+                    attempted: j.attempted != null ? j.attempted : j.correct + j.wrong,
+                    percentage: j.percentage
+                  },
+                  sections: j.sections || [],
+                  review: j.review
+                })
+              );
+            } catch (storageErr) {
+              /* ignore */
+            }
+            resultEl.innerHTML +=
+              ' · <a href="/mock-analysis.html">View detailed analysis</a>';
+          }
+        }
+        if (window.ResearchiumProgress && window.ResearchiumProgress.record) {
+          window.ResearchiumProgress.record({
+            type: "quiz_submit",
+            label: currentTopic || "Practice quiz",
+            score: j.score,
+            total: j.total
+          });
+        }
       })
       .catch(function () {
         if (resultEl) resultEl.textContent = "Submit failed. Try again.";

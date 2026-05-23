@@ -331,6 +331,60 @@
       });
   }
 
+  function loadBenefits() {
+    var grid = document.getElementById("yoBenefitsGrid");
+    if (!grid) return;
+
+    var req =
+      window.ResearchiumApi && window.ResearchiumApi.get
+        ? window.ResearchiumApi.get("/api/platform/overview")
+        : fetch("/api/platform/overview").then(function (r) {
+            return r.ok ? r.json() : null;
+          });
+
+    req
+      .then(function (data) {
+        if (!data || !Array.isArray(data.features)) return;
+        var headline = document.getElementById("yoBenefitsHeadline");
+        var sub = document.getElementById("yoBenefitsSubhead");
+        if (headline && data.headline) headline.textContent = data.headline;
+        if (sub && data.subhead) sub.textContent = data.subhead;
+
+        grid.innerHTML = data.features
+          .map(function (f) {
+            return (
+              '<a class="yo-benefit-pill" href="' +
+              esc(f.href || "/why-feature.html?slug=" + encodeURIComponent(f.slug)) +
+              '"><span>' +
+              esc(f.icon) +
+              "</span><span>" +
+              esc(f.title) +
+              '</span><span class="yo-benefit-pill__stat">' +
+              esc(f.stat || "") +
+              "</span></a>"
+            );
+          })
+          .join("");
+
+        if (data.learnAnywhere) {
+          var la = data.learnAnywhere;
+          var t = document.getElementById("yoLearnAnywhereTitle");
+          var s = document.getElementById("yoLearnAnywhereSummary");
+          if (t && la.title) t.textContent = la.title;
+          if (s && la.summary) s.textContent = la.summary;
+        }
+      })
+      .catch(function () {
+        grid.innerHTML =
+          '<a class="yo-benefit-pill" href="/live-classes.html"><span>▶</span><span>Live + Recorded</span></a>' +
+          '<a class="yo-benefit-pill" href="/study-materials.html"><span>📄</span><span>Downloadable PDFs</span></a>' +
+          '<a class="yo-benefit-pill" href="/mcq-test.html"><span>🎯</span><span>Daily practice</span></a>' +
+          '<a class="yo-benefit-pill" href="/gate-exam.html"><span>📊</span><span>Full mocks</span></a>' +
+          '<a class="yo-benefit-pill" href="/csir-net.html#ai-doubt"><span>💬</span><span>Doubt support</span></a>' +
+          '<a class="yo-benefit-pill" href="/mcq-test.html#mock-test-series"><span>📈</span><span>Progress tracking</span></a>';
+      });
+  }
+
   function loadCsirStats() {
     var req =
       window.ResearchiumApi && window.ResearchiumApi.get
@@ -353,5 +407,6 @@
   initStories();
   loadLiveClasses();
   loadCourses();
+  loadBenefits();
   loadCsirStats();
 })();

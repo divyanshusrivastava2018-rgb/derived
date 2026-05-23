@@ -444,6 +444,20 @@
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--ac-text);
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+a.yo-benefit-pill:hover {
+  border-color: var(--yo-primary, #6d28d9);
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.12);
+}
+
+.yo-benefit-pill__stat {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--ac-muted);
 }
 
 .yo-benefit-pill span:first-child {
