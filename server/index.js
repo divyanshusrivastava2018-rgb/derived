@@ -27,6 +27,7 @@ const rssRouter = require('./routes/rss');
 const sitemapRouter = require('./routes/sitemap');
 const store = require('./lib/store');
 const siteStore = require('./lib/siteStore');
+const gateMcqBank = require('./lib/gateMcqBank');
 const { DEV_DEFAULT_SECRET, getAdminPassword } = require('./lib/adminAuth');
 const memberCookie = require('./lib/memberCookie');
 
@@ -47,11 +48,11 @@ store.readAll();
 siteStore.readSite();
 
 function warnIfGateAnswersMissing() {
-  const answersPath = path.join(__dirname, 'data', 'gate-mcq-answers.json');
-  if (!fs.existsSync(answersPath)) {
+  const result = gateMcqBank.ensureAnswersFile();
+  if (!result.ok) {
     console.warn(
-      '[Researchium] Missing server/data/gate-mcq-answers.json — GATE exam scoring will not work. ' +
-        'Run: node server/scripts/split-gate-mcq-answers.js (if upgrading from an older bank), or copy the file from your secure backup.'
+      '[Researchium] GATE answer keys unavailable — scoring will not work. ' +
+        'Add server/data/gate-mcq-answers.json or gate-mcq-answers.seed.json, or run: npm run migrate:gate-answers'
     );
   }
 }

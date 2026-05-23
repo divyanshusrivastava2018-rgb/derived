@@ -244,7 +244,14 @@ function listMockTests() {
   const categories = loadCategories();
   const tokens = [];
 
-  gateMcqBank.listPapers().forEach((p) => {
+  let gatePapers = [];
+  try {
+    gatePapers = gateMcqBank.listPapers();
+  } catch (err) {
+    console.error('[mockTestCatalog] GATE papers unavailable:', err.message);
+  }
+
+  gatePapers.forEach((p) => {
     tokens.push({
       id: 'gate-' + p.slug,
       group: 'gate-year',

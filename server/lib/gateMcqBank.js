@@ -4,6 +4,7 @@ const { formatMathText } = require('./mathLatex');
 
 const BANK_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-bank.json');
 const ANSWERS_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-answers.json');
+const ANSWERS_SEED_FILE = path.join(__dirname, '..', 'data', 'gate-mcq-answers.seed.json');
 
 let bankCache = null;
 let bankMtime = 0;
@@ -54,6 +55,9 @@ function migrateAnswersFromLegacyBank() {
 }
 
 function loadBankRaw() {
+  if (!fs.existsSync(BANK_FILE)) {
+    throw new Error('Missing server/data/gate-mcq-bank.json');
+  }
   const stat = fs.statSync(BANK_FILE);
   if (bankCache && stat.mtimeMs === bankMtime) return bankCache;
   const raw = fs.readFileSync(BANK_FILE, 'utf8');
@@ -66,6 +70,33 @@ function loadBank() {
   const bank = loadBankRaw();
   const answers = loadAnswersMap();
   return { bank, answers };
+}
+
+/** Deploy bootstrap: copy committed seed if answers file is missing. */
+function ensureAnswersFile() {
+  if (fs.existsSync(ANSWERS_FILE)) {
+    const answers = loadAnswersMap();
+    const count = Object.keys(answers || {}).length;
+    return { ok: count > 0, source: 'file', count };
+  }
+  if (fs.existsSync(ANSWERS_SEED_FILE)) {
+    fs.copyFileSync(ANSWERS_SEED_FILE, ANSWERS_FILE);
+    try {
+      fs.chmodSync(ANSWERS_FILE, 0o600);
+    } catch {
+      /* ignore */
+    }
+    answersCache = null;
+    answersMtime = 0;
+    const answers = loadAnswersMap();
+    const count = Object.keys(answers || {}).length;
+    console.log('[Researchium] Created gate-mcq-answers.json from seed (' + count + ' keys).');
+    return { ok: count > 0, source: 'seed', count };
+  }
+  const answers = migrateAnswersFromLegacyBank();
+  const count = Object.keys(answers || {}).length;
+  if (count > 0) return { ok: true, source: 'migration', count };
+  return { ok: false, source: 'missing', count: 0 };
 }
 
 function answerIndexFor(q, answers) {
@@ -284,5 +315,6 @@ module.exports = {
   scorePaper,
   letterToIndex,
   loadBank,
-  answerIndexFor
+  answerIndexFor,
+  ensureAnswersFile
 };

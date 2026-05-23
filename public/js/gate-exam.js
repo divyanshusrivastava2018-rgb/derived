@@ -385,6 +385,10 @@
       $("btnBeginExam").disabled = !this.checked;
     });
     $("btnBeginExam").addEventListener("click", function () {
+      if (!allQuestions.length) {
+        alert("This examination could not be loaded. Return to the mock test series and try again.");
+        return;
+      }
       showView("view-exam");
       startTimer();
       goToQuestion(0);
@@ -441,26 +445,65 @@
     });
   }
 
+  function showGateLoadError(message) {
+    var msg =
+      message ||
+      "Could not load this examination. Ensure the site server is running and GATE data is deployed.";
+    var box = $("gateLoadError");
+    if (!box) {
+      box = document.createElement("p");
+      box.id = "gateLoadError";
+      box.className = "gate-load-error";
+      var login = $("view-login");
+      if (login && login.querySelector(".gate-login-panel")) {
+        login.querySelector(".gate-login-panel").prepend(box);
+      } else if (login) {
+        login.prepend(box);
+      }
+    }
+    if (box) {
+      box.textContent = msg;
+      box.style.display = "block";
+    }
+    var begin = $("btnBeginExam");
+    if (begin) begin.disabled = true;
+  }
+
   function loadPaper() {
     return fetch("/api/mcq/gate/paper/" + encodeURIComponent(year) + "/start", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: "{}"
     })
       .then(function (r) {
-        return r.json().then(function (j) {
-          if (!r.ok) throw new Error(j.error || "load failed");
+        return r.text().then(function (text) {
+          var j = {};
+          try {
+            j = text ? JSON.parse(text) : {};
+          } catch (parseErr) {
+            throw new Error("Server returned an invalid response. Is the API running?");
+          }
+          if (!r.ok) throw new Error(j.error || "Paper not found (" + r.status + ")");
           return j;
         });
       })
       .then(function (j) {
         sessionId = j.sessionId || "";
         paper = j.paper;
+        if (!paper) throw new Error("Exam paper data is missing.");
         document.title = paper.title + " — Online Assessment";
         $("durText").textContent = String(paper.durationMinutes);
         timerSeconds = (paper.durationMinutes || 180) * 60;
         $("examTimer").textContent = "Time Left : " + formatTime(timerSeconds);
         allQuestions = flatQuestions();
+        if (!allQuestions.length) {
+          throw new Error(
+            "This paper has no questions. On the server, check gate-mcq-bank.json and gate-mcq-answers.json."
+          );
+        }
+        var errBox = $("gateLoadError");
+        if (errBox) errBox.style.display = "none";
         initState();
         fillLoginPanel();
         renderPaperTable();
@@ -471,8 +514,7 @@
   bindEvents();
   showView("view-login");
 
-  loadPaper().catch(function () {
-    document.body.innerHTML =
-      '<p style="padding:2rem;text-align:center">Could not load examination. <a href="/mcq-test.html#mock-test-series">Back to Mock Test Series</a></p>';
+  loadPaper().catch(function (err) {
+    showGateLoadError(err && err.message ? err.message : null);
   });
 })();

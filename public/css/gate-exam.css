@@ -461,6 +461,16 @@ body.gate-exam-body {
 .gate-result-score { font-size: 18px; font-weight: 700; margin: 12px 0; color: #2e6da4; }
 .gate-result-detail { color: #555; font-size: 13px; }
 
+.gate-load-error {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: #fff3cd;
+  border: 1px solid #c9a227;
+  color: #664d03;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .gate-modal {
   position: fixed;
   inset: 0;

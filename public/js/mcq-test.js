@@ -11,9 +11,12 @@
     if (window.ResearchiumApi && window.ResearchiumApi.get) {
       return window.ResearchiumApi.get("/api/mcq/mock-tests");
     }
-    return fetch("/api/mcq/mock-tests", { cache: "no-store" }).then(function (r) {
+    return fetch("/api/mcq/mock-tests", { cache: "no-store", credentials: "same-origin" }).then(function (r) {
       if (!r.ok) throw new Error("api");
-      return r.json();
+      return r.json().then(function (data) {
+        if (data && data.error && (!data.tokens || !data.tokens.length)) throw new Error("api");
+        return data;
+      });
     }).catch(function () {
       return fetch("/data/offline-mock-tests.json", { cache: "no-store" }).then(function (r) {
         if (!r.ok) throw new Error("offline");

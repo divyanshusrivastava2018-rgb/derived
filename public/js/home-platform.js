@@ -338,13 +338,25 @@
     var req =
       window.ResearchiumApi && window.ResearchiumApi.get
         ? window.ResearchiumApi.get("/api/platform/overview")
-        : fetch("/api/platform/overview").then(function (r) {
-            return r.ok ? r.json() : null;
-          });
+        : fetch("/api/platform/overview", { cache: "no-store" })
+            .then(function (r) {
+              return r.ok ? r.json() : Promise.reject(new Error("api"));
+            })
+            .catch(function () {
+              return fetch("/data/offline-platform-overview.json", { cache: "no-store" }).then(
+                function (r) {
+                  return r.ok ? r.json() : null;
+                }
+              );
+            });
 
     req
       .then(function (data) {
-        if (!data || !Array.isArray(data.features)) return;
+        if (!data || !Array.isArray(data.features)) {
+          grid.innerHTML =
+            '<p class="loading-banner">Benefits will appear when the server is running.</p>';
+          return;
+        }
         var headline = document.getElementById("yoBenefitsHeadline");
         var sub = document.getElementById("yoBenefitsSubhead");
         if (headline && data.headline) headline.textContent = data.headline;
