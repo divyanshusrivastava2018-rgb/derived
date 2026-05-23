@@ -119,6 +119,22 @@
     return "/api/mcq/gate/paper/" + encodeURIComponent(year);
   }
 
+  function gateHealthPath() {
+    return "/api/mcq/gate/healthz";
+  }
+
+  function checkGateApiReachable() {
+    return gateFetch(gateHealthPath(), { method: "GET" }).then(function (j) {
+      if (!j || j.ok !== true) {
+        throw {
+          status: 503,
+          error: "GATE exam API is not ready. Ensure the Node server is running."
+        };
+      }
+      return j;
+    });
+  }
+
   function loadOfflinePaper() {
     return fetch("/data/offline-gate-exams.json", { cache: "no-store" })
       .then(function (r) {
@@ -680,7 +696,10 @@
       responses[q.id] = s && s.answer !== null ? s.answer : -1;
     });
 
-    ensureGateSession()
+    checkGateApiReachable()
+      .then(function () {
+        return ensureGateSession();
+      })
       .then(function () {
         return postGateSubmit(responses, true);
       })

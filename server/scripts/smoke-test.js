@@ -232,6 +232,11 @@ async function main() {
       fail(`/api/mcq/mock-tests expected tokens`);
     }
 
+    res = await req('GET', '/api/mcq/gate/healthz');
+    if (res.status !== 200 || !res.json || res.json.ok !== true) {
+      fail(`/api/mcq/gate/healthz expected ok`);
+    }
+
     res = await req('POST', '/api/mcq/gate/paper/2018/start', { body: {} });
     if (res.status !== 200 || !res.json || !res.json.sessionId) {
       fail(`GATE start should return sessionId`);

@@ -1,3 +1,7 @@
+/**
+ * GATE MCQ exam API — list papers, start session, submit (answers server-only).
+ * Mounted at /api/mcq/gate (see server/routes/mcq.js).
+ */
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { nanoid } = require('nanoid');
@@ -22,8 +26,18 @@ const submitLimiter = rateLimit({
   message: { error: 'Too many submissions. Try again later.' }
 });
 
+/** In-memory sessions — use Redis/DB if you run multiple Node instances. */
 const ACTIVE_SESSIONS = new Map();
 const SESSION_TTL_MS = 3 * 60 * 60 * 1000;
+
+function cleanupSessions() {
+  const now = Date.now();
+  for (const [id, s] of ACTIVE_SESSIONS) {
+    if (!s || now > s.expiresAt) ACTIVE_SESSIONS.delete(id);
+  }
+}
+
+setInterval(cleanupSessions, 10 * 60 * 1000).unref?.();
 
 function stripAnswers(paper) {
   return {
@@ -53,28 +67,31 @@ function stripAnswers(paper) {
   };
 }
 
-function cleanupSessions() {
-  const now = Date.now();
-  for (const [id, s] of ACTIVE_SESSIONS) {
-    if (!s || now > s.expiresAt) ACTIVE_SESSIONS.delete(id);
-  }
+/** Always JSON errors (never HTML) for the browser error helper. */
+function jsonError(res, status, message) {
+  return res.status(status).json({ error: message });
 }
 
-setInterval(cleanupSessions, 10 * 60 * 1000).unref?.();
+router.get('/healthz', (_req, res) => {
+  res.json({ ok: true, service: 'gate-mcq', ts: Date.now() });
+});
 
 router.get('/papers', (_req, res) => {
   res.json({ papers: gateMcqBank.listPapers() });
 });
 
 router.get('/paper/:slug', (req, res) => {
-  const paper = gateMcqBank.getPaper(req.params.slug);
-  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+  const slug = String(req.params.slug || '').trim();
+  const paper = gateMcqBank.getPaper(slug);
+  if (!paper) return jsonError(res, 404, 'Paper not found.');
   res.json(stripAnswers(paper));
 });
 
 router.post('/paper/:slug/start', startLimiter, jsonParser, (req, res) => {
-  const paper = gateMcqBank.getPaper(req.params.slug);
-  if (!paper) return res.status(404).json({ error: 'Paper not found' });
+  const slug = String(req.params.slug || '').trim();
+  const paper = gateMcqBank.getPaper(slug);
+  if (!paper) return jsonError(res, 404, 'Paper not found.');
+
   const sessionId = nanoid(20);
   ACTIVE_SESSIONS.set(sessionId, {
     slug: paper.slug,
@@ -82,6 +99,7 @@ router.post('/paper/:slug/start', startLimiter, jsonParser, (req, res) => {
     createdAt: Date.now(),
     expiresAt: Date.now() + SESSION_TTL_MS
   });
+
   res.json({
     ok: true,
     sessionId,
@@ -100,17 +118,24 @@ router.post('/paper/:slug/submit', submitLimiter, jsonParser, (req, res) => {
 
   if (session) {
     if (session.slug !== slug) {
-      return res.status(400).json({ error: 'Session does not match this paper.' });
+      return jsonError(
+        res,
+        400,
+        'Session does not match this paper. Please start the exam again.'
+      );
     }
     paper = session.paper;
     ACTIVE_SESSIONS.delete(sessionId);
   } else {
-    /* Session lost (server restart, load balancer, or long break) — still score if paper exists. */
     paper = gateMcqBank.getPaper(slug);
     if (!paper) {
-      return res.status(404).json({
-        error: 'Exam session expired or paper not found. Refresh the page and start the mock again.'
-      });
+      return jsonError(
+        res,
+        404,
+        'Exam session not found and paper "' +
+          slug +
+          '" does not exist. Please refresh and start the mock exam again.'
+      );
     }
   }
 
