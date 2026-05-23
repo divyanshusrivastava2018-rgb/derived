@@ -403,8 +403,74 @@
     }
   }
 
-  function submitExam(auto) {
-    if (!auto && !confirm("Submit examination? You cannot change answers after submit.")) return;
+  function showGateAlert(message, title) {
+    var modal = $("gateAlertModal");
+    var textEl = $("gateAlertText");
+    var titleEl = $("gateAlertTitle");
+    var okBtn = $("btnAlertOk");
+    if (!modal) {
+      window.alert(message);
+      return;
+    }
+    if (titleEl) titleEl.textContent = title || "Notice";
+    if (textEl) textEl.textContent = message || "";
+    modal.classList.remove("gate-hidden");
+    function close() {
+      modal.classList.add("gate-hidden");
+      if (okBtn) okBtn.removeEventListener("click", close);
+      document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) {
+      if (e.key === "Escape" || e.key === "Enter") close();
+    }
+    if (okBtn) {
+      okBtn.addEventListener("click", close);
+      okBtn.focus();
+    }
+    document.addEventListener("keydown", onKey);
+  }
+
+  function confirmSubmitExam() {
+    return new Promise(function (resolve) {
+      var modal = $("gateSubmitModal");
+      if (!modal) {
+        resolve(
+          window.confirm(
+            "Submit examination? You cannot change your answers after submission."
+          )
+        );
+        return;
+      }
+      var confirmBtn = $("btnSubmitConfirm");
+      var cancelBtn = $("btnSubmitCancel");
+      modal.classList.remove("gate-hidden");
+
+      function finish(ok) {
+        modal.classList.add("gate-hidden");
+        if (confirmBtn) confirmBtn.removeEventListener("click", onConfirm);
+        if (cancelBtn) cancelBtn.removeEventListener("click", onCancel);
+        document.removeEventListener("keydown", onKey);
+        resolve(ok);
+      }
+
+      function onConfirm() {
+        finish(true);
+      }
+      function onCancel() {
+        finish(false);
+      }
+      function onKey(e) {
+        if (e.key === "Escape") onCancel();
+      }
+
+      if (confirmBtn) confirmBtn.addEventListener("click", onConfirm);
+      if (cancelBtn) cancelBtn.addEventListener("click", onCancel);
+      document.addEventListener("keydown", onKey);
+      if (cancelBtn) cancelBtn.focus();
+    });
+  }
+
+  function runSubmitExam() {
     saveCurrentAnswer();
     if (timerHandle) clearInterval(timerHandle);
 
@@ -465,11 +531,22 @@
         }
       })
       .catch(function (err) {
-        alert(
+        showGateAlert(
           (err && err.message) ||
-            "Could not submit. Ensure the Node server is running (npm start) and try again."
+            "Could not submit. Ensure the Node server is running (npm start) and try again.",
+          "Submission failed"
         );
       });
+  }
+
+  function submitExam(auto) {
+    if (auto) {
+      runSubmitExam();
+      return;
+    }
+    confirmSubmitExam().then(function (ok) {
+      if (ok) runSubmitExam();
+    });
   }
 
   function bindEvents() {

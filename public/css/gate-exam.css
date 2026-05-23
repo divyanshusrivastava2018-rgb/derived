@@ -488,7 +488,26 @@ body.gate-exam-body {
   text-align: center;
 }
 .gate-modal-title { font-weight: 700; margin-bottom: 10px; }
-.gate-modal-text { font-size: 12px; margin-bottom: 14px; color: #444; }
+.gate-modal-text { font-size: 12px; margin-bottom: 14px; color: #444; line-height: 1.55; }
+
+.gate-modal-box--confirm {
+  max-width: 400px;
+  text-align: left;
+}
+
+.gate-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.gate-modal-actions .gate-btn-submit-exam {
+  min-width: 100px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+}
 
 .gate-hidden { display: none !important; }
 

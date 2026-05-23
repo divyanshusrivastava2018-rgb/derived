@@ -219,11 +219,34 @@
       </div>
     </div>
 
-    <div id="gateCalcModal" class="gate-modal gate-hidden" role="dialog" aria-label="Calculator">
+    <div id="gateCalcModal" class="gate-modal gate-hidden" role="dialog" aria-modal="true" aria-label="Calculator">
       <div class="gate-modal-box">
         <p class="gate-modal-title">Scientific calculator</p>
         <p class="gate-modal-text">Use your system calculator for practice. An on-screen calculator may be added in a future release.</p>
         <button type="button" class="gate-btn-nav" id="btnCloseCalc">Close</button>
+      </div>
+    </div>
+
+    <div id="gateAlertModal" class="gate-modal gate-hidden" role="alertdialog" aria-modal="true" aria-labelledby="gateAlertTitle">
+      <div class="gate-modal-box gate-modal-box--confirm">
+        <p class="gate-modal-title" id="gateAlertTitle">Notice</p>
+        <p class="gate-modal-text" id="gateAlertText"></p>
+        <div class="gate-modal-actions">
+          <button type="button" class="gate-btn-nav" id="btnAlertOk">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gateSubmitModal" class="gate-modal gate-hidden" role="dialog" aria-modal="true" aria-labelledby="gateSubmitModalTitle">
+      <div class="gate-modal-box gate-modal-box--confirm">
+        <p class="gate-modal-title" id="gateSubmitModalTitle">Submit examination?</p>
+        <p class="gate-modal-text">
+          You cannot change your answers after submission. Make sure you have reviewed the question palette.
+        </p>
+        <div class="gate-modal-actions">
+          <button type="button" class="gate-btn-nav" id="btnSubmitCancel">Cancel</button>
+          <button type="button" class="gate-btn-submit-exam" id="btnSubmitConfirm">Submit</button>
+        </div>
       </div>
     </div>
 
