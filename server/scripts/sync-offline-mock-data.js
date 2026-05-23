@@ -23,5 +23,49 @@ fs.writeFileSync(
   'utf8'
 );
 
+/** Full papers (no answer keys) for gate-exam.html when /api is unreachable */
+function stripPaperForClient(paper) {
+  if (!paper) return null;
+  return {
+    year: paper.year,
+    slug: paper.slug,
+    title: paper.title,
+    subject: paper.subject,
+    subjectLabel: paper.subjectLabel,
+    durationMinutes: paper.durationMinutes,
+    sections: (paper.sections || []).map((sec) => ({
+      key: sec.key,
+      label: sec.label,
+      marks1Count: sec.marks1Count,
+      marks2Count: sec.marks2Count,
+      questions: (sec.questions || []).map((q) => ({
+        id: q.id,
+        number: q.number,
+        sectionKey: q.sectionKey,
+        sectionLabel: q.sectionLabel,
+        type: q.type,
+        marks: q.marks,
+        negativeMarks: q.negativeMarks,
+        text: q.text,
+        options: q.options
+      }))
+    }))
+  };
+}
+
+const offlineExams = {};
+gateMcqBank.listPapers().forEach((meta) => {
+  const slug = meta.slug || String(meta.year);
+  const full = gateMcqBank.getPaper(slug);
+  const stripped = stripPaperForClient(full);
+  if (stripped) offlineExams[slug] = stripped;
+});
+fs.writeFileSync(
+  path.join(outDir, 'offline-gate-exams.json'),
+  JSON.stringify(offlineExams, null, 2),
+  'utf8'
+);
+
 const tokens = mockTestCatalog.listMockTests().tokens;
 console.log('Wrote offline mock catalog:', tokens.length, 'tokens');
+console.log('Wrote offline GATE exams:', Object.keys(offlineExams).length, 'papers');

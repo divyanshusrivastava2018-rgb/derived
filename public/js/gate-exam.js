@@ -5,6 +5,7 @@
 
   var paper = null;
   var sessionId = "";
+  var gatePracticeOnly = false;
   var allQuestions = [];
   var currentIndex = 0;
   var currentSectionKey = "";
@@ -24,6 +25,113 @@
 
   function $(id) {
     return document.getElementById(id);
+  }
+
+  function escText(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function apiUrl(path) {
+    if (window.ResearchiumApi && window.ResearchiumApi.url) {
+      return window.ResearchiumApi.url(path);
+    }
+    return path.charAt(0) === "/" ? path : "/" + path;
+  }
+
+  function parseApiBody(r, text) {
+    var body = text == null ? "" : String(text).trim();
+    if (!body) {
+      throw new Error("Empty response from server. Start the app with npm start.");
+    }
+    if (body.charAt(0) === "<") {
+      throw new Error(
+        "API is not reachable (got HTML). Run the Node server and proxy /api to it, or use the same host as the API."
+      );
+    }
+    try {
+      return JSON.parse(body);
+    } catch (parseErr) {
+      throw new Error("Could not read server data (invalid JSON, status " + r.status + ").");
+    }
+  }
+
+  function gateFetch(path, opts) {
+    var options = Object.assign(
+      {
+        credentials: "same-origin",
+        headers: { Accept: "application/json" }
+      },
+      opts || {}
+    );
+    if (options.body && typeof options.body === "object") {
+      options.headers["Content-Type"] = "application/json";
+      options.body = JSON.stringify(options.body);
+    }
+    return fetch(apiUrl(path), options).then(function (r) {
+      return r.text().then(function (text) {
+        var json = parseApiBody(r, text);
+        if (!r.ok) {
+          throw new Error((json && json.error) || "Request failed (" + r.status + ")");
+        }
+        return json;
+      });
+    });
+  }
+
+  function gateStartPath() {
+    return "/api/mcq/gate/paper/" + encodeURIComponent(year) + "/start";
+  }
+
+  function gateSubmitPath() {
+    return "/api/mcq/gate/paper/" + encodeURIComponent(year) + "/submit";
+  }
+
+  function gatePaperPath() {
+    return "/api/mcq/gate/paper/" + encodeURIComponent(year);
+  }
+
+  function loadOfflinePaper() {
+    return fetch("/data/offline-gate-exams.json", { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("offline");
+        return r.json();
+      })
+      .then(function (data) {
+        var key = String(year).trim();
+        return (data && (data[key] || data[year])) || null;
+      });
+  }
+
+  function applyLoadedPaper(p) {
+    paper = p;
+    if (!paper) throw new Error("Exam paper data is missing.");
+    document.title = paper.title + " — Online Assessment";
+    if ($("durText")) $("durText").textContent = String(paper.durationMinutes);
+    timerSeconds = (paper.durationMinutes || 180) * 60;
+    if ($("examTimer")) $("examTimer").textContent = "Time Left : " + formatTime(timerSeconds);
+    allQuestions = flatQuestions();
+    if (!allQuestions.length) {
+      throw new Error(
+        "This paper has no questions. On the server run: npm run prepare:gate && npm run sync:mock-offline"
+      );
+    }
+    var errBox = $("gateLoadError");
+    if (errBox) errBox.style.display = "none";
+    initState();
+    fillLoginPanel();
+    renderPaperTable();
+  }
+
+  function ensureGateSession() {
+    if (sessionId && !gatePracticeOnly) return Promise.resolve(sessionId);
+    return gateFetch(gateStartPath(), { method: "POST", body: {} }).then(function (j) {
+      sessionId = j.sessionId || "";
+      gatePracticeOnly = false;
+      if (!sessionId) throw new Error("Could not start exam session.");
+      return sessionId;
+    });
   }
 
   function showView(id) {
@@ -306,15 +414,11 @@
       responses[q.id] = s && s.answer !== null ? s.answer : -1;
     });
 
-    fetch("/api/mcq/gate/paper/" + encodeURIComponent(year) + "/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId: sessionId, responses: responses })
-    })
-      .then(function (r) {
-        return r.json().then(function (j) {
-          if (!r.ok) throw new Error(j.error || "submit failed");
-          return j;
+    ensureGateSession()
+      .then(function () {
+        return gateFetch(gateSubmitPath(), {
+          method: "POST",
+          body: { sessionId: sessionId, responses: responses }
         });
       })
       .then(function (j) {
@@ -360,8 +464,11 @@
           });
         }
       })
-      .catch(function () {
-        alert("Could not submit. Check your connection and try again.");
+      .catch(function (err) {
+        alert(
+          (err && err.message) ||
+            "Could not submit. Ensure the Node server is running (npm start) and try again."
+        );
       });
   }
 
@@ -448,66 +555,81 @@
   function showGateLoadError(message) {
     var msg =
       message ||
-      "Could not load this examination. Ensure the site server is running and GATE data is deployed.";
+      "Could not load this examination. Start the server with npm start, or run npm run prepare:gate on deploy.";
+    var login = $("view-login");
+    var main = login && login.querySelector(".gate-login-main");
     var box = $("gateLoadError");
     if (!box) {
-      box = document.createElement("p");
+      box = document.createElement("div");
       box.id = "gateLoadError";
       box.className = "gate-load-error";
-      var login = $("view-login");
-      if (login && login.querySelector(".gate-login-panel")) {
-        login.querySelector(".gate-login-panel").prepend(box);
+      if (main) {
+        main.insertBefore(box, main.firstChild);
       } else if (login) {
         login.prepend(box);
       }
     }
     if (box) {
-      box.textContent = msg;
+      box.innerHTML =
+        "<p>" +
+        escText(msg) +
+        '</p><p style="margin-top:10px"><button type="button" class="gate-btn-nav" id="btnRetryGateLoad">Retry</button> ' +
+        '<a href="/mcq-test.html#mock-test-series" class="gate-btn-nav" style="display:inline-block;margin-left:8px;text-decoration:none">Mock tests</a></p>';
       box.style.display = "block";
+      var retry = document.getElementById("btnRetryGateLoad");
+      if (retry) {
+        retry.addEventListener("click", function () {
+          box.style.display = "none";
+          loadPaper().catch(function (err) {
+            showGateLoadError(err && err.message ? err.message : null);
+          });
+        });
+      }
     }
     var begin = $("btnBeginExam");
     if (begin) begin.disabled = true;
   }
 
   function loadPaper() {
-    return fetch("/api/mcq/gate/paper/" + encodeURIComponent(year) + "/start", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: "{}"
-    })
-      .then(function (r) {
-        return r.text().then(function (text) {
-          var j = {};
-          try {
-            j = text ? JSON.parse(text) : {};
-          } catch (parseErr) {
-            throw new Error("Server returned an invalid response. Is the API running?");
-          }
-          if (!r.ok) throw new Error(j.error || "Paper not found (" + r.status + ")");
-          return j;
-        });
-      })
+    gatePracticeOnly = false;
+    return gateFetch(gateStartPath(), { method: "POST", body: {} })
       .then(function (j) {
         sessionId = j.sessionId || "";
-        paper = j.paper;
-        if (!paper) throw new Error("Exam paper data is missing.");
-        document.title = paper.title + " — Online Assessment";
-        $("durText").textContent = String(paper.durationMinutes);
-        timerSeconds = (paper.durationMinutes || 180) * 60;
-        $("examTimer").textContent = "Time Left : " + formatTime(timerSeconds);
-        allQuestions = flatQuestions();
-        if (!allQuestions.length) {
-          throw new Error(
-            "This paper has no questions. On the server, check gate-mcq-bank.json and gate-mcq-answers.json."
-          );
-        }
-        var errBox = $("gateLoadError");
-        if (errBox) errBox.style.display = "none";
-        initState();
-        fillLoginPanel();
-        renderPaperTable();
+        if (!sessionId) throw new Error("Exam session could not be created.");
+        applyLoadedPaper(j.paper);
+      })
+      .catch(function (startErr) {
+        return gateFetch(gatePaperPath(), { method: "GET" })
+          .then(function (paperOnly) {
+            gatePracticeOnly = true;
+            sessionId = "";
+            applyLoadedPaper(paperOnly);
+            showGateLoadNotice(
+              "Loaded in practice mode. Scoring needs the API — click Retry after starting the server."
+            );
+          })
+          .catch(function () {
+            return loadOfflinePaper().then(function (offlinePaper) {
+              if (!offlinePaper) throw startErr;
+              gatePracticeOnly = true;
+              sessionId = "";
+              applyLoadedPaper(offlinePaper);
+              showGateLoadNotice(
+                "Offline paper loaded. Start the Node server (npm start) before submitting for a score."
+              );
+            });
+          });
       });
+  }
+
+  function showGateLoadNotice(message) {
+    var box = $("gateLoadError");
+    if (!box) return;
+    box.innerHTML = "<p>" + escText(message) + "</p>";
+    box.style.display = "block";
+    box.style.background = "#e8f4fc";
+    box.style.borderColor = "#2e6da4";
+    box.style.color = "#1a4d7a";
   }
 
   setCandidateNames();
