@@ -9,22 +9,48 @@
 
   var meta = document.querySelector('meta[name="researchium-api-base"]');
   var configured = (meta && meta.getAttribute("content")) || window.RESEARCHIUM_API_BASE || "";
+  var runtimeGateApiBase = "";
 
-  function inferApiBase() {
-    if (configured && String(configured).trim()) return String(configured).trim();
-    try {
-      var host = window.location.hostname || "";
-      if (host === "localhost" || host === "127.0.0.1") return "";
-      if (host.endsWith(".github.io") || host === "github.io") {
-        return "https://www.derived.co.in";
-      }
-    } catch {
-      /* ignore */
+  function pickApiBase() {
+    if (configured && String(configured).trim()) {
+      return String(configured).trim().replace(/\/$/, "");
+    }
+    if (runtimeGateApiBase && String(runtimeGateApiBase).trim()) {
+      return String(runtimeGateApiBase).trim().replace(/\/$/, "");
     }
     return "";
   }
 
-  var API_BASE = String(inferApiBase()).replace(/\/$/, "");
+  var API_BASE = "";
+
+  function loadRuntimeConfig() {
+    return fetch("/data/runtime-config.json", { cache: "no-store" })
+      .then(function (r) {
+        return r.ok ? r.json() : {};
+      })
+      .catch(function () {
+        return {};
+      })
+      .then(function (cfg) {
+        runtimeGateApiBase = (cfg && cfg.gateApiBase) || "";
+        API_BASE = pickApiBase();
+        if (window.ResearchiumApi) {
+          window.ResearchiumApi.base = API_BASE;
+        }
+      });
+  }
+
+  var configReady = loadRuntimeConfig();
+
+  function fetchCredentials(url) {
+    try {
+      var target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) return "same-origin";
+    } catch {
+      /* ignore */
+    }
+    return "omit";
+  }
 
   function apiUrl(path) {
     var p = path.charAt(0) === "/" ? path : "/" + path;
@@ -73,8 +99,9 @@
   }
 
   function fetchJson(path, opts) {
-    var url = apiUrl(path);
-    var options = Object.assign({ credentials: "same-origin", headers: {} }, opts || {});
+    return configReady.then(function () {
+      var url = apiUrl(path);
+      var options = Object.assign({ credentials: fetchCredentials(url), headers: {} }, opts || {});
     if (options.body && typeof options.body === "object" && !(options.body instanceof FormData)) {
       options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(options.body);
@@ -116,26 +143,31 @@
           return text ? JSON.parse(text) : {};
         });
       });
+    });
   }
 
   var healthPromise = null;
 
   window.ResearchiumApi = {
     base: API_BASE,
+    ready: configReady,
     url: apiUrl,
     isOnline: null,
 
     checkHealth: function () {
       if (healthPromise) return healthPromise;
-      healthPromise = fetch(apiUrl("/healthz"), { cache: "no-store", credentials: "same-origin" })
-        .then(function (r) {
-          window.ResearchiumApi.isOnline = r.ok;
-          return r.ok;
-        })
-        .catch(function () {
-          window.ResearchiumApi.isOnline = false;
-          return false;
-        });
+      healthPromise = configReady.then(function () {
+        var url = apiUrl("/healthz");
+        return fetch(url, { cache: "no-store", credentials: fetchCredentials(url) })
+          .then(function (r) {
+            window.ResearchiumApi.isOnline = r.ok;
+            return r.ok;
+          })
+          .catch(function () {
+            window.ResearchiumApi.isOnline = false;
+            return false;
+          });
+      });
       return healthPromise;
     },
 

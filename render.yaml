@@ -1,0 +1,26 @@
+# Full-stack Researchium (static public/ + Express /api). Connect this repo on Render.com.
+services:
+  - type: web
+    name: researchium
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run prepare:gate && npm run sync:mock-offline
+    startCommand: node server/index.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: GATE_ALLOW_STATELESS_SUBMIT
+        value: "0"
+      - key: RESEARCHIUM_ADMIN_USERNAME
+        sync: false
+      - key: RESEARCHIUM_ADMIN_PASSWORD
+        sync: false
+      - key: RESEARCHIUM_MEMBER_SECRET
+        generateValue: true
+      - key: HCAPTCHA_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false

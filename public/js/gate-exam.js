@@ -983,7 +983,17 @@
   bindEvents();
   showView("view-login");
 
-  loadPaper()
+  function whenApiReady() {
+    if (window.ResearchiumApi && window.ResearchiumApi.ready) {
+      return window.ResearchiumApi.ready;
+    }
+    return Promise.resolve();
+  }
+
+  whenApiReady()
+    .then(function () {
+      return loadPaper();
+    })
     .then(function () {
       tryRestoreReviewMode();
     })

@@ -19,7 +19,8 @@
     "import:math-science": "node server/scripts/import-mathematical-science-materials.js",
     "sync:mock-offline": "node server/scripts/sync-offline-mock-data.js",
     "migrate:gate-answers": "node server/scripts/split-gate-mcq-answers.js",
-    "prepare:gate": "node server/scripts/ensure-gate-answers.js"
+    "prepare:gate": "node server/scripts/ensure-gate-answers.js",
+    "build:runtime-config": "node server/scripts/build-runtime-config.js"
   },
   "dependencies": {
     "compression": "^1.8.1",

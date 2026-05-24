@@ -5,12 +5,10 @@
 (function () {
   "use strict";
 
-  function apiBase() {
-    if (window.ResearchiumApi && window.ResearchiumApi.url) {
-      return window.ResearchiumApi.url("/api/mcq/gate");
-    }
-    return "/api/mcq/gate";
-  }
+  /** @type {string} API origin (e.g. https://app.onrender.com) or "" for same-origin relative /api */
+  var gateApiOrigin = "";
+  var gateApiResolved = false;
+  var gateApiResolvePromise = null;
 
   function errMsg(err) {
     if (window.ResearchiumErrors && window.ResearchiumErrors.errorToMessage) {
@@ -30,29 +28,51 @@
     alert((title || "Error") + "\n\n" + errMsg(err));
   }
 
+  function whenCoreReady() {
+    if (window.ResearchiumApi && window.ResearchiumApi.ready) {
+      return window.ResearchiumApi.ready;
+    }
+    return Promise.resolve();
+  }
+
+  function gateApiUrl(suffix) {
+    var path = "/api/mcq/gate" + (suffix.charAt(0) === "/" ? suffix : "/" + suffix);
+    var origin = String(gateApiOrigin || "").replace(/\/$/, "");
+    return origin ? origin + path : path;
+  }
+
+  function fetchCredentials(url) {
+    try {
+      var target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) return "same-origin";
+    } catch {
+      /* ignore */
+    }
+    return "omit";
+  }
+
   function normalizeSubmitError(msg, status) {
-    var m = String(msg || "").trim();
-    var lower = m.toLowerCase();
+    var lower = String(msg || "").toLowerCase();
     if (
       status === 404 ||
       lower.indexOf("page could not be found") >= 0 ||
       lower.indexOf("exam submit api was not found") >= 0 ||
-      (lower.indexOf("not found") >= 0 && lower.indexOf("paper not found") < 0 && lower.indexOf("question not found") < 0)
+      (lower.indexOf("not found") >= 0 &&
+        lower.indexOf("paper not found") < 0 &&
+        lower.indexOf("question not found") < 0)
     ) {
-      var apiHost = "";
-      try {
-        apiHost = new URL(apiBase() + "/healthz", window.location.origin).origin;
-      } catch {
-        apiHost = "the exam API host";
-      }
+      var tried = gateApiOrigin || window.location.origin;
       return (
-        "Exam scoring is unavailable (404). The page loaded, but " +
-        apiHost +
-        " did not respond.\n\n" +
-        "Use the live site at https://www.derived.co.in with the Node server running, " +
-        "or run npm start locally and open http://localhost:3000/gate-exam.html"
+        "Exam scoring API is not available (404).\n\n" +
+        "This site is serving HTML only — the Node server must run for submit/score.\n\n" +
+        "• VPS: proxy /api to Node (see docs/nginx-gate-api.example.conf) and run npm start\n" +
+        "• GitHub Pages: deploy API on Render (render.yaml), set GitHub secret GATE_API_BASE to that URL\n" +
+        "• Local: npm start → http://localhost:3000/gate-exam.html\n\n" +
+        "Last tried: " +
+        tried
       );
     }
+    return null;
   }
 
   function parseResponseBody(res, text) {
@@ -84,7 +104,7 @@
   function apiFetch(url, options) {
     var opts = Object.assign(
       {
-        credentials: "same-origin",
+        credentials: fetchCredentials(url),
         headers: { Accept: "application/json", "Content-Type": "application/json" }
       },
       options || {}
@@ -122,45 +142,97 @@
       });
   }
 
-  function checkApiHealth() {
-    return new Promise(function (resolve, reject) {
-      var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-      var timer = setTimeout(function () {
-        if (controller) controller.abort();
-        reject(
-          new Error(
-            "The exam server did not respond in time. Check your connection or try refreshing the page."
-          )
-        );
-      }, 8000);
+  function probeHealthAtOrigin(origin) {
+    var url = origin
+      ? String(origin).replace(/\/$/, "") + "/api/mcq/gate/healthz"
+      : "/api/mcq/gate/healthz";
 
-      var opts = controller ? { signal: controller.signal, method: "GET" } : { method: "GET" };
+    return fetch(url, {
+      method: "GET",
+      credentials: fetchCredentials(url),
+      headers: { Accept: "application/json" }
+    }).then(function (res) {
+      return res.text().then(function (text) {
+        if (!res.ok) return false;
+        try {
+          var data = JSON.parse(text);
+          return data && data.ok === true;
+        } catch {
+          return false;
+        }
+      });
+    }).catch(function () {
+      return false;
+    });
+  }
 
-      apiFetch(apiBase() + "/healthz", opts)
-        .then(function (data) {
-          clearTimeout(timer);
-          if (!data || data.ok !== true) {
-            reject(new Error("GATE exam API is not ready."));
-            return;
-          }
-          resolve(data);
-        })
-        .catch(function (err) {
-          clearTimeout(timer);
-          reject(err);
+  function uniqueOrigins(list) {
+    var seen = {};
+    var out = [];
+    list.forEach(function (item) {
+      var key = item == null ? "" : String(item);
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push(key);
+    });
+    return out;
+  }
+
+  function resolveGateApiOrigin() {
+    if (gateApiResolved) return Promise.resolve(gateApiOrigin);
+    if (gateApiResolvePromise) return gateApiResolvePromise;
+
+    gateApiResolvePromise = whenCoreReady()
+      .then(function () {
+        var candidates = uniqueOrigins([
+          "",
+          window.ResearchiumApi && window.ResearchiumApi.base ? window.ResearchiumApi.base : ""
+        ]);
+
+        var chain = Promise.resolve(false);
+        candidates.forEach(function (origin) {
+          chain = chain.then(function (found) {
+            if (found) return true;
+            return probeHealthAtOrigin(origin).then(function (ok) {
+              if (ok) {
+                gateApiOrigin = origin;
+                gateApiResolved = true;
+                return true;
+              }
+              return false;
+            });
+          });
         });
+
+        return chain.then(function (found) {
+          if (!found) {
+            throw new Error(normalizeSubmitError("", 404));
+          }
+          return gateApiOrigin;
+        });
+      })
+      .finally(function () {
+        gateApiResolvePromise = null;
+      });
+
+    return gateApiResolvePromise;
+  }
+
+  function checkApiHealth() {
+    return resolveGateApiOrigin().then(function () {
+      return apiFetch(gateApiUrl("/healthz"), { method: "GET" });
     });
   }
 
   function doSubmit(slug, sessionId, responses) {
-    return apiFetch(apiBase() + "/paper/" + encodeURIComponent(slug) + "/submit", {
+    return apiFetch(gateApiUrl("/paper/" + encodeURIComponent(slug) + "/submit"), {
       method: "POST",
       body: { sessionId: sessionId || "", responses: responses || {} }
     });
   }
 
   function startNewSession(slug) {
-    return apiFetch(apiBase() + "/paper/" + encodeURIComponent(slug) + "/start", {
+    return apiFetch(gateApiUrl("/paper/" + encodeURIComponent(slug) + "/start"), {
       method: "POST",
       body: {}
     }).then(function (data) {
@@ -213,7 +285,7 @@
 
     onLoading(true);
 
-    checkApiHealth()
+    resolveGateApiOrigin()
       .then(function () {
         return ensureSession(slug, sessionId);
       })
@@ -257,6 +329,7 @@
     submitExam: submitExam,
     checkApiHealth: checkApiHealth,
     startNewSession: startNewSession,
-    ensureSession: ensureSession
+    ensureSession: ensureSession,
+    resolveGateApiOrigin: resolveGateApiOrigin
   };
 })();
