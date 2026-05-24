@@ -35,3 +35,13 @@ The static build writes `public/data/runtime-config.json` with `gateApiBase` fro
 curl -s https://YOUR_HOST/api/mcq/gate/healthz
 # {"ok":true,"service":"gate-mcq",...}
 ```
+
+## Static hosting (GitHub Pages / no API)
+
+If the API is unreachable, the exam falls back to **client-side scoring** using `public/data/gate-score-bundle.json`. Regenerate after answer-key changes:
+
+```bash
+npm run sync:mock-offline
+```
+
+Commit `public/data/gate-score-bundle.json` with your deploy. AI step-by-step solutions still need the live API and `reviewToken`.

@@ -1,0 +1,2794 @@
+{
+  "papers": {
+    "2018": {
+      "year": 2018,
+      "slug": "2018",
+      "title": "GATE Mathematics 2018",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2019": {
+      "year": 2019,
+      "slug": "2019",
+      "title": "GATE Mathematics 2019",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2020": {
+      "year": 2020,
+      "slug": "2020",
+      "title": "GATE Mathematics 2020",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2021": {
+      "year": 2021,
+      "slug": "2021",
+      "title": "GATE Mathematics 2021",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2022": {
+      "year": 2022,
+      "slug": "2022",
+      "title": "GATE Mathematics 2022",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2023": {
+      "year": 2023,
+      "slug": "2023",
+      "title": "GATE Mathematics 2023",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2024": {
+      "year": 2024,
+      "slug": "2024",
+      "title": "GATE Mathematics 2024",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2025": {
+      "year": 2025,
+      "slug": "2025",
+      "title": "GATE Mathematics 2025",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    },
+    "2026": {
+      "year": 2026,
+      "slug": "2026",
+      "title": "GATE Mathematics 2026",
+      "subjectLabel": "MA Mathematics",
+      "answers": {
+        "ga1": 1,
+        "ga2": 0,
+        "ga3": 1,
+        "ga4": 0,
+        "ga5": 1,
+        "ga6": 0,
+        "ga7": 2,
+        "ga8": 0,
+        "ga9": 0,
+        "ga10": 0,
+        "ma1": 3,
+        "ma2": 2,
+        "ma3": 1,
+        "ma4": 3,
+        "ma5": 2,
+        "ma6": 0,
+        "ma7": 0,
+        "ma8": 0,
+        "ma9": 1,
+        "ma10": 3,
+        "ma11": 0,
+        "ma12": 2,
+        "ma13": 0,
+        "ma14": 2,
+        "ma15": 0,
+        "ma16": 0,
+        "ma17": 3,
+        "ma18": 0,
+        "ma19": 0,
+        "ma20": 0
+      },
+      "solutions": {
+        "ga1": {
+          "explanation": "Correct answer: Option B (2). Abandon. Review each option below.",
+          "options": [
+            "A. Retain — Incorrect: does not match the required result (correct: B).",
+            "B. Abandon — Correct: this is the keyed answer for this mock.",
+            "C. Request — Incorrect: does not match the required result (correct: B).",
+            "D. Repair — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga2": {
+          "explanation": "Let the number be n. Given 40% of n = 280, so 0.40n = 280. Hence n = 280 ÷ 0.40 = 700.",
+          "options": [
+            "A. 700 — Correct. 40% of 700 = 0.4 × 700 = 280, which matches the question.",
+            "B. 560 — Incorrect. 40% of 560 = 224, not 280.",
+            "C. 1120 — Incorrect. 40% of 1120 = 448; this often comes from multiplying 280 by 4 instead of dividing by 0.4.",
+            "D. 350 — Incorrect. 40% of 350 = 140, not 280."
+          ]
+        },
+        "ga3": {
+          "explanation": "Correct answer: Option B (2). Verbosity. Review each option below.",
+          "options": [
+            "A. Conciseness — Incorrect: does not match the required result (correct: B).",
+            "B. Verbosity — Correct: this is the keyed answer for this mock.",
+            "C. Clarity — Incorrect: does not match the required result (correct: B).",
+            "D. Speed — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga4": {
+          "explanation": "Correct answer: Option A (1). 54. Review each option below.",
+          "options": [
+            "A. 54 — Correct: this is the keyed answer for this mock.",
+            "B. 45 — Incorrect: does not match the required result (correct: A).",
+            "C. 60 — Incorrect: does not match the required result (correct: A).",
+            "D. 72 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga5": {
+          "explanation": "Correct answer: Option B (2). Accommodate. Review each option below.",
+          "options": [
+            "A. Accomodate — Incorrect: does not match the required result (correct: B).",
+            "B. Accommodate — Correct: this is the keyed answer for this mock.",
+            "C. Acommodate — Incorrect: does not match the required result (correct: B).",
+            "D. Acomodate — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ga6": {
+          "explanation": "Correct answer: Option A (1). 20. Review each option below.",
+          "options": [
+            "A. 20 — Correct: this is the keyed answer for this mock.",
+            "B. 30 — Incorrect: does not match the required result (correct: A).",
+            "C. 40 — Incorrect: does not match the required result (correct: A).",
+            "D. 50 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga7": {
+          "explanation": "Correct answer: Option C (3). Cannot be determined. Review each option below.",
+          "options": [
+            "A. Valid — Incorrect: does not match the required result (correct: C).",
+            "B. Invalid — Incorrect: does not match the required result (correct: C).",
+            "C. Cannot be determined — Correct: this is the keyed answer for this mock.",
+            "D. None — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ga8": {
+          "explanation": "Correct answer: Option A (1). 5. Review each option below.",
+          "options": [
+            "A. 5 — Correct: this is the keyed answer for this mock.",
+            "B. 6 — Incorrect: does not match the required result (correct: A).",
+            "C. -5 — Incorrect: does not match the required result (correct: A).",
+            "D. -6 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga9": {
+          "explanation": "Correct answer: Option A (1). 12.5. Review each option below.",
+          "options": [
+            "A. 12.5 — Correct: this is the keyed answer for this mock.",
+            "B. 15 — Incorrect: does not match the required result (correct: A).",
+            "C. 10 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ga10": {
+          "explanation": "Correct answer: Option A (1). Q-P-R-S. Review each option below.",
+          "options": [
+            "A. Q-P-R-S — Correct: this is the keyed answer for this mock.",
+            "B. P-Q-R-S — Incorrect: does not match the required result (correct: A).",
+            "C. Q-R-P-S — Incorrect: does not match the required result (correct: A).",
+            "D. P-R-Q-S — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma1": {
+          "explanation": "Correct answer: Option D (4). Both P and Q are FALSE. Review each option below.",
+          "options": [
+            "A. Both P & Q are TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P is TRUE, Q is FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P is FALSE, Q is TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both P and Q are FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma2": {
+          "explanation": "Correct answer: Option C (3). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w|<5 — Incorrect: does not match the required result (correct: C).",
+            "B. |w|>5 — Incorrect: does not match the required result (correct: C).",
+            "C. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "D. |w-5|>5 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma3": {
+          "explanation": "Correct answer: Option B (2). g_1 is analytic, g_2 is not analytic. Review each option below.",
+          "options": [
+            "A. Both g_1 and g_2 are analytic — Incorrect: does not match the required result (correct: B).",
+            "B. g_1 is analytic, g_2 is not analytic — Correct: this is the keyed answer for this mock.",
+            "C. g_1 is not analytic, g_2 is analytic — Incorrect: does not match the required result (correct: B).",
+            "D. Neither g_1 nor g_2 is analytic — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma4": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma5": {
+          "explanation": "Correct answer: Option C (3). \\lambda=k_n^{2} where k-\\tan(k\\pi)=0. Review each option below.",
+          "options": [
+            "A. \\lambda=(n\\pi)^{2} — Incorrect: does not match the required result (correct: C).",
+            "B. \\lambda=n^{2} — Incorrect: does not match the required result (correct: C).",
+            "C. \\lambda=k_n^{2} where k-\\tan(k\\pi)=0 — Correct: this is the keyed answer for this mock.",
+            "D. \\lambda=k_n^{2} where k+\\tan(k\\pi)=0 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma6": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}+y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma7": {
+          "explanation": "Correct answer: Option A (1). 1 - e^{-100}. Review each option below.",
+          "options": [
+            "A. 1 - e^{-100} — Correct: this is the keyed answer for this mock.",
+            "B. 1 - e^{100} — Incorrect: does not match the required result (correct: A).",
+            "C. 1 - e^{-10} — Incorrect: does not match the required result (correct: A).",
+            "D. 1 - e^{10} — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma8": {
+          "explanation": "Correct answer: Option A (1). 1. Review each option below.",
+          "options": [
+            "A. 1 — Correct: this is the keyed answer for this mock.",
+            "B. 2 — Incorrect: does not match the required result (correct: A).",
+            "C. 3 — Incorrect: does not match the required result (correct: A).",
+            "D. 4 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma9": {
+          "explanation": "Correct answer: Option B (2). P TRUE, Q FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: B).",
+            "B. P TRUE, Q FALSE — Correct: this is the keyed answer for this mock.",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: B).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: B)."
+          ]
+        },
+        "ma10": {
+          "explanation": "Correct answer: Option D (4). Both FALSE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Incorrect: does not match the required result (correct: D).",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: D).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: D).",
+            "D. Both FALSE — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma11": {
+          "explanation": "Correct answer: Option A (1). Both TRUE. Review each option below.",
+          "options": [
+            "A. Both TRUE — Correct: this is the keyed answer for this mock.",
+            "B. P TRUE, Q FALSE — Incorrect: does not match the required result (correct: A).",
+            "C. P FALSE, Q TRUE — Incorrect: does not match the required result (correct: A).",
+            "D. Both FALSE — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma12": {
+          "explanation": "Correct answer: Option C (3). k = \\tan(k\\pi). Review each option below.",
+          "options": [
+            "A. \\lambda=\\tan^{2}(k\\pi) — Incorrect: does not match the required result (correct: C).",
+            "B. \\tan(k\\pi)=k — Incorrect: does not match the required result (correct: C).",
+            "C. k = \\tan(k\\pi) — Correct: this is the keyed answer for this mock.",
+            "D. None of these — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma13": {
+          "explanation": "Correct answer: Option A (1). 28. Review each option below.",
+          "options": [
+            "A. 28 — Correct: this is the keyed answer for this mock.",
+            "B. 24 — Incorrect: does not match the required result (correct: A).",
+            "C. 36 — Incorrect: does not match the required result (correct: A).",
+            "D. 20 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma14": {
+          "explanation": "Correct answer: Option C (3). 66. Review each option below.",
+          "options": [
+            "A. 55 — Incorrect: does not match the required result (correct: C).",
+            "B. 60 — Incorrect: does not match the required result (correct: C).",
+            "C. 66 — Correct: this is the keyed answer for this mock.",
+            "D. 72 — Incorrect: does not match the required result (correct: C)."
+          ]
+        },
+        "ma15": {
+          "explanation": "Correct answer: Option A (1). |w-5|<5. Review each option below.",
+          "options": [
+            "A. |w-5|<5 — Correct: this is the keyed answer for this mock.",
+            "B. |w-5|>5 — Incorrect: does not match the required result (correct: A).",
+            "C. |w|<5 — Incorrect: does not match the required result (correct: A).",
+            "D. |w|>5 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma16": {
+          "explanation": "Correct answer: Option A (1). Always converges. Review each option below.",
+          "options": [
+            "A. Always converges — Correct: this is the keyed answer for this mock.",
+            "B. Diverges for some x_0 — Incorrect: does not match the required result (correct: A).",
+            "C. Converges only if x_0=1 — Incorrect: does not match the required result (correct: A).",
+            "D. None of these — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma17": {
+          "explanation": "Correct answer: Option D (4). None of these. Review each option below.",
+          "options": [
+            "A. \\gamma=0 — Incorrect: does not match the required result (correct: D).",
+            "B. \\gamma is free — Incorrect: does not match the required result (correct: D).",
+            "C. \\beta=0 — Incorrect: does not match the required result (correct: D).",
+            "D. None of these — Correct: this is the keyed answer for this mock."
+          ]
+        },
+        "ma18": {
+          "explanation": "Correct answer: Option A (1). y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2}. Review each option below.",
+          "options": [
+            "A. y\\,u_{x} + x\\,u_{y} = x^{2}+y^{2} — Correct: this is the keyed answer for this mock.",
+            "B. x\\,u_{x} + y\\,u_{y} = x^{2}-y^{2} — Incorrect: does not match the required result (correct: A).",
+            "C. y\\,u_{x} + x\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A).",
+            "D. x\\,u_{x} - y\\,u_{y} = 0 — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma19": {
+          "explanation": "Correct answer: Option A (1). Analytic. Review each option below.",
+          "options": [
+            "A. Analytic — Correct: this is the keyed answer for this mock.",
+            "B. Not analytic — Incorrect: does not match the required result (correct: A).",
+            "C. Harmonic only — Incorrect: does not match the required result (correct: A).",
+            "D. Constant — Incorrect: does not match the required result (correct: A)."
+          ]
+        },
+        "ma20": {
+          "explanation": "Correct answer: Option A (1).  \\dfrac{e^{-49t}}{\\sqrt{2}} . Review each option below.",
+          "options": [
+            "A.  \\dfrac{e^{-49t}}{\\sqrt{2}}  — Correct: this is the keyed answer for this mock.",
+            "B.  e^{-t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "C.  e^{-49t}\\sin(\\pi/4)  — Incorrect: does not match the required result (correct: A).",
+            "D.  0  — Incorrect: does not match the required result (correct: A)."
+          ]
+        }
+      }
+    }
+  }
+}

@@ -261,14 +261,67 @@
     return false;
   }
 
+  function isApiUnavailableError(msg) {
+    var lower = String(msg || "").toLowerCase();
+    return (
+      lower.indexOf("exam scoring api is not available") >= 0 ||
+      lower.indexOf("offline scoring data is missing") >= 0 ||
+      lower.indexOf("page could not be found") >= 0 ||
+      lower.indexOf("cannot reach the exam server") >= 0 ||
+      (lower.indexOf("404") >= 0 && lower.indexOf("paper not found") < 0)
+    );
+  }
+
+  function tryOfflineSubmit(slug, responses, paper) {
+    if (!window.GateExamOfflineScore || !window.GateExamOfflineScore.scoreOffline) {
+      return Promise.reject(new Error("Offline scoring module did not load. Refresh the page."));
+    }
+    if (!paper || !paper.sections) {
+      return Promise.reject(new Error("Exam paper is not loaded."));
+    }
+    return window.GateExamOfflineScore.scoreOffline(slug, responses, paper);
+  }
+
+  function submitViaApi(slug, sessionId, responses, onSessionId) {
+    return resolveGateApiOrigin()
+      .then(function () {
+        return ensureSession(slug, sessionId);
+      })
+      .then(function (activeSessionId) {
+        if (activeSessionId && activeSessionId !== sessionId) {
+          onSessionId(activeSessionId);
+        }
+        return doSubmit(slug, activeSessionId, responses);
+      });
+  }
+
+  function finishWithOfflineFallback(err, slug, responses, paper, onSuccess, onError, onLoading) {
+    var msg = errMsg(err);
+    if (!isApiUnavailableError(msg) || !paper) {
+      onLoading(false);
+      onError(msg);
+      return;
+    }
+    tryOfflineSubmit(slug, responses, paper)
+      .then(function (result) {
+        onLoading(false);
+        onSuccess(result);
+      })
+      .catch(function (offErr) {
+        onLoading(false);
+        onError(errMsg(offErr));
+      });
+  }
+
   /**
-   * @param {{ slug: string, sessionId?: string, responses: object, onSuccess?: Function, onError?: Function, onLoading?: Function, onSessionId?: Function }} options
+   * @param {{ slug: string, sessionId?: string, responses: object, paper?: object, onSuccess?: Function, onError?: Function, onLoading?: Function, onSessionId?: Function }} options
    */
   function submitExam(options) {
     var opts = options || {};
     var slug = String(opts.slug || "").trim();
     var sessionId = String(opts.sessionId || "").trim();
     var responses = opts.responses || {};
+    var paper = opts.paper || null;
     var onSuccess = opts.onSuccess || function () {};
     var onError =
       opts.onError ||
@@ -285,16 +338,7 @@
 
     onLoading(true);
 
-    resolveGateApiOrigin()
-      .then(function () {
-        return ensureSession(slug, sessionId);
-      })
-      .then(function (activeSessionId) {
-        if (activeSessionId && activeSessionId !== sessionId) {
-          onSessionId(activeSessionId);
-        }
-        return doSubmit(slug, activeSessionId, responses);
-      })
+    submitViaApi(slug, sessionId, responses, onSessionId)
       .then(function (result) {
         onLoading(false);
         onSuccess(result);
@@ -314,14 +358,12 @@
               onSuccess(result);
             })
             .catch(function (retryErr) {
-              onLoading(false);
-              onError(errMsg(retryErr));
+              finishWithOfflineFallback(retryErr, slug, responses, paper, onSuccess, onError, onLoading);
             });
           return;
         }
 
-        onLoading(false);
-        onError(msg);
+        finishWithOfflineFallback(firstErr, slug, responses, paper, onSuccess, onError, onLoading);
       });
   }
 

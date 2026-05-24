@@ -759,6 +759,7 @@
       slug: String(year).trim(),
       sessionId: sessionId,
       responses: responses,
+      paper: paper,
       onSessionId: function (newId) {
         sessionId = newId || "";
       },
@@ -773,19 +774,6 @@
         onSubmitSuccess(j);
       },
       onError: function (msg) {
-        var text = String(msg || "");
-        if (
-          gatePracticeOnly ||
-          /page could not be found|exam scoring is unavailable|404|submit api|unavailable/i.test(text)
-        ) {
-          showGateAlert(
-            text.indexOf("Exam scoring is unavailable") >= 0
-              ? text
-              : "Scoring needs the live API. Open https://www.derived.co.in/gate-exam.html or run npm start locally (http://localhost:3000).",
-            "Submission failed"
-          );
-          return;
-        }
         showGateAlert(msg || "Submission failed. Refresh the page and try again.", "Submission failed");
       }
     });

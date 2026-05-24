@@ -355,6 +355,11 @@ async function main() {
       fail(`/gate-solutions.html should load gate-exam-solution.js`);
     }
 
+    res = await req('GET', '/data/gate-score-bundle.json');
+    if (res.status !== 200 || !res.json || !res.json.papers || !res.json.papers['2018']) {
+      fail(`/data/gate-score-bundle.json should include paper 2018 for offline scoring`);
+    }
+
     res = await req('POST', '/api/admin/login', {
       body: { username: 'wrong', password: 'wrong' }
     });

@@ -66,6 +66,44 @@ fs.writeFileSync(
   'utf8'
 );
 
+/** Compact answer keys + solution text for client-side scoring when /api is unreachable (static hosting). */
+const solutionsPath = path.join(__dirname, '..', 'data', 'gate-mcq-solutions.json');
+let solutionsMap = {};
+if (fs.existsSync(solutionsPath)) {
+  const raw = JSON.parse(fs.readFileSync(solutionsPath, 'utf8'));
+  solutionsMap = raw && raw.solutions ? raw.solutions : {};
+}
+
+const scoreBundle = { papers: {} };
+gateMcqBank.listPapers().forEach((meta) => {
+  const slug = meta.slug || String(meta.year);
+  const full = gateMcqBank.getPaper(slug);
+  if (!full || !full.answerKey) return;
+  scoreBundle.papers[slug] = {
+    year: full.year,
+    slug: full.slug,
+    title: full.title,
+    subjectLabel: full.subjectLabel,
+    answers: full.answerKey,
+    solutions: {}
+  };
+  Object.keys(full.answerKey).forEach((qid) => {
+    if (solutionsMap[qid]) {
+      scoreBundle.papers[slug].solutions[qid] = solutionsMap[qid];
+    }
+  });
+});
+fs.writeFileSync(
+  path.join(outDir, 'gate-score-bundle.json'),
+  JSON.stringify(scoreBundle, null, 2),
+  'utf8'
+);
+
+if (fs.existsSync(solutionsPath)) {
+  fs.copyFileSync(solutionsPath, path.join(outDir, 'gate-mcq-solutions.json'));
+}
+
 const tokens = mockTestCatalog.listMockTests().tokens;
 console.log('Wrote offline mock catalog:', tokens.length, 'tokens');
 console.log('Wrote offline GATE exams:', Object.keys(offlineExams).length, 'papers');
+console.log('Wrote gate-score-bundle:', Object.keys(scoreBundle.papers).length, 'papers');
