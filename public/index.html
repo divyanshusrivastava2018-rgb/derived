@@ -15,6 +15,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/png" href="/images/researchium-logo.png?v=header4" />
+    <link rel="preload" href="/images/researchium-logo.png?v=header4" as="image" />
     <link rel="preload" href="/css/app.css" as="style" />
     <link rel="stylesheet" href="/css/app.css" />
     <script type="application/ld+json">
@@ -22,7 +24,8 @@
     </script>
   </head>
   <body data-page="home" data-cms-page="home" class="platform-home">
-    <header id="site-header" class="site-header-mount"></header>
+    <header id="site-header" class="site-header-mount"><a href="/" class="site-nav__brand site-nav__brand--preload" aria-label="Researchium home"><img src="/images/researchium-logo.png?v=header4" alt="Researchium" class="site-nav__logo-img" width="200" height="57" decoding="async" fetchpriority="high" /></a></header>
+    <script src="/js/researchium-chrome.js"></script>
 
     <nav class="yo-quickstrip" aria-label="Quick links">
       <div class="yo-quickstrip__inner">
@@ -324,7 +327,6 @@
     </footer>
 
     <script defer src="/js/researchium-core.js"></script>
-    <script defer src="/js/researchium-chrome.js"></script>
     <script defer src="/js/cms-hero.js"></script>
     <script defer src="/js/home-platform.js"></script>
     <script defer src="/js/gtag-lazy.js"></script>

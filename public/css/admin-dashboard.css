@@ -97,6 +97,19 @@
   gap: 10px;
   text-decoration: none;
   color: inherit;
+  line-height: 0;
+}
+
+.adm-logo-img {
+  display: block;
+  height: 36px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.adm-sidebar.is-collapsed .adm-logo-img {
+  height: 28px;
 }
 
 .adm-logo-icon {

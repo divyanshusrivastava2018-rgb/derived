@@ -141,15 +141,31 @@ async function main() {
       fail(`/api/platform/overview expected features array`);
     }
 
+    res = await req('GET', '/api/platform/progress/session');
+    if (res.status !== 200 || !res.json || !res.json.learnerToken) {
+      fail(`GET /api/platform/progress/session should return learnerToken`);
+    }
+    const learnerToken = res.json.learnerToken;
+
     res = await req('POST', '/api/platform/progress', {
       body: {
-        learnerId: 'lr_smoke_test_12345678',
+        learnerToken,
         type: 'quiz_submit',
         label: 'Smoke quiz'
       }
     });
     if (res.status !== 201 || !res.json || !res.json.ok) {
       fail(`POST /api/platform/progress should succeed`);
+    }
+
+    res = await req('GET', `/api/platform/progress?learnerToken=${encodeURIComponent(learnerToken)}`);
+    if (res.status !== 200 || !res.json || res.json.learnerId == null) {
+      fail(`GET /api/platform/progress should return summary for token`);
+    }
+
+    res = await req('GET', '/api/platform/progress?learnerId=lr_smoke_test_12345678');
+    if (res.status !== 401) {
+      fail(`GET /api/platform/progress with raw learnerId should be 401 in development when token required`);
     }
 
     res = await req('GET', '/');
@@ -358,6 +374,17 @@ async function main() {
     res = await req('GET', '/data/gate-score-bundle.json');
     if (res.status !== 200 || !res.json || !res.json.papers || !res.json.papers['2018']) {
       fail(`/data/gate-score-bundle.json should include paper 2018 for offline scoring`);
+    }
+    if (res.json.papers['2018'].answers) {
+      fail(`gate-score-bundle must not expose plaintext answers object`);
+    }
+    if (!res.json.papers['2018'].enc) {
+      fail(`gate-score-bundle should use obfuscated enc field`);
+    }
+
+    res = await req('GET', '/data/gate-mcq-solutions.json');
+    if (res.status === 200) {
+      fail(`/data/gate-mcq-solutions.json must not be served publicly`);
     }
 
     res = await req('POST', '/api/admin/login', {

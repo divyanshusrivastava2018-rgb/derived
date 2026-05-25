@@ -302,7 +302,23 @@
       onError(msg);
       return;
     }
-    tryOfflineSubmit(slug, responses, paper)
+    var offlineReady = window.GateExamOfflineScore && window.GateExamOfflineScore.loadRuntime;
+    var chain = offlineReady
+      ? window.GateExamOfflineScore.loadRuntime()
+      : Promise.resolve({});
+    chain
+      .then(function () {
+        if (
+          window.GateExamOfflineScore &&
+          window.GateExamOfflineScore.offlineScoringEnabled &&
+          !window.GateExamOfflineScore.offlineScoringEnabled()
+        ) {
+          throw new Error(
+            "Secure scoring requires the live API. Deploy the Node server and set GATE_API_BASE, or enable practice-only offline mode."
+          );
+        }
+        return tryOfflineSubmit(slug, responses, paper);
+      })
       .then(function (result) {
         onLoading(false);
         onSuccess(result);

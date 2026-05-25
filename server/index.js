@@ -87,6 +87,10 @@ function assertProductionAdminConfigured() {
     console.error('[Researchium] ALLOW_DEMO_MEMBER must not be set in production.');
     process.exit(1);
   }
+  if (process.env.GATE_ALLOW_STATELESS_SUBMIT === '1') {
+    console.error('[Researchium] GATE_ALLOW_STATELESS_SUBMIT must not be set in production.');
+    process.exit(1);
+  }
 }
 
 assertProductionAdminConfigured();
@@ -144,6 +148,29 @@ const connectSrcExtra = [
   'https://www.googletagmanager.com'
 ];
 
+function buildConnectSrc() {
+  const set = new Set(connectSrcExtra);
+  const raw = (process.env.CORS_ORIGIN || process.env.SITE_URL || '').trim();
+  raw.split(/[\s,]+/).forEach((origin) => {
+    if (origin) {
+      try {
+        set.add(new URL(origin).origin);
+      } catch {
+        /* ignore invalid origin */
+      }
+    }
+  });
+  const gateApi = (process.env.GATE_API_BASE || '').trim();
+  if (gateApi) {
+    try {
+      set.add(new URL(gateApi).origin);
+    } catch {
+      /* ignore */
+    }
+  }
+  return [...set];
+}
+
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -153,7 +180,7 @@ app.use(
         styleSrc: styleSrcExtra,
         fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
         imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: connectSrcExtra,
+        connectSrc: buildConnectSrc(),
         frameSrc: ["'self'", 'https://www.youtube.com', 'https://www.youtube-nocookie.com'],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],

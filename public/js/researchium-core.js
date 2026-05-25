@@ -37,6 +37,8 @@
         if (window.ResearchiumApi) {
           window.ResearchiumApi.base = API_BASE;
         }
+        window.__GATE_RUNTIME__ = cfg || {};
+        return cfg;
       });
   }
 
@@ -242,37 +244,66 @@
     }
   };
 
-  var LEARNER_KEY = "researchium_learner_id";
+  var LEARNER_TOKEN_KEY = "researchium_learner_token_v1";
+  var learnerTokenInflight = null;
 
-  function getLearnerId() {
+  function ensureLearnerToken() {
     try {
-      var id = localStorage.getItem(LEARNER_KEY);
-      if (!id) {
-        id =
-          "lr_" +
-          Math.random().toString(36).slice(2, 10) +
-          Date.now().toString(36).slice(-6);
-        localStorage.setItem(LEARNER_KEY, id);
+      var existing = localStorage.getItem(LEARNER_TOKEN_KEY);
+      if (existing && String(existing).indexOf(".") > 0) {
+        return Promise.resolve(existing);
       }
-      return id;
     } catch {
-      return "lr_anonymous";
+      /* ignore */
     }
+    if (learnerTokenInflight) return learnerTokenInflight;
+    learnerTokenInflight = configReady
+      .then(function () {
+        var url = apiUrl("/api/platform/progress/session");
+        return fetch(url, { credentials: fetchCredentials(url), cache: "no-store" });
+      })
+      .then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok || !j || !j.learnerToken) {
+            throw new Error((j && j.error) || "Could not start progress session");
+          }
+          return j.learnerToken;
+        });
+      })
+      .then(function (token) {
+        try {
+          localStorage.setItem(LEARNER_TOKEN_KEY, token);
+        } catch {
+          /* quota */
+        }
+        learnerTokenInflight = null;
+        return token;
+      })
+      .catch(function (e) {
+        learnerTokenInflight = null;
+        throw e;
+      });
+    return learnerTokenInflight;
   }
 
   function recordProgress(payload) {
-    var body = Object.assign({ learnerId: getLearnerId() }, payload || {});
-    return fetch(apiUrl("/api/platform/progress"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }).catch(function () {
-      return null;
-    });
+    return ensureLearnerToken()
+      .then(function (token) {
+        var body = Object.assign({ learnerToken: token }, payload || {});
+        return fetch(apiUrl("/api/platform/progress"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: fetchCredentials(apiUrl("/api/platform/progress")),
+          body: JSON.stringify(body)
+        });
+      })
+      .catch(function () {
+        return null;
+      });
   }
 
   window.ResearchiumProgress = {
-    getLearnerId: getLearnerId,
+    ensureLearnerToken: ensureLearnerToken,
     record: recordProgress
   };
 })();

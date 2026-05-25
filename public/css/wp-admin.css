@@ -39,6 +39,15 @@
   margin-bottom: 1.5rem;
 }
 
+.wp-logo-img {
+  display: block;
+  height: 48px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 0.5rem;
+  object-fit: contain;
+}
+
 .wp-login-card .wp-logo strong {
   font-size: 1.5rem;
   color: #3858e9;

@@ -9,6 +9,8 @@ server/data/learner-progress.json
 server/data/gate-mcq-answers.json
 server/data/gate-mcq-answers.seed.json
 server/data/gate-solution-cache/
+server/data/gate-sessions.json
+public/data/gate-mcq-solutions.json
 *.log
 .DS_Store
 *known_hosts*

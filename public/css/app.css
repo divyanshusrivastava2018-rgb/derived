@@ -21,6 +21,15 @@
   font-size: 20px;
 }
 
+.footer-logo-img {
+  display: block;
+  height: 40px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  background: #fff;
+}
+
 .page-hero {
   padding: 110px 28px 56px;
   background: linear-gradient(
@@ -852,12 +861,12 @@ body[data-page="courses"] .admin-catalog-hint a {
 .site-footer-extended .footer-logo,
 .site-footer-extended .footer-brand-block .logo {
   color: #fff;
+  line-height: 0;
 }
-.site-footer-extended .logo-gold {
-  color: var(--ac-primary-light);
-}
-.site-footer-extended .logo-icon {
-  color: var(--ac-accent);
+.site-footer-extended .footer-logo-img {
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
 }
 
 /* Home */

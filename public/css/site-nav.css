@@ -31,23 +31,32 @@
 .site-nav__brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--fh, "Plus Jakarta Sans", system-ui, sans-serif);
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--ac-text, #1a202c);
   text-decoration: none;
   flex-shrink: 0;
+  line-height: 0;
+  min-height: 48px;
 }
 
-.site-nav__brand em {
-  font-style: normal;
-  color: var(--yo-primary, #6d28d9);
+.site-nav__brand--preload {
+  display: inline-flex;
+  padding: 8px 0;
 }
 
-.site-nav__icon {
-  font-size: 1.1rem;
-  line-height: 1;
+.site-nav__logo-img {
+  display: block;
+  height: 48px;
+  width: auto;
+  max-width: min(200px, 44vw);
+  object-fit: contain;
+  object-position: left center;
+  background: #fff;
+}
+
+@media (max-width: 480px) {
+  .site-nav__logo-img {
+    height: 32px;
+    max-width: 38vw;
+  }
 }
 
 .site-nav__search {

@@ -5,6 +5,40 @@
   "use strict";
 
   var PAGE = document.body.getAttribute("data-page") || "";
+  var LOGO_PNG = "/images/researchium-logo.png";
+  var LOGO_VER = "header4";
+  var LOGO_ALT = "Researchium";
+
+  function logoUrl() {
+    return LOGO_PNG + "?v=" + LOGO_VER;
+  }
+
+  function brandLogoImg(className) {
+    return (
+      '<img src="' +
+      logoUrl() +
+      '" alt="' +
+      LOGO_ALT +
+      '" class="' +
+      className +
+      '" width="200" height="57" decoding="async" fetchpriority="high" />'
+    );
+  }
+
+  function initFavicon() {
+    if (document.querySelector('link[data-rm-icon="1"]')) return;
+    var link = document.createElement("link");
+    link.rel = "icon";
+    link.type = "image/png";
+    link.href = logoUrl();
+    link.setAttribute("data-rm-icon", "1");
+    document.head.appendChild(link);
+    var preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "image";
+    preload.href = logoUrl();
+    document.head.appendChild(preload);
+  }
 
   var NAV_LINKS = [
     { href: "/courses.html", label: "Courses", key: "courses" },
@@ -47,9 +81,11 @@
       '<header class="site-header">' +
       '<div class="site-nav" id="siteNav">' +
       '<div class="site-nav__row">' +
-      '<a href="/" class="site-nav__brand">' +
-      '<span class="site-nav__icon" aria-hidden="true">📘</span>' +
-      "Research<em>ium</em></a>" +
+      '<a href="/" class="site-nav__brand" aria-label="' +
+      LOGO_ALT +
+      ' home">' +
+      brandLogoImg("site-nav__logo-img") +
+      "</a>" +
       '<form class="site-nav__search" id="siteNavSearchForm" role="search">' +
       '<input type="search" id="siteNavSearchInput" placeholder="Search courses, mock tests…" aria-label="Search" />' +
       '<button type="submit">Search</button></form>' +
@@ -80,7 +116,11 @@
     return (
       '<div class="footer-grid container">' +
       '<div class="footer-brand-block">' +
-      '<a href="/" class="logo footer-logo"><span class="logo-icon" aria-hidden="true">📘</span>Research<span class="logo-gold">ium</span></a>' +
+      '<a href="/" class="logo footer-logo" aria-label="' +
+      LOGO_ALT +
+      ' home">' +
+      brandLogoImg("footer-logo-img") +
+      "</a>" +
       '<p class="footer-desc">Structured learning for exams, research careers, and publication-ready skills — courses, live classes, and mocks in one place.</p>' +
       '<div class="et-footer-social">' +
       '<a href="https://www.youtube.com/@MathswithDivyanshuSir" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>' +
@@ -174,6 +214,7 @@
     if (mount) mount.innerHTML = renderFooter();
   }
 
+  initFavicon();
   initHeader();
   initFooter();
 })();

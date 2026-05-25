@@ -1,4 +1,6 @@
 {
   "gateApiBase": "",
+  "offlineScoring": true,
+  "requireLiveApi": false,
   "updatedAt": ""
 }

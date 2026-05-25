@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Regenerate public/data/offline-mock-tests.json and offline-gate-papers.json
- * for static / offline GET fallbacks in api-client.js.
+ * Regenerate public/data offline fallbacks for static hosting.
  */
 const fs = require('fs');
 const path = require('path');
 const mockTestCatalog = require('../lib/mockTestCatalog');
 const gateMcqBank = require('../lib/gateMcqBank');
+const { encodeAnswers, VERSION } = require('../lib/gateBundleCodec');
 
 const outDir = path.join(__dirname, '..', '..', 'public', 'data');
 fs.mkdirSync(outDir, { recursive: true });
@@ -66,7 +66,6 @@ fs.writeFileSync(
   'utf8'
 );
 
-/** Compact answer keys + solution text for client-side scoring when /api is unreachable (static hosting). */
 const solutionsPath = path.join(__dirname, '..', 'data', 'gate-mcq-solutions.json');
 let solutionsMap = {};
 if (fs.existsSync(solutionsPath)) {
@@ -74,24 +73,24 @@ if (fs.existsSync(solutionsPath)) {
   solutionsMap = raw && raw.solutions ? raw.solutions : {};
 }
 
-const scoreBundle = { papers: {} };
+/** Obfuscated keys + solutions for optional offline scoring (not for secure exams). */
+const scoreBundle = { v: VERSION, papers: {} };
 gateMcqBank.listPapers().forEach((meta) => {
   const slug = meta.slug || String(meta.year);
   const full = gateMcqBank.getPaper(slug);
   if (!full || !full.answerKey) return;
+  const sol = {};
+  Object.keys(full.answerKey).forEach((qid) => {
+    if (solutionsMap[qid]) sol[qid] = solutionsMap[qid];
+  });
   scoreBundle.papers[slug] = {
     year: full.year,
     slug: full.slug,
     title: full.title,
     subjectLabel: full.subjectLabel,
-    answers: full.answerKey,
-    solutions: {}
+    enc: encodeAnswers(slug, full.answerKey),
+    solutions: sol
   };
-  Object.keys(full.answerKey).forEach((qid) => {
-    if (solutionsMap[qid]) {
-      scoreBundle.papers[slug].solutions[qid] = solutionsMap[qid];
-    }
-  });
 });
 fs.writeFileSync(
   path.join(outDir, 'gate-score-bundle.json'),
@@ -99,11 +98,12 @@ fs.writeFileSync(
   'utf8'
 );
 
-if (fs.existsSync(solutionsPath)) {
-  fs.copyFileSync(solutionsPath, path.join(outDir, 'gate-mcq-solutions.json'));
+const publicSolutions = path.join(outDir, 'gate-mcq-solutions.json');
+if (fs.existsSync(publicSolutions)) {
+  fs.unlinkSync(publicSolutions);
 }
 
 const tokens = mockTestCatalog.listMockTests().tokens;
 console.log('Wrote offline mock catalog:', tokens.length, 'tokens');
 console.log('Wrote offline GATE exams:', Object.keys(offlineExams).length, 'papers');
-console.log('Wrote gate-score-bundle:', Object.keys(scoreBundle.papers).length, 'papers');
+console.log('Wrote obfuscated gate-score-bundle:', Object.keys(scoreBundle.papers).length, 'papers');

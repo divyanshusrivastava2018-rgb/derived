@@ -2,38 +2,62 @@
 
 ## Answer keys (secret)
 
-- **Never** commit `gate-mcq-answers.json` (gitignored, mode `0600` on server).
-- Prefer **`GATE_ANSWERS_JSON`** in production (JSON string in env / secret manager) instead of a file in the repo.
-- `gate-mcq-answers.seed.json` is for local/deploy bootstrap only. Do not publish real keys in public repositories.
+- **Never** commit `server/data/gate-mcq-answers.json` (gitignored, mode `0600` on server).
+- Prefer **`GATE_ANSWERS_JSON`** in production (JSON string in env / secret manager).
+- `gate-mcq-answers.seed.json` is for local/deploy bootstrap only.
+
+## Public offline bundle (practice only)
+
+- `public/data/gate-score-bundle.json` stores **obfuscated** keys (`enc` field), not plaintext `answers`.
+- `public/data/gate-mcq-solutions.json` is **not** published (gitignored).
+- Offline scoring is **not** secure against a motivated user — use the live API for scored mocks.
+
+Regenerate after key changes:
+
+```bash
+npm run sync:mock-offline
+```
+
+Disable offline scoring on static deploy:
+
+```bash
+GATE_OFFLINE_SCORING=0 npm run build:runtime-config
+```
 
 ## API behaviour
 
 | Endpoint | Requirement |
 |----------|-------------|
-| `POST .../start` | Returns questions **without** answer indices |
-| `POST .../submit` | **Valid session required** in production (`NODE_ENV=production`) |
-| `POST .../submit` | Returns `reviewToken` for post-submit review / AI solutions |
-| `POST .../solve-question` | Requires `reviewToken` from a completed submit |
+| `POST .../start` | Questions **without** answer indices |
+| `POST .../submit` | **Valid session required** in production |
+| `POST .../submit` | Returns `reviewToken` for post-submit review / AI |
+| `POST .../solve-question` | Requires `reviewToken`; max solves per token (default 30, `GATE_MAX_SOLVES_PER_REVIEW`) |
 
-Development / smoke tests: set `GATE_ALLOW_STATELESS_SUBMIT=1` only when needed.
+**Never** set in production: `GATE_ALLOW_STATELESS_SUBMIT=1`, `ALLOW_DEMO_MEMBER=1`.
+
+Development / smoke: `GATE_ALLOW_STATELESS_SUBMIT=1` only when needed.
+
+## Sessions
+
+- In-memory by default; optional `GATE_SESSION_STORE=file` (gitignored `gate-sessions.json`) for single-server restarts.
+- Use Redis when running multiple Node instances.
+
+## Progress API
+
+- Clients must use `GET /api/platform/progress/session` → signed `learnerToken`.
+- Raw `learnerId` is rejected in production (no IDOR).
 
 ## Deployment
 
 ```bash
 NODE_ENV=production
 CORS_ORIGIN=https://www.derived.co.in
-# Optional: inject keys without a file
-# GATE_ANSWERS_JSON='{"answers":{"ga1":1,...}}'
+GATE_SESSION_STORE=file
+TRUST_PROXY=1
 ```
 
-Ensure nginx (or your proxy) does **not** serve `server/data/` — only `public/` and `/api` to Node.
-
-If you deploy **static files to GitHub Pages**, the exam UI must call the live API on `https://www.derived.co.in`. The client auto-detects `*.github.io` and sets the API base. Add your Pages origin to `CORS_ORIGIN` on the server:
-
-```bash
-CORS_ORIGIN=https://www.derived.co.in,https://YOUR_USER.github.io
-```
+Ensure nginx proxies `/api` to Node — see `docs/nginx-gate-api.example.conf`.
 
 ## AI solver
 
-`ANTHROPIC_API_KEY` / `OPENAI_API_KEY` are server-only. Solutions are rate-limited per IP and per `reviewToken` (max 60 questions per attempt).
+Server-only API keys. Rate-limited per IP and per `reviewToken`.
