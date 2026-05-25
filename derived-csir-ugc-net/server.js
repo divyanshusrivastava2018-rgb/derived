@@ -23,7 +23,21 @@ const allowedOrigins = corsOrigins.length ? corsOrigins : defaultOrigins;
 
 app.use(
   helmet({
-    contentSecurityPolicy: false
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", 'https://js.hcaptcha.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://hcaptcha.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'", 'https://hcaptcha.com', 'https://*.hcaptcha.com'],
+        frameSrc: ["'self'", 'https://hcaptcha.com', 'https://*.hcaptcha.com'],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        frameAncestors: ["'self'"]
+      }
+    },
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
   })
 );
 app.use(
@@ -45,6 +59,9 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 app.use('/api', apiRouter);
+
+/* index.html links ../public/css — resolve as /public/css when served from this app */
+app.use('/public', express.static(path.join(ROOT, '..', 'public')));
 
 app.use(express.static(ROOT, { index: false }));
 

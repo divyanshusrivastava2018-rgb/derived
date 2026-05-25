@@ -66,30 +66,18 @@ fs.writeFileSync(
   'utf8'
 );
 
-const solutionsPath = path.join(__dirname, '..', 'data', 'gate-mcq-solutions.json');
-let solutionsMap = {};
-if (fs.existsSync(solutionsPath)) {
-  const raw = JSON.parse(fs.readFileSync(solutionsPath, 'utf8'));
-  solutionsMap = raw && raw.solutions ? raw.solutions : {};
-}
-
-/** Obfuscated keys + solutions for optional offline scoring (not for secure exams). */
+/** Obfuscated keys only (no plaintext answers or authored solutions in public/). */
 const scoreBundle = { v: VERSION, papers: {} };
 gateMcqBank.listPapers().forEach((meta) => {
   const slug = meta.slug || String(meta.year);
   const full = gateMcqBank.getPaper(slug);
   if (!full || !full.answerKey) return;
-  const sol = {};
-  Object.keys(full.answerKey).forEach((qid) => {
-    if (solutionsMap[qid]) sol[qid] = solutionsMap[qid];
-  });
   scoreBundle.papers[slug] = {
     year: full.year,
     slug: full.slug,
     title: full.title,
     subjectLabel: full.subjectLabel,
-    enc: encodeAnswers(slug, full.answerKey),
-    solutions: sol
+    enc: encodeAnswers(slug, full.answerKey)
   };
 });
 fs.writeFileSync(

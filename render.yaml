@@ -14,6 +14,11 @@ services:
         value: "1"
       - key: GATE_ALLOW_STATELESS_SUBMIT
         value: "0"
+      - key: GATE_OFFLINE_SCORING
+        value: "0"
+      # Optional: rotate offline bundle obfuscation (must match public/js/gate-bundle-decode.js if used)
+      # - key: GATE_OFFLINE_BUNDLE_PEPPER
+      #   sync: false
       - key: RESEARCHIUM_ADMIN_USERNAME
         sync: false
       - key: RESEARCHIUM_ADMIN_PASSWORD

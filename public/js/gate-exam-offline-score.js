@@ -53,6 +53,9 @@
   }
 
   function decodePaperAnswers(slug, entry) {
+    if (entry && entry.answers && typeof entry.answers === "object") {
+      return {};
+    }
     if (entry.enc && window.GateBundleDecode && window.GateBundleDecode.decodeAnswers) {
       return window.GateBundleDecode.decodeAnswers(slug, entry.enc);
     }

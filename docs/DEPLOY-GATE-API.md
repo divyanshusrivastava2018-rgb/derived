@@ -16,6 +16,8 @@ RESEARCHIUM_ADMIN_PASSWORD=...
 RESEARCHIUM_MEMBER_SECRET=...
 HCAPTCHA_SECRET_KEY=...
 CORS_ORIGIN=https://www.derived.co.in
+GATE_OFFLINE_SCORING=0
+TRUST_PROXY=1
 ```
 
 ## Option B — GitHub Pages + API on Render
@@ -38,10 +40,12 @@ curl -s https://YOUR_HOST/api/mcq/gate/healthz
 
 ## Static hosting (GitHub Pages / no API)
 
-If the API is unreachable, the exam falls back to **client-side scoring** using `public/data/gate-score-bundle.json`. Regenerate after answer-key changes:
+Production Pages deploy sets `NODE_ENV=production` and `GATE_OFFLINE_SCORING=0` in `runtime-config.json` so exams **require** the live API (`GATE_API_BASE` GitHub secret).
+
+For **local dev only**, optional offline scoring uses obfuscated `public/data/gate-score-bundle.json` (`enc` only — no plaintext `answers`). Regenerate after key changes:
 
 ```bash
 npm run sync:mock-offline
 ```
 
-Commit `public/data/gate-score-bundle.json` with your deploy. AI step-by-step solutions still need the live API and `reviewToken`.
+Never enable offline scoring on production if exam integrity matters. AI step-by-step solutions always need the live API and `reviewToken`.

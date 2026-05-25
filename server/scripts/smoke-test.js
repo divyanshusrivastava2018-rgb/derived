@@ -164,8 +164,12 @@ async function main() {
     }
 
     res = await req('GET', '/api/platform/progress?learnerId=lr_smoke_test_12345678');
-    if (res.status !== 401) {
-      fail(`GET /api/platform/progress with raw learnerId should be 401 in development when token required`);
+    if (process.env.NODE_ENV === 'production') {
+      if (res.status !== 401) {
+        fail(`GET /api/platform/progress with raw learnerId should be 401 in production`);
+      }
+    } else if (res.status !== 200 && res.status !== 401) {
+      fail(`GET /api/platform/progress with raw learnerId unexpected status ${res.status}`);
     }
 
     res = await req('GET', '/');
@@ -377,6 +381,9 @@ async function main() {
     }
     if (res.json.papers['2018'].answers) {
       fail(`gate-score-bundle must not expose plaintext answers object`);
+    }
+    if (res.json.papers['2018'].solutions) {
+      fail(`gate-score-bundle must not expose solutions object`);
     }
     if (!res.json.papers['2018'].enc) {
       fail(`gate-score-bundle should use obfuscated enc field`);

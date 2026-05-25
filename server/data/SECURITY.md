@@ -8,7 +8,8 @@
 
 ## Public offline bundle (practice only)
 
-- `public/data/gate-score-bundle.json` stores **obfuscated** keys (`enc` field), not plaintext `answers`.
+- `public/data/gate-score-bundle.json` stores **obfuscated** keys (`enc` field) only — no `answers`, no `solutions`.
+- Regenerate: `npm run sync:mock-offline` after key changes.
 - `public/data/gate-mcq-solutions.json` is **not** published (gitignored).
 - Offline scoring is **not** secure against a motivated user — use the live API for scored mocks.
 
@@ -53,7 +54,14 @@ Development / smoke: `GATE_ALLOW_STATELESS_SUBMIT=1` only when needed.
 NODE_ENV=production
 CORS_ORIGIN=https://www.derived.co.in
 GATE_SESSION_STORE=file
+GATE_OFFLINE_SCORING=0
 TRUST_PROXY=1
+RESEARCHIUM_ADMIN_USERNAME=...
+RESEARCHIUM_ADMIN_PASSWORD=...
+RESEARCHIUM_MEMBER_SECRET=...
+HCAPTCHA_SECRET_KEY=...
+# GATE_OFFLINE_BUNDLE_PEPPER=...  # optional; must match client decoder if offline scoring enabled
+# ANTHROPIC_API_KEY=... / OPENAI_API_KEY=...
 ```
 
 Ensure nginx proxies `/api` to Node — see `docs/nginx-gate-api.example.conf`.

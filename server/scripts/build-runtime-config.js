@@ -10,9 +10,14 @@ const gateApiBase = String(process.env.GATE_API_BASE || process.env.RENDER_EXTER
   .trim()
   .replace(/\/$/, '');
 
-const offlineScoring =
-  process.env.GATE_OFFLINE_SCORING === '1' ||
-  (process.env.GATE_OFFLINE_SCORING !== '0' && !gateApiBase);
+function resolveOfflineScoring() {
+  if (process.env.GATE_OFFLINE_SCORING === '1') return true;
+  if (process.env.GATE_OFFLINE_SCORING === '0') return false;
+  if (process.env.NODE_ENV === 'production') return false;
+  return !gateApiBase;
+}
+
+const offlineScoring = resolveOfflineScoring();
 
 const payload = {
   gateApiBase,
