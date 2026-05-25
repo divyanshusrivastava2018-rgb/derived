@@ -1,7 +1,7 @@
 /* Yes Officer–inspired platform UI — layout & components (Researchium content only) */
 
 .platform-home {
-  padding-top: 64px;
+  padding-top: 72px;
   background: var(--yo-bg, #f4f6fb);
 }
 

@@ -16,46 +16,69 @@
 }
 
 .site-nav {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 clamp(0.75rem, 2.5vw, 2rem);
+  box-sizing: border-box;
 }
 
 .site-nav__row {
   display: flex;
   align-items: center;
-  gap: 0.75rem 1rem;
-  min-height: 64px;
+  gap: 0.75rem clamp(0.75rem, 2vw, 1.5rem);
+  min-height: 72px;
+  width: 100%;
 }
 
 .site-nav__brand {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   line-height: 0;
-  min-height: 48px;
+  min-height: 0;
+  max-width: min(42vw, 320px);
 }
 
 .site-nav__brand--preload {
   display: inline-flex;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
+/* Logo asset 714×202 — show full wordmark width, not cropped */
 .site-nav__logo-img {
   display: block;
-  height: 48px;
+  height: clamp(36px, 5.5vw, 58px);
   width: auto;
-  max-width: min(200px, 44vw);
+  max-width: 100%;
+  aspect-ratio: 714 / 202;
   object-fit: contain;
   object-position: left center;
   background: #fff;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 768px) {
+  .site-nav__brand {
+    max-width: min(38vw, 360px);
+  }
+
   .site-nav__logo-img {
-    height: 32px;
-    max-width: 38vw;
+    height: clamp(44px, 4.2vw, 58px);
+  }
+}
+
+@media (max-width: 480px) {
+  .site-nav__row {
+    min-height: 60px;
+  }
+
+  .site-nav__brand {
+    max-width: 46vw;
+  }
+
+  .site-nav__logo-img {
+    height: 34px;
   }
 }
 
@@ -323,7 +346,7 @@ body.eduthink-home:not(.platform-home) {
   }
 
   body.site-page {
-    padding-top: 64px;
+    padding-top: 72px;
   }
 
   body.site-nav-lock {

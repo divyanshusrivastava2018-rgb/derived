@@ -6,7 +6,7 @@
 
   var PAGE = document.body.getAttribute("data-page") || "";
   var LOGO_PNG = "/images/researchium-logo.png";
-  var LOGO_VER = "header4";
+  var LOGO_VER = "header5";
   var LOGO_ALT = "Researchium";
 
   function logoUrl() {
@@ -21,7 +21,7 @@
       LOGO_ALT +
       '" class="' +
       className +
-      '" width="200" height="57" decoding="async" fetchpriority="high" />'
+      '" width="714" height="202" decoding="async" fetchpriority="high" />'
     );
   }
 
