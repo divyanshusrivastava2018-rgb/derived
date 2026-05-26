@@ -39,6 +39,12 @@
             class="btn-ghost u-inline-block u-rounded-pill"
             >Open playlist on YouTube</a
           >
+          <a
+            href="/stream-dashboard.html"
+            id="stream-dashboard-entry"
+            class="btn-ghost u-inline-block u-rounded-pill stream-dashboard-entry"
+            >Streamer dashboard</a
+          >
         </div>
       </div>
 
@@ -75,6 +81,15 @@
     <script defer src="/js/cms-hero.js"></script>
     <script defer src="/js/live-schedule.js"></script>
     <script defer src="/js/youtube-playlist.js"></script>
+    <script defer src="/js/stream-dashboard-gate.js"></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function () {
+        var link = document.getElementById('stream-dashboard-entry');
+        if (link && window.StreamDashboardGate) {
+          StreamDashboardGate.bindLink(link);
+        }
+      });
+    </script>
       <script defer src="/js/gtag-lazy.js"></script>
   </body>
 </html>
