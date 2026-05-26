@@ -1,645 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Researchium — Stream Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0f1117;
-    --bg2: #181c26;
-    --bg3: #1f2435;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #eef0f6;
-    --text2: #8b91a8;
-    --text3: #555d72;
-    --accent: #4f7fff;
-    --accent2: #3a6aff;
-    --red: #ff4545;
-    --green: #2ecc71;
-    --amber: #f5a623;
-    --font: 'DM Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
-
-  /* Sidebar */
-  .sidebar {
-    width: 220px; min-height: 100vh; background: var(--bg2);
-    border-right: 1px solid var(--border); display: flex; flex-direction: column;
-    padding: 0; flex-shrink: 0;
-  }
-  .logo { padding: 22px 20px 18px; border-bottom: 1px solid var(--border); }
-  .logo-text { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
-  .logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
-  .nav { padding: 16px 10px; flex: 1; }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px; padding: 9px 12px;
-    border-radius: 8px; cursor: pointer; font-size: 13.5px; color: var(--text2);
-    transition: all 0.15s; margin-bottom: 2px; text-decoration: none;
-  }
-  .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active { background: rgba(79,127,255,0.12); color: var(--accent); }
-  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .nav-section { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 16px 12px 6px; }
-  .sidebar-bottom { padding: 16px; border-top: 1px solid var(--border); }
-  .channel-card {
-    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-    background: var(--bg3); border-radius: 10px; border: 1px solid var(--border);
-  }
-  .channel-avatar {
-    width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0;
-  }
-  .channel-name { font-size: 12.5px; font-weight: 500; color: var(--text); }
-  .channel-sub { font-size: 11px; color: var(--text2); }
-
-  /* Main */
-  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .topbar {
-    padding: 16px 28px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg2);
-  }
-  .topbar-title { font-size: 16px; font-weight: 500; }
-  .topbar-right { display: flex; align-items: center; gap: 10px; }
-  .btn {
-    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
-    cursor: pointer; border: none; font-family: var(--font); transition: all 0.15s;
-  }
-  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
-  .btn-ghost:hover { background: var(--bg3); color: var(--text); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-danger { background: var(--red); color: #fff; }
-  .btn-danger:hover { background: #e03030; }
-
-  .content { padding: 28px; flex: 1; overflow-y: auto; }
-
-  /* Status bar */
-  .status-bar {
-    display: flex; align-items: center; gap: 16px; padding: 14px 20px;
-    background: var(--bg3); border: 1px solid var(--border); border-radius: 12px;
-    margin-bottom: 24px; flex-wrap: wrap;
-  }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .status-dot.offline { background: var(--text3); }
-  .status-dot.live { background: var(--red); animation: pulse 1.2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-  .status-label { font-size: 13px; font-weight: 500; }
-  .status-label.live { color: var(--red); }
-  .status-label.offline { color: var(--text2); }
-  .status-divider { width: 1px; height: 20px; background: var(--border2); }
-  .status-stat { font-size: 12.5px; color: var(--text2); }
-  .status-stat strong { color: var(--text); font-weight: 500; }
-  .status-actions { margin-left: auto; display: flex; gap: 8px; }
-
-  /* Grid layout */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
-
-  /* Cards */
-  .card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px;
-  }
-  .card-title { font-size: 13px; color: var(--text2); margin-bottom: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-
-  /* Stat cards */
-  .stat-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-  .stat-val { font-size: 26px; font-weight: 600; color: var(--text); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
-  .stat-lbl { font-size: 12px; color: var(--text2); }
-  .stat-change { font-size: 11px; margin-top: 6px; }
-  .stat-change.up { color: var(--green); }
-  .stat-change.down { color: var(--red); }
-
-  /* Stream preview */
-  .preview-area {
-    aspect-ratio: 16/9; background: #080a10; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border); margin-bottom: 14px; overflow: hidden;
-    position: relative;
-  }
-  .preview-offline { text-align: center; }
-  .preview-offline svg { width: 40px; height: 40px; color: var(--text3); margin-bottom: 10px; }
-  .preview-offline p { font-size: 13px; color: var(--text3); }
-  .preview-live-badge {
-    position: absolute; top: 10px; left: 10px;
-    background: var(--red); color: #fff; font-size: 11px; font-weight: 600;
-    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
-    display: none;
-  }
-
-  /* Destination cards */
-  .dest-list { display: flex; flex-direction: column; gap: 10px; }
-  .dest-item {
-    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-    background: var(--bg3); border-radius: 10px; border: 1px solid var(--border);
-    transition: border-color 0.2s;
-  }
-  .dest-item.connected { border-color: rgba(46,204,113,0.3); }
-  .dest-icon {
-    width: 34px; height: 34px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
-  }
-  .dest-icon.yt { background: rgba(255,0,0,0.12); }
-  .dest-icon.fb { background: rgba(66,103,178,0.15); }
-  .dest-icon.tw { background: rgba(100,65,165,0.15); }
-  .dest-name { font-size: 13.5px; font-weight: 500; flex: 1; }
-  .dest-handle { font-size: 11.5px; color: var(--text2); }
-  .dest-toggle {
-    width: 36px; height: 20px; background: var(--text3); border-radius: 10px;
-    cursor: pointer; transition: background 0.2s; position: relative; flex-shrink: 0;
-  }
-  .dest-toggle.on { background: var(--green); }
-  .dest-toggle::after {
-    content: ''; position: absolute; width: 14px; height: 14px;
-    background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: left 0.2s;
-  }
-  .dest-toggle.on::after { left: 19px; }
-
-  /* Schedule */
-  .schedule-item {
-    display: flex; align-items: center; gap: 12px; padding: 11px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .schedule-item:last-child { border-bottom: none; }
-  .sched-time { font-size: 12px; font-family: var(--mono); color: var(--text2); min-width: 70px; }
-  .sched-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .sched-title { font-size: 13px; color: var(--text); flex: 1; }
-  .sched-tag {
-    font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500;
-  }
-  .tag-math { background: rgba(79,127,255,0.15); color: #7fa8ff; }
-  .tag-bio { background: rgba(46,204,113,0.12); color: #5ed48a; }
-  .tag-chem { background: rgba(245,166,35,0.12); color: #f5c060; }
-  .tag-phys { background: rgba(180,100,255,0.12); color: #c97fff; }
-
-  /* Stream key */
-  .key-box {
-    display: flex; align-items: center; gap: 8px; background: var(--bg3);
-    border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px;
-  }
-  .key-val { font-family: var(--mono); font-size: 12px; color: var(--text2); flex: 1; letter-spacing: 1px; }
-  .copy-btn {
-    font-size: 11.5px; padding: 5px 10px; background: var(--bg2);
-    border: 1px solid var(--border2); border-radius: 6px; color: var(--text2);
-    cursor: pointer; font-family: var(--font); transition: all 0.15s;
-  }
-  .copy-btn:hover { color: var(--text); border-color: var(--accent); }
-
-  /* Chat */
-  .chat-area { height: 200px; overflow-y: auto; margin-bottom: 12px; }
-  .chat-msg { padding: 6px 0; border-bottom: 1px solid var(--border); }
-  .chat-user { font-size: 12px; font-weight: 500; color: var(--accent); }
-  .chat-text { font-size: 12.5px; color: var(--text2); margin-top: 1px; }
-  .chat-time { font-size: 10.5px; color: var(--text3); }
-  .chat-empty { text-align: center; padding: 40px 0; color: var(--text3); font-size: 13px; }
-
-  /* OBS instruction */
-  .obs-step {
-    display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
-  .obs-step:last-child { border-bottom: none; }
-  .obs-num {
-    width: 24px; height: 24px; border-radius: 50%; background: rgba(79,127,255,0.15);
-    color: var(--accent); font-size: 12px; font-weight: 600;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
-  }
-  .obs-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
-  .obs-text strong { color: var(--text); font-weight: 500; }
-  .obs-code {
-    font-family: var(--mono); font-size: 11.5px; background: var(--bg3);
-    border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px;
-    color: #7fa8ff;
-  }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    .sidebar { display: none; }
-    .grid-2 { grid-template-columns: 1fr; }
-    .grid-3 { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 600px) {
-    .grid-3 { grid-template-columns: 1fr; }
-    .content { padding: 16px; }
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Stream Studio – Researchium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/stream-dashboard.css" />
 </head>
-<body>
-<script src="/js/stream-dashboard-gate.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.StreamDashboardGate) {
-      StreamDashboardGate.requireAuthOnLoad();
-    }
-  });
-</script>
-
-<!-- Sidebar -->
-<div class="sidebar">
-  <div class="logo">
-    <div class="logo-text">Researchium</div>
-    <div class="logo-sub">Stream Studio</div>
-  </div>
-  <nav class="nav">
-    <div class="nav-section">Studio</div>
-    <a class="nav-item active" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-      Go Live
-    </a>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      Studio
-    </a>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
-      Recordings
-    </a>
-    <div class="nav-section">Manage</div>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Schedule
-    </a>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      Analytics
-    </a>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      Students
-    </a>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-      Destinations
-    </a>
-    <div class="nav-section">Account</div>
-    <a class="nav-item" href="#">
-      <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      Settings
-    </a>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="channel-card">
-      <div class="channel-avatar">MD</div>
-      <div>
-        <div class="channel-name">Maths with Divyanshu</div>
-        <div class="channel-sub">595 subscribers</div>
+<body class="stream-dash" id="stream-dash-body">
+  <aside class="sidebar" aria-label="Studio navigation">
+    <div class="logo">
+      <a href="/">
+        <img src="/images/researchium-logo.png" alt="Researchium" width="160" height="45" decoding="async" />
+      </a>
+      <div class="logo-sub">Stream Studio</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Studio</div>
+      <a class="nav-item active" href="/stream-dashboard.html" aria-current="page">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+        Go live
+      </a>
+      <span class="nav-item nav-item--muted">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Studio (soon)
+      </span>
+      <span class="nav-item nav-item--muted">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+        Recordings (soon)
+      </span>
+      <div class="nav-section">Manage</div>
+      <a class="nav-item" href="/live-classes.html">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Live schedule
+      </a>
+      <span class="nav-item nav-item--muted">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics (soon)
+      </span>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="channel-card">
+        <div class="channel-avatar" aria-hidden="true">MD</div>
+        <div>
+          <div class="channel-name">Maths with Divyanshu</div>
+          <div class="channel-sub">YouTube · @MathswithDivyanshuSir</div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </aside>
 
-<!-- Main Content -->
-<div class="main">
-  <div class="topbar">
-    <div class="topbar-title">Go Live</div>
-    <div class="topbar-right">
-      <button class="btn btn-ghost" onclick="openSchedule()">+ Schedule class</button>
-      <button class="btn btn-primary" id="goLiveBtn" onclick="toggleLive()">
-        &#9679; Go Live
-      </button>
-    </div>
-  </div>
-
-  <div class="content">
-
-    <!-- Status bar -->
-    <div class="status-bar">
-      <div class="status-dot offline" id="statusDot"></div>
-      <span class="status-label offline" id="statusLabel">Offline</span>
-      <div class="status-divider"></div>
-      <span class="status-stat"><strong id="viewerCount">0</strong> viewers</span>
-      <div class="status-divider"></div>
-      <span class="status-stat">Duration: <strong id="duration">00:00:00</strong></span>
-      <div class="status-divider"></div>
-      <span class="status-stat">Bitrate: <strong id="bitrate">— kbps</strong></span>
-      <div class="status-actions">
-        <button class="btn btn-ghost" style="font-size:12px; padding:6px 12px;" onclick="copyStreamKey()">Copy stream key</button>
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <a class="back-link" href="/live-classes.html">← Live classes</a>
+        <h1 class="topbar-title">Go live</h1>
       </div>
-    </div>
-
-    <!-- Stats row -->
-    <div class="grid-3">
-      <div class="stat-card">
-        <div class="stat-val" id="totalViews">254</div>
-        <div class="stat-lbl">Total views (28 days)</div>
-        <div class="stat-change up">↑ 12% from last month</div>
+      <div class="topbar-right">
+        <button type="button" class="btn btn-ghost" id="btnSchedule">+ Schedule class</button>
+        <button type="button" class="btn btn-primary" id="goLiveBtn">&#9679; Go live</button>
       </div>
-      <div class="stat-card">
-        <div class="stat-val">595</div>
-        <div class="stat-lbl">YouTube subscribers</div>
-        <div class="stat-change down">↓ 5 this week</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">7.3h</div>
-        <div class="stat-lbl">Watch time (28 days)</div>
-        <div class="stat-change up">↑ 3% from last month</div>
-      </div>
-    </div>
+    </header>
 
-    <!-- Main grid -->
-    <div class="grid-2">
+    <div class="content">
+      <section class="status-bar" aria-label="Stream status">
+        <div class="status-group">
+          <span class="status-dot offline" id="statusDot"></span>
+          <span class="status-label offline" id="statusLabel">Offline</span>
+        </div>
+        <div class="status-metrics">
+          <span class="status-stat"><strong id="viewerCount">0</strong> viewers</span>
+          <span class="status-stat">Duration <strong id="duration">00:00:00</strong></span>
+          <span class="status-stat">Bitrate <strong id="bitrate">— kbps</strong></span>
+        </div>
+        <div class="status-actions">
+          <button type="button" class="btn btn-ghost" id="btnStreamKeyHelp">Stream key help</button>
+        </div>
+      </section>
 
-      <!-- Left: Preview + OBS setup -->
-      <div>
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title">Stream preview</div>
+      <section class="grid-stats" aria-label="Channel overview">
+        <article class="stat-card">
+          <div class="stat-val" id="totalViews">254</div>
+          <div class="stat-lbl">Views (28 days)</div>
+          <div class="stat-change up">↑ 12% vs last month</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-val">595</div>
+          <div class="stat-lbl">Subscribers</div>
+          <div class="stat-change down">↓ 5 this week</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-val">7.3h</div>
+          <div class="stat-lbl">Watch time (28 days)</div>
+          <div class="stat-change up">↑ 3% vs last month</div>
+        </article>
+      </section>
+
+      <section class="studio-main">
+        <article class="card card-preview">
+          <div class="card-header">
+            <h2 class="card-title">Stream preview</h2>
+            <span class="card-badge">YouTube embed</span>
+          </div>
           <div class="preview-area" id="previewArea">
             <span class="preview-live-badge" id="liveBadge">● LIVE</span>
             <div class="preview-offline" id="previewOffline">
-              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
               <p>Not streaming yet</p>
-              <p style="font-size:11px; margin-top:4px; color: #3a4055;">Start OBS and click Go Live</p>
+              <p class="hint">Start OBS, then click <strong>Go live</strong> here to show your YouTube feed.</p>
             </div>
-            <iframe id="liveFrame" style="display:none; width:100%; height:100%; border:none;"
-              src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            <iframe id="liveFrame" title="Live stream preview" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <a href="https://www.youtube.com/@MathswithDivyanshuSir" target="_blank"
-               class="btn btn-ghost" style="font-size:12px; padding:7px 12px; text-decoration:none;">
-              ▶ Open YouTube channel
-            </a>
-            <button class="btn btn-ghost" style="font-size:12px; padding:7px 12px;" onclick="copyPageLink()">
-              Share class link
-            </button>
+          <div class="preview-actions">
+            <a href="https://www.youtube.com/@MathswithDivyanshuSir" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">Open YouTube channel</a>
+            <button type="button" class="btn btn-ghost" id="btnShareStudentLink">Share student link</button>
           </div>
-        </div>
+        </article>
 
-        <div class="card">
-          <div class="card-title">OBS setup — stream to your website</div>
-          <div style="margin-bottom:12px;">
-            <div style="font-size:12px; color:var(--text2); margin-bottom:6px;">Your RTMP server URL</div>
-            <div class="key-box">
-              <span class="key-val">rtmp://a.rtmp.youtube.com/live2</span>
-              <button class="copy-btn" onclick="copyText('rtmp://a.rtmp.youtube.com/live2', this)">Copy</button>
-            </div>
+        <article class="card card-chat">
+          <div class="card-header">
+            <h2 class="card-title">Live chat preview</h2>
+            <span class="card-badge">Demo</span>
           </div>
-          <div style="margin-bottom:16px;">
-            <div style="font-size:12px; color:var(--text2); margin-bottom:6px;">Your stream key (keep secret)</div>
-            <div class="key-box">
-              <span class="key-val" id="streamKeyDisplay">●●●●●●●●●●●●●●●●</span>
-              <button class="copy-btn" onclick="revealKey(this)">Show</button>
-            </div>
+          <div class="chat-area" id="chatArea">
+            <p class="chat-empty" id="chatEmpty">Chat preview appears when you go live</p>
           </div>
-          <div class="obs-step">
-            <div class="obs-num">1</div>
-            <div class="obs-text"><strong>Open OBS Studio</strong> → Settings → Stream → Service: <span class="obs-code">YouTube - RTMP</span></div>
+          <div class="chat-compose">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Reply to students…" autocomplete="off" />
+            <button type="button" class="btn btn-primary" id="btnSendChat">Send</button>
           </div>
-          <div class="obs-step">
-            <div class="obs-num">2</div>
-            <div class="obs-text">Paste the <strong>stream key</strong> from YouTube Studio → <span class="obs-code">Go Live → Stream settings</span></div>
-          </div>
-          <div class="obs-step">
-            <div class="obs-num">3</div>
-            <div class="obs-text"><strong>Click "Start Streaming"</strong> in OBS → then click <strong>Go Live</strong> on this dashboard</div>
-          </div>
-          <div class="obs-step">
-            <div class="obs-num">4</div>
-            <div class="obs-text">Your stream appears <strong>live on this page and on YouTube</strong> simultaneously</div>
-          </div>
-        </div>
-      </div>
+        </article>
+      </section>
 
-      <!-- Right: Destinations + Schedule + Chat -->
-      <div>
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title">Streaming destinations</div>
+      <section class="studio-row">
+        <article class="card">
+          <div class="card-header">
+            <h2 class="card-title">OBS setup</h2>
+          </div>
+          <p class="obs-notice">Stream keys stay in YouTube Studio only — never commit them to this site.</p>
+          <div class="field-block">
+            <div class="field-label">RTMP server URL</div>
+            <div class="key-box">
+              <span class="key-val" id="rtmpUrl">rtmp://a.rtmp.youtube.com/live2</span>
+              <button type="button" class="copy-btn" id="btnCopyRtmp">Copy</button>
+            </div>
+          </div>
+          <div class="field-block">
+            <div class="field-label">Stream key</div>
+            <div class="key-box">
+              <span class="key-val" id="streamKeyDisplay">••••-••••-••••-••••</span>
+              <button type="button" class="copy-btn" id="btnRevealKey">Show</button>
+            </div>
+          </div>
+          <ol class="obs-steps">
+            <li class="obs-step">
+              <span class="obs-num">1</span>
+              <p class="obs-text"><strong>OBS Studio</strong> → Settings → Stream → Service <span class="obs-code">YouTube - RTMP</span></p>
+            </li>
+            <li class="obs-step">
+              <span class="obs-num">2</span>
+              <p class="obs-text">Copy your key from <span class="obs-code">YouTube Studio → Go Live</span></p>
+            </li>
+            <li class="obs-step">
+              <span class="obs-num">3</span>
+              <p class="obs-text"><strong>Start Streaming</strong> in OBS, then <strong>Go live</strong> on this page</p>
+            </li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <h2 class="card-title">Destinations</h2>
+          </div>
           <div class="dest-list">
             <div class="dest-item connected">
-              <div class="dest-icon yt">
+              <div class="dest-icon yt" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 00.5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 002.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 002.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
               </div>
-              <div style="flex:1;">
+              <div class="dest-meta">
                 <div class="dest-name">YouTube</div>
-                <div class="dest-handle">@MathswithDivyanshuSir • Connected</div>
+                <div class="dest-handle">@MathswithDivyanshuSir</div>
               </div>
-              <div class="dest-toggle on" id="ytToggle" onclick="toggleDest('ytToggle')"></div>
+              <span class="dest-badge">Active</span>
             </div>
-            <div class="dest-item">
-              <div class="dest-icon fb">
+            <div class="dest-item is-disabled">
+              <div class="dest-icon fb" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#4267B2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
               </div>
-              <div style="flex:1;">
+              <div class="dest-meta">
                 <div class="dest-name">Facebook Live</div>
-                <div class="dest-handle" style="color:#f5a623;">Not connected — click to add</div>
+                <div class="dest-handle dest-handle--warn">Coming soon</div>
               </div>
-              <div class="dest-toggle" id="fbToggle" onclick="toggleDest('fbToggle')"></div>
+              <span class="dest-badge dest-badge--soon">Soon</span>
             </div>
-            <div class="dest-item">
-              <div class="dest-icon tw">
+            <div class="dest-item is-disabled">
+              <div class="dest-icon tw" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="#9146FF"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
               </div>
-              <div style="flex:1;">
+              <div class="dest-meta">
                 <div class="dest-name">Twitch</div>
-                <div class="dest-handle" style="color:#f5a623;">Not connected — click to add</div>
+                <div class="dest-handle dest-handle--warn">Coming soon</div>
               </div>
-              <div class="dest-toggle" id="twToggle" onclick="toggleDest('twToggle')"></div>
+              <span class="dest-badge dest-badge--soon">Soon</span>
             </div>
           </div>
-        </div>
+        </article>
 
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title">Upcoming classes</div>
-          <div id="scheduleList">
+        <article class="card">
+          <div class="card-header">
+            <h2 class="card-title">Upcoming classes</h2>
+          </div>
+          <div class="schedule-list" id="scheduleList">
             <div class="schedule-item">
               <span class="sched-time">Today 7 PM</span>
-              <div class="sched-dot"></div>
+              <span class="sched-dot"></span>
               <span class="sched-title">Real Analysis — Sequences</span>
               <span class="sched-tag tag-math">Maths</span>
             </div>
             <div class="schedule-item">
               <span class="sched-time">Today 8:30 PM</span>
-              <div class="sched-dot" style="background:#f5c060;"></div>
+              <span class="sched-dot" style="background:#fcd34d"></span>
               <span class="sched-title">Organic Mechanisms — CSIR NET</span>
               <span class="sched-tag tag-chem">Chem</span>
             </div>
             <div class="schedule-item">
               <span class="sched-time">Tomorrow 6 PM</span>
-              <div class="sched-dot" style="background:#5ed48a;"></div>
+              <span class="sched-dot" style="background:#6ee7b7"></span>
               <span class="sched-title">Molecular Biology — Central Dogma</span>
               <span class="sched-tag tag-bio">Bio</span>
             </div>
             <div class="schedule-item">
               <span class="sched-time">Thu 7 PM</span>
-              <div class="sched-dot" style="background:#c97fff;"></div>
+              <span class="sched-dot" style="background:#d8b4fe"></span>
               <span class="sched-title">Quantum Mechanics Intro</span>
               <span class="sched-tag tag-phys">Physics</span>
             </div>
           </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Live chat (YouTube)</div>
-          <div class="chat-area" id="chatArea">
-            <div class="chat-empty" id="chatEmpty">Chat appears here when you go live</div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="chatInput" placeholder="Reply to students…"
-              style="flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:8px; padding:8px 12px; font-size:13px; color:var(--text); font-family:var(--font); outline:none;"
-              onkeydown="if(event.key==='Enter') sendChat()">
-            <button class="btn btn-primary" style="font-size:13px; padding:8px 14px;" onclick="sendChat()">Send</button>
-          </div>
-        </div>
-      </div>
-
+        </article>
+      </section>
     </div>
   </div>
-</div>
 
-<script>
-const CHANNEL_ID = 'UCu4B2QfpHl7aLoVEZWwEw5g';
-let isLive = false;
-let timerInterval = null;
-let seconds = 0;
-let viewerInterval = null;
-let viewers = 0;
-
-function toggleLive() {
-  isLive = !isLive;
-  const btn = document.getElementById('goLiveBtn');
-  const dot = document.getElementById('statusDot');
-  const label = document.getElementById('statusLabel');
-  const badge = document.getElementById('liveBadge');
-  const offline = document.getElementById('previewOffline');
-  const frame = document.getElementById('liveFrame');
-  const bitrate = document.getElementById('bitrate');
-
-  if (isLive) {
-    btn.className = 'btn btn-danger';
-    btn.innerHTML = '&#9632; End Stream';
-    dot.className = 'status-dot live';
-    label.className = 'status-label live';
-    label.textContent = 'LIVE';
-    badge.style.display = 'block';
-    offline.style.display = 'none';
-    frame.style.display = 'block';
-    frame.src = `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1`;
-    bitrate.textContent = '4500 kbps';
-    seconds = 0;
-    timerInterval = setInterval(updateTimer, 1000);
-    viewers = Math.floor(Math.random() * 15) + 3;
-    document.getElementById('viewerCount').textContent = viewers;
-    viewerInterval = setInterval(() => {
-      viewers += Math.floor(Math.random() * 3) - 1;
-      if (viewers < 0) viewers = 0;
-      document.getElementById('viewerCount').textContent = viewers;
-    }, 8000);
-    simulateChat();
-  } else {
-    btn.className = 'btn btn-primary';
-    btn.innerHTML = '&#9679; Go Live';
-    dot.className = 'status-dot offline';
-    label.className = 'status-label offline';
-    label.textContent = 'Offline';
-    badge.style.display = 'none';
-    offline.style.display = 'block';
-    frame.style.display = 'none';
-    frame.src = '';
-    bitrate.textContent = '— kbps';
-    document.getElementById('viewerCount').textContent = '0';
-    clearInterval(timerInterval);
-    clearInterval(viewerInterval);
-  }
-}
-
-function updateTimer() {
-  seconds++;
-  const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-  const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-  const s = String(seconds % 60).padStart(2, '0');
-  document.getElementById('duration').textContent = `${h}:${m}:${s}`;
-}
-
-const chatMessages = [
-  { user: 'Rahul Sharma', text: 'Sir please explain eigenvalues again' },
-  { user: 'Priya Singh', text: 'Can you solve question 5 from last paper?' },
-  { user: 'Amit Kumar', text: 'Thanks sir! Very clear explanation' },
-  { user: 'Neha Patel', text: 'Sir audio is little low please increase' },
-  { user: 'Rohan Verma', text: 'Sir when is next class on topology?' },
-  { user: 'Deepika', text: 'Great class! Subscribed 🙏' },
-];
-let chatIdx = 0;
-
-function simulateChat() {
-  if (!isLive) return;
-  const area = document.getElementById('chatArea');
-  const empty = document.getElementById('chatEmpty');
-  if (empty) empty.remove();
-  const msg = chatMessages[chatIdx % chatMessages.length];
-  chatIdx++;
-  const now = new Date();
-  const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const div = document.createElement('div');
-  div.className = 'chat-msg';
-  div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span class="chat-user">${msg.user}</span><span class="chat-time">${timeStr}</span></div><div class="chat-text">${msg.text}</div>`;
-  area.appendChild(div);
-  area.scrollTop = area.scrollHeight;
-  if (isLive) setTimeout(simulateChat, Math.random() * 6000 + 3000);
-}
-
-function sendChat() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  const area = document.getElementById('chatArea');
-  const now = new Date();
-  const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const div = document.createElement('div');
-  div.className = 'chat-msg';
-  div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span class="chat-user" style="color:#2ecc71;">You (Teacher)</span><span class="chat-time">${timeStr}</span></div><div class="chat-text">${text}</div>`;
-  area.appendChild(div);
-  area.scrollTop = area.scrollHeight;
-  input.value = '';
-}
-
-function toggleDest(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('on');
-}
-
-function copyStreamKey() {
-  copyText('YOUR-YOUTUBE-STREAM-KEY-HERE', { textContent: 'Copied!' });
-  alert('Go to YouTube Studio → Go Live → Stream settings to get your actual stream key');
-}
-
-function revealKey(btn) {
-  const el = document.getElementById('streamKeyDisplay');
-  if (btn.textContent === 'Show') {
-    el.textContent = 'xxxx-xxxx-xxxx-xxxx (get from YouTube Studio)';
-    btn.textContent = 'Hide';
-  } else {
-    el.textContent = '●●●●●●●●●●●●●●●●';
-    btn.textContent = 'Show';
-  }
-}
-
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).catch(() => {});
-  const orig = btn.textContent;
-  btn.textContent = 'Copied!';
-  setTimeout(() => { btn.textContent = orig; }, 1800);
-}
-
-function copyPageLink() {
-  const studentUrl = `${window.location.origin}/live-classes.html`;
-  navigator.clipboard.writeText(studentUrl).catch(() => {});
-  alert('Live class link copied! Share this with your students.\n\n' + studentUrl);
-}
-
-function openSchedule() {
-  alert('Schedule feature: Add your class times to the schedule list.\n\nFor now, edit the schedule directly in the HTML file or connect a Google Sheet.');
-}
-</script>
+  <script src="/js/stream-dashboard-gate.js"></script>
+  <script src="/js/stream-dashboard.js" defer></script>
 </body>
 </html>

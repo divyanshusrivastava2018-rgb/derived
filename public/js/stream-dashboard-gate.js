@@ -82,10 +82,30 @@
     });
   }
 
+  /** Run on stream-dashboard.html only (external script — works with CSP). */
+  async function bootDashboardPage() {
+    if (!document.body || document.body.id !== 'stream-dash-body') {
+      return;
+    }
+    if (!isAuthed()) {
+      const ok = await promptForAccess();
+      if (!ok) {
+        global.location.replace(RETURN_PATH);
+      }
+    }
+  }
+
   global.StreamDashboardGate = {
     bindLink,
     isAuthed,
     requireAuthOnLoad,
-    promptForAccess
+    promptForAccess,
+    bootDashboardPage
   };
+
+  if (document.body && document.body.id === 'stream-dash-body') {
+    bootDashboardPage();
+  } else {
+    document.addEventListener('DOMContentLoaded', bootDashboardPage);
+  }
 })(window);
