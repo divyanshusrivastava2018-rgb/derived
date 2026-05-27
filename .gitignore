@@ -1,6 +1,7 @@
 node_modules/
 server/uploads/*
 !server/uploads/.gitkeep
+server/data/*.json
 server/data/courses.json
 .env
 server/data/csir-leads.json

@@ -19,6 +19,7 @@
     blog: "panel-blog",
     videos: "panel-videos",
     liveyt: "panel-liveyt",
+    streamstudio: "panel-streamstudio",
     pages: "panel-pages",
     news: "panel-news",
     materials: "panel-materials",
@@ -30,6 +31,7 @@
     blog: "Home › Posts",
     videos: "Home › Courses",
     liveyt: "Home › Live & media",
+    streamstudio: "Home › Stream hosts",
     pages: "Home › Pages",
     news: "Home › News",
     materials: "Home › Materials",
@@ -59,16 +61,154 @@
   }
 
   function showLogin() {
+    document.body.classList.remove("adm-dash-active");
     if (loginEl) loginEl.hidden = false;
     if (appEl) appEl.hidden = true;
   }
 
-  async function loadLoginHint() {
+  var adminAssetsPromise = null;
+
+  function loadStylesheet(href) {
+    var existingLink = document.querySelector('link[data-admin-asset="' + href + '"]');
+    if (existingLink && existingLink.sheet) {
+      return Promise.resolve();
+    }
+    return new Promise(function (resolve, reject) {
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      link.dataset.adminAsset = href;
+      link.onload = function () {
+        resolve();
+      };
+      link.onerror = function () {
+        reject(new Error("stylesheet_load_failed"));
+      };
+      document.head.appendChild(link);
+    });
+  }
+
+  function loadScript(src) {
+    var isChart = src.indexOf("chart.js") !== -1;
+    if (isChart && window.Chart) {
+      return Promise.resolve();
+    }
+    var existing = document.querySelector('script[data-admin-asset="' + src + '"]');
+    if (existing) {
+      return new Promise(function (resolve, reject) {
+        if (isChart && window.Chart) {
+          resolve();
+          return;
+        }
+        if (existing.getAttribute("data-loaded") === "1") {
+          resolve();
+          return;
+        }
+        existing.addEventListener(
+          "load",
+          function () {
+            existing.setAttribute("data-loaded", "1");
+            resolve();
+          },
+          { once: true }
+        );
+        existing.addEventListener(
+          "error",
+          function () {
+            reject(new Error("script_load_failed"));
+          },
+          { once: true }
+        );
+      });
+    }
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = src;
+      s.dataset.adminAsset = src;
+      s.onload = function () {
+        s.setAttribute("data-loaded", "1");
+        resolve();
+      };
+      s.onerror = function () {
+        reject(new Error("script_load_failed"));
+      };
+      document.head.appendChild(s);
+    });
+  }
+
+  function withTimeout(promise, ms, label) {
+    return Promise.race([
+      promise,
+      new Promise(function (_, reject) {
+        setTimeout(function () {
+          reject(new Error(label || "timeout"));
+        }, ms);
+      })
+    ]);
+  }
+
+  function ensureAdminAssets() {
+    if (!adminAssetsPromise) {
+      adminAssetsPromise = withTimeout(
+        Promise.all([
+          loadStylesheet(
+            "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"
+          ),
+          loadScript("https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js")
+        ]),
+        12000,
+        "admin_assets_timeout"
+      ).catch(function (err) {
+        adminAssetsPromise = null;
+        throw err;
+      });
+    }
+    return adminAssetsPromise;
+  }
+
+  function shouldOpenStreamStudioAfterLogin() {
+    var box = document.getElementById("adminOpenStudio");
+    return !box || box.checked;
+  }
+
+  function goToStreamStudioAfterLogin() {
+    if (!shouldOpenStreamStudioAfterLogin()) return false;
+    try {
+      localStorage.setItem("researchium_open_studio_after_login", "1");
+    } catch (_) {
+      /* ignore */
+    }
+    window.location.assign("/stream-studio/studio-lobby.html");
+    return true;
+  }
+
+  function loadLoginHint() {
     var info = document.getElementById("adminLoginInfo");
     var userInput = document.getElementById("adminUsername");
-    if (!info || !userInput) return;
-    userInput.placeholder = "Your login ID";
-    info.textContent = "Credentials are configured on the server (not stored in this page).";
+    var openBox = document.getElementById("adminOpenStudio");
+    if (!userInput) return;
+    userInput.placeholder = "Admin username";
+    try {
+      if (openBox && localStorage.getItem("researchium_open_studio_after_login") === "0") {
+        openBox.checked = false;
+      }
+    } catch (_) {
+      /* ignore */
+    }
+    if (!info) return;
+    info.textContent = "Sign in with your administrator account.";
+    apiFetch("/healthz")
+      .then(function (r) {
+        if (!r.ok) throw new Error("bad");
+        if (location.protocol === "file:") {
+          info.textContent =
+            "Open via the server: http://localhost:3000/admin.html (not as a local file).";
+        }
+      })
+      .catch(function () {
+        info.textContent =
+          "Server not reachable. Run npm start in the project folder, then open http://localhost:3000/admin.html";
+      });
   }
 
   function switchPanel(tab) {
@@ -90,10 +230,12 @@
     if (titleEl) titleEl.textContent = title;
     if (crumbEl) crumbEl.textContent = BREADCRUMB[tab] || BREADCRUMB.overview;
     if (tab === "leads") loadLeadsTables();
-    if (tab === "overview") loadOverviewStats();
+    if (tab === "overview" && window.Chart) loadOverviewStats();
+    if (tab === "streamstudio") loadStreamHostsTable();
   }
 
   function showDash() {
+    document.body.classList.add("adm-dash-active");
     if (loginEl) loginEl.hidden = true;
     if (appEl) appEl.hidden = false;
     switchPanel("overview");
@@ -103,10 +245,24 @@
     renderPageCopyEditor();
     loadNewsTable();
     loadMaterialsTable();
+    ensureAdminAssets()
+      .then(function () {
+        return loadOverviewStats();
+      })
+      .catch(function () {
+        showToast("Charts/icons could not load (CDN blocked?). Other admin tools still work.", true);
+      });
   }
 
   async function loadOverviewStats() {
     if (!window.AdminDashboard) return;
+    if (!window.Chart) {
+      try {
+        await ensureAdminAssets();
+      } catch (_) {
+        return;
+      }
+    }
     try {
       var r = await handleAuthResponse(
         await apiFetch("/api/admin/dashboard", { headers: authHeaders() })
@@ -133,9 +289,14 @@
   document.getElementById("adminLoginForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
     var err = document.getElementById("adminLoginErr");
+    var submitBtn = document.getElementById("adminLoginSubmit");
     var username = document.getElementById("adminUsername").value.trim();
     var password = document.getElementById("adminPassword").value;
-    err.hidden = true;
+    if (err) err.hidden = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Signing in…";
+    }
     try {
       var r = await apiFetch("/api/admin/login", {
         method: "POST",
@@ -146,10 +307,14 @@
         return {};
       });
       if (!r.ok || !data.ok) {
-        err.textContent =
-          data.error ||
-          "Invalid login ID or password.";
-        err.hidden = false;
+        if (err) {
+          err.textContent = data.error || "Invalid username or password.";
+          err.hidden = false;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Log in";
+        }
         return;
       }
       document.getElementById("adminPassword").value = "";
@@ -159,11 +324,31 @@
       if (av && username) {
         av.textContent = username.slice(0, 2).toUpperCase();
       }
+      if (document.getElementById("adminOpenStudio")) {
+        try {
+          localStorage.setItem(
+            "researchium_open_studio_after_login",
+            document.getElementById("adminOpenStudio").checked ? "1" : "0"
+          );
+        } catch (_) {
+          /* ignore */
+        }
+      }
+      if (goToStreamStudioAfterLogin()) {
+        return;
+      }
       showDash();
       showToast("Signed in.");
     } catch {
-      err.textContent = "Could not reach server.";
-      err.hidden = false;
+      if (err) {
+        err.textContent =
+          "Could not reach server. Run npm start, then use http://localhost:3000/admin.html";
+        err.hidden = false;
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Log in";
+      }
     }
   });
 
@@ -176,6 +361,7 @@
     inp.type = show ? "text" : "password";
     this.textContent = show ? "Hide" : "Show";
     this.setAttribute("aria-pressed", show ? "true" : "false");
+    this.setAttribute("aria-label", show ? "Hide password" : "Show password");
   });
 
   document.getElementById("adminLogout")?.addEventListener("click", async function () {
@@ -790,6 +976,58 @@
     }
   }
 
+  async function loadStreamHostsTable() {
+    var wrap = document.getElementById("streamHostsTableWrap");
+    if (!wrap) return;
+    wrap.innerHTML = '<p class="admin-muted">Loading…</p>';
+    try {
+      var r = await handleAuthResponse(
+        await apiFetch("/api/admin/stream-studio/studio-users", { headers: authHeaders() })
+      );
+      if (!r) return;
+      if (!r.ok) {
+        var errBody = await r.json().catch(function () {
+          return {};
+        });
+        wrap.innerHTML =
+          "<p class=\"admin-err\">" +
+          esc(errBody.message || errBody.error || "Could not load stream hosts.") +
+          "</p>";
+        return;
+      }
+      var data = await r.json();
+      var users = data.users || [];
+      if (!users.length) {
+        wrap.innerHTML = "<p class=\"admin-muted\">No studio accounts yet. Create one above.</p>";
+        return;
+      }
+      var rows = users
+        .map(function (u) {
+          var created = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—";
+          return (
+            "<tr><td>" +
+            esc(u.name) +
+            "</td><td>" +
+            esc(u.email) +
+            "</td><td>" +
+            esc(u.institution || "—") +
+            "</td><td>" +
+            esc(created) +
+            '</td><td class="admin-td-actions"><button type="button" class="btn-card-danger btn-del-stream-host" data-id="' +
+            esc(u.id) +
+            '">Remove</button></td></tr>'
+          );
+        })
+        .join("");
+      wrap.innerHTML =
+        '<table class="admin-table adm-table"><thead><tr><th>Name</th><th>Email</th><th>Institution</th><th>Created</th><th></th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table>";
+    } catch (_) {
+      wrap.innerHTML = "<p class=\"admin-err\">Failed to load stream hosts.</p>";
+    }
+  }
+
   async function loadMaterialsTable() {
     var wrap = document.getElementById("materialsTableWrap");
     if (!wrap) return;
@@ -829,6 +1067,50 @@
   document.getElementById("btnCancelNews")?.addEventListener("click", clearNewsForm);
   document.getElementById("btnNewMaterial")?.addEventListener("click", clearMaterialForm);
   document.getElementById("btnCancelMaterial")?.addEventListener("click", clearMaterialForm);
+
+  document.getElementById("streamHostForm")?.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var body = {
+      name: document.getElementById("streamHostName").value.trim(),
+      email: document.getElementById("streamHostEmail").value.trim(),
+      institution: document.getElementById("streamHostInstitution").value.trim() || undefined,
+      password: document.getElementById("streamHostPassword").value
+    };
+    var r0 = await apiFetch("/api/admin/stream-studio/studio-users", {
+      method: "POST",
+      headers: authHeaders(true),
+      body: JSON.stringify(body)
+    });
+    var r = await handleAuthResponse(r0);
+    if (!r || !r.ok) {
+      var errBody = await r0.json().catch(function () {
+        return {};
+      });
+      showToast(errBody.message || errBody.error || "Could not create host.", true);
+      return;
+    }
+    document.getElementById("streamHostForm").reset();
+    showToast("Stream host account created.");
+    loadStreamHostsTable();
+  });
+
+  document.getElementById("streamHostsTableWrap")?.addEventListener("click", async function (e) {
+    var del = e.target.closest(".btn-del-stream-host");
+    if (!del) return;
+    var id = del.getAttribute("data-id");
+    if (!id || !confirm("Remove this studio account? They will not be able to sign in.")) return;
+    var r0 = await apiFetch("/api/admin/stream-studio/studio-users/" + encodeURIComponent(id), {
+      method: "DELETE",
+      headers: authHeaders()
+    });
+    var r = await handleAuthResponse(r0);
+    if (!r || !r.ok) {
+      showToast("Could not remove host.", true);
+      return;
+    }
+    showToast("Host removed.");
+    loadStreamHostsTable();
+  });
 
   document.getElementById("newsAdminForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -1013,7 +1295,7 @@
             '<div class="wp-people-meta">' +
             esc(formatPeopleDate(row.createdAt)) +
             "</div>" +
-            '<span class="wp-role-badge wp-role-badge--interest">Subscriber</span></li>"
+            '<span class="wp-role-badge wp-role-badge--interest">Subscriber</span></li>'
           );
         })
         .join("") +

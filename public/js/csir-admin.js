@@ -105,9 +105,14 @@
   document.getElementById("csirAdminLoginForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
     var err = document.getElementById("csirAdminLoginErr");
+    var submitBtn = e.target.querySelector('button[type="submit"]');
     var user = document.getElementById("csirAdminUser").value.trim();
     var pass = document.getElementById("csirAdminPass").value;
     if (err) err.hidden = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Signing in…";
+    }
     try {
       var r = await apiFetch("/api/admin/login", {
         method: "POST",
@@ -129,6 +134,11 @@
       if (err) {
         err.textContent = "Network error. Is the server running?";
         err.hidden = false;
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign in";
       }
     }
   });

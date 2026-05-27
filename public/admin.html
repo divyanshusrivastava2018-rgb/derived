@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="/css/app.css" />
     <link rel="stylesheet" href="/css/wp-admin.css" />
     <link rel="stylesheet" href="/css/admin-dashboard.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   </head>
-  <body class="wp-admin-page adm-dash-active" data-page="admin">
+  <body class="wp-admin-page" data-page="admin">
     <!-- Login (WordPress-style) -->
     <div id="admin-login" class="wp-login-wrap">
       <div class="wp-login-card admin-login-card">
@@ -20,21 +18,45 @@
           <span>Site administration</span>
         </div>
         <h1>Log in</h1>
-        <p class="wp-login-lead admin-lead">
-          Use server credentials (<code>RESEARCHIUM_ADMIN_*</code> in <code>.env</code>).
+        <p id="adminLoginInfo" class="wp-login-lead admin-login-info">
+          Sign in with your administrator account.
         </p>
         <form id="adminLoginForm" class="admin-form">
-          <label class="admin-label" for="adminUsername">Username or email</label>
-          <input type="text" id="adminUsername" class="admin-input" autocomplete="username" required />
+          <label class="admin-label" for="adminUsername">Username</label>
+          <input
+            type="text"
+            id="adminUsername"
+            class="admin-input"
+            autocomplete="username"
+            required
+            autofocus
+          />
           <label class="admin-label" for="adminPassword">Password</label>
           <div class="admin-password-row">
-            <input type="password" id="adminPassword" class="admin-input" autocomplete="current-password" required />
-            <button type="button" id="adminTogglePw" class="btn-ghost" aria-pressed="false">Show</button>
+            <input
+              type="password"
+              id="adminPassword"
+              class="admin-input admin-input-flex"
+              autocomplete="current-password"
+              required
+            />
+            <button
+              type="button"
+              id="adminTogglePw"
+              class="admin-btn-toggle-pw"
+              aria-pressed="false"
+              aria-label="Show password"
+            >
+              Show
+            </button>
           </div>
-          <button type="submit" class="btn-gold admin-login-btn">Log in</button>
-          <p id="adminLoginErr" class="admin-err" hidden></p>
+          <label class="admin-check admin-open-studio-check">
+            <input type="checkbox" id="adminOpenStudio" checked />
+            Go to Stream Studio after sign-in
+          </label>
+          <button type="submit" class="btn-gold admin-login-btn" id="adminLoginSubmit">Log in</button>
+          <p id="adminLoginErr" class="admin-err" role="alert" aria-live="assertive" hidden></p>
         </form>
-        <p id="adminLoginInfo" class="admin-login-info admin-muted"></p>
         <p class="wp-login-back admin-hint"><a href="/">← Back to site</a></p>
       </div>
     </div>
@@ -70,6 +92,9 @@
           </button>
           <button type="button" class="adm-nav-item" data-tab="liveyt" data-title="Live &amp; media">
             <i class="ti ti-broadcast"></i><span class="adm-nav-text">Live &amp; media</span>
+          </button>
+          <button type="button" class="adm-nav-item" data-tab="streamstudio" data-title="Stream hosts">
+            <i class="ti ti-video"></i><span class="adm-nav-text">Stream hosts</span>
           </button>
           <button type="button" class="adm-nav-item" data-tab="pages" data-title="Pages">
             <i class="ti ti-file-text"></i><span class="adm-nav-text">Pages</span>
@@ -371,6 +396,32 @@
                 <label class="admin-check"><input type="checkbox" id="chkSyncPlayer" /> Sync on-page YouTube player</label>
                 <button type="button" id="btnImportPlaylist" class="btn-gold">Import playlist</button>
                 <p id="importPlaylistResult" class="admin-muted" hidden></p>
+              </div>
+            </div>
+
+            <div id="panel-streamstudio" class="admin-panel" hidden>
+              <div class="admin-panel-head">
+                <h2>Stream studio hosts</h2>
+                <a href="/stream-studio/studio-lobby.html?manual=1" class="adm-btn adm-btn-ghost" target="_blank" rel="noopener">Open studio</a>
+              </div>
+              <p class="admin-muted" style="margin: 0 0 1rem">
+                Create sign-in accounts for educators. Self-registration on the studio login page is disabled.
+                Requires <code>RESEARCHIUM_STREAM_API_KEY</code> and stream API running (<code>npm run dev:api</code> in
+                <code>Researchium_stream/</code>).
+              </p>
+              <form id="streamHostForm" class="admin-form admin-card" style="margin-bottom: 1rem">
+                <label class="admin-label" for="streamHostName">Full name</label>
+                <input type="text" id="streamHostName" class="admin-input" required placeholder="Dr. Jane Smith" />
+                <label class="admin-label" for="streamHostEmail">Email</label>
+                <input type="email" id="streamHostEmail" class="admin-input" required placeholder="host@example.com" />
+                <label class="admin-label" for="streamHostInstitution">Institution (optional)</label>
+                <input type="text" id="streamHostInstitution" class="admin-input" placeholder="University name" />
+                <label class="admin-label" for="streamHostPassword">Password</label>
+                <input type="password" id="streamHostPassword" class="admin-input" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
+                <button type="submit" class="btn-gold">Create host account</button>
+              </form>
+              <div id="streamHostsTableWrap" class="admin-table-wrap adm-table-wrap">
+                <p class="admin-muted">Loading…</p>
               </div>
             </div>
 

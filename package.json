@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server/index.js",
     "start:clean": "powershell -NoProfile -ExecutionPolicy Bypass -File server/scripts/start-clean.ps1",
+    "start:all": "bash server/scripts/start-all.sh",
+    "dev:stream-api": "npm run dev:api --prefix Researchium_stream",
     "dev": "nodemon server/index.js",
     "test": "node server/scripts/smoke-test.js",
     "build:csir": "node server/scripts/build-csir-integrated.js",

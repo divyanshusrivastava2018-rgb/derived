@@ -39,7 +39,10 @@
     }
 
     document.documentElement.classList.remove('studio-session-pending');
-    document.getElementById('btnStudioSignOut')?.addEventListener('click', redirectToLobby);
+    document.getElementById('btnStudioSignOut')?.addEventListener('click', () => {
+      sessionStorage.removeItem('studio_token');
+      window.location.href = 'studio-lobby.html';
+    });
 
     const auth = window.ResearchiumStudio;
     const dashboardApi = window.ResearchiumDashboardApi;
@@ -72,16 +75,25 @@
     }
 
     let toastTimer = null;
+    let toastFadeTimer = null;
     function showToast(message, type) {
       const el = document.getElementById('streamDashToast');
       if (!el) return;
       el.textContent = message;
-      el.className = 'stream-dash-toast' + (type === 'error' ? ' stream-dash-toast--error' : '');
+      el.className = 'stream-dash-toast';
+      if (type === 'error') el.classList.add('stream-dash-toast--error');
+      else if (type === 'success') el.classList.add('stream-dash-toast--success');
+      else el.classList.add('stream-dash-toast--info');
       el.hidden = false;
+      requestAnimationFrame(() => el.classList.add('is-visible'));
       clearTimeout(toastTimer);
+      clearTimeout(toastFadeTimer);
       toastTimer = setTimeout(() => {
-        el.hidden = true;
-      }, 6000);
+        el.classList.remove('is-visible');
+        toastFadeTimer = setTimeout(() => {
+          el.hidden = true;
+        }, 250);
+      }, 3000);
     }
 
     function copyText(text, btn) {
@@ -124,12 +136,13 @@
     }
 
     // -----------------------------
-    // My streams (card list + localStorage)
+    // My streams (API-backed list)
     // -----------------------------
-    const STREAMS_LS_KEY = 'researchium_streams_v1';
     let streamsFilter = 'all';
     let streamsSearchQuery = '';
     let openStreamMenuId = null;
+    let streamsData = [];
+    let streamsSearchTimer = null;
 
     const STREAM_PLATFORM_ICON = {
       youtube: { label: 'Y', cls: 'stream-platform-icon--youtube' },
@@ -143,144 +156,15 @@
       custom: { label: 'C', cls: 'stream-platform-icon--custom' },
     };
 
-    const THUMB_GRADIENTS = [
-      ['#8b5cf6', '#6d28d9'],
-      ['#ef4444', '#b91c1c'],
-      ['#10b981', '#047857'],
-      ['#f59e0b', '#b45309'],
-      ['#3b82f6', '#1d4ed8'],
-      ['#ec4899', '#9d174d'],
-    ];
-
-    function loadStreamsFromLs() {
-      return safeJsonParse(safeLsGet(STREAMS_LS_KEY), []);
+    function streamApi(path, options = {}) {
+      const token = sessionStorage.getItem('studio_token');
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      if (token) headers.Authorization = `Bearer ${token}`;
+      return fetch(`/api/stream${path}`, { ...options, headers });
     }
 
-    function saveStreamsToLs(streams) {
-      safeLsSet(STREAMS_LS_KEY, JSON.stringify(streams));
-    }
-
-    function initDemoStreamsIfNeeded() {
-      if (safeLsGet(STREAMS_LS_KEY)) return;
-      const now = new Date();
-      const today7pm = new Date(now);
-      today7pm.setHours(19, 0, 0, 0);
-      if (today7pm < now) today7pm.setDate(today7pm.getDate() + 1);
-      const twoDaysAgo = new Date(now);
-      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-      twoDaysAgo.setHours(18, 30, 0, 0);
-
-      const demo = [
-        {
-          id: 'demo-real-analysis',
-          roomSlug: 'real-analysis-sequences',
-          title: 'Real Analysis · Sequences',
-          subject: 'Mathematics',
-          status: 'scheduled',
-          platforms: ['youtube', 'twitch'],
-          peakViewers: null,
-          scheduledAt: today7pm.toISOString(),
-          updatedAt: now.toISOString(),
-          createdAt: now.toISOString(),
-          link: `${location.origin}/live-classes.html?stream=real-analysis-sequences`,
-        },
-        {
-          id: 'demo-crispr',
-          roomSlug: 'crispr-cas9-workshop',
-          title: 'CRISPR-Cas9 Workshop',
-          subject: 'Biology',
-          status: 'ended',
-          platforms: ['youtube', 'linkedin'],
-          peakViewers: 142,
-          scheduledAt: null,
-          endedAt: twoDaysAgo.toISOString(),
-          updatedAt: twoDaysAgo.toISOString(),
-          createdAt: twoDaysAgo.toISOString(),
-          link: `${location.origin}/live-classes.html?stream=crispr-cas9-workshop`,
-        },
-        {
-          id: 'demo-physics-qa',
-          roomSlug: 'physics-live-qa',
-          title: 'Physics Live Q&A',
-          subject: 'Physics',
-          status: 'draft',
-          platforms: [],
-          peakViewers: null,
-          scheduledAt: null,
-          updatedAt: now.toISOString(),
-          createdAt: now.toISOString(),
-          link: `${location.origin}/live-classes.html?stream=physics-live-qa`,
-        },
-      ];
-      saveStreamsToLs(demo);
-    }
-
-    function mergeApiStreams(apiStreams) {
-      const local = loadStreamsFromLs();
-      if (!apiStreams?.length) return local;
-      const bySlug = new Map(local.map((s) => [s.roomSlug || s.id, s]));
-      apiStreams.forEach((api) => {
-        const slug = api.roomSlug || api.id;
-        if (!slug) return;
-        if (bySlug.has(slug)) {
-          const existing = bySlug.get(slug);
-          bySlug.set(slug, {
-            ...existing,
-            title: api.title || existing.title,
-            status: api.status || existing.status,
-            updatedAt: api.updatedAt || existing.updatedAt,
-          });
-        } else {
-          bySlug.set(slug, {
-            id: slug,
-            roomSlug: slug,
-            title: api.title || 'Untitled stream',
-            subject: api.channel || 'General Research',
-            status: api.status || 'draft',
-            platforms: [],
-            peakViewers: null,
-            scheduledAt: null,
-            updatedAt: api.updatedAt || api.createdAt || new Date().toISOString(),
-            createdAt: api.createdAt || new Date().toISOString(),
-            link: `${location.origin}/live-classes.html?stream=${encodeURIComponent(slug)}`,
-          });
-        }
-      });
-      return Array.from(bySlug.values());
-    }
-
-    function titleInitials(title) {
-      const parts = String(title || '')
-        .split(/[\s·\-–—]+/)
-        .filter(Boolean);
-      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-      return String(title || 'ST').slice(0, 2).toUpperCase();
-    }
-
-    function colorsFromTitle(title) {
-      let h = 0;
-      const t = String(title || '');
-      for (let i = 0; i < t.length; i += 1) h = (h * 31 + t.charCodeAt(i)) >>> 0;
-      return THUMB_GRADIENTS[h % THUMB_GRADIENTS.length];
-    }
-
-    function drawStreamThumb(canvas, title) {
-      const [c1, c2] = colorsFromTitle(title);
-      const ctx = canvas.getContext('2d');
-      const w = 40;
-      const h = 40;
-      canvas.width = w;
-      canvas.height = h;
-      const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, c1);
-      grad.addColorStop(1, c2);
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = 'rgba(255,255,255,0.95)';
-      ctx.font = 'bold 13px "Plus Jakarta Sans", system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(titleInitials(title), w / 2, h / 2 + 0.5);
+    function subjectInitial(subject) {
+      return String(subject || 'S').trim().charAt(0).toUpperCase() || 'S';
     }
 
     function formatStreamListDate(stream) {
@@ -341,6 +225,32 @@
       return list;
     }
 
+    function updateStreamFilterTabCounts(streams) {
+      const totals = { all: streams.length, draft: 0, scheduled: 0, live: 0, ended: 0 };
+      streams.forEach((s) => {
+        const key = String(s.status || 'draft').toLowerCase();
+        if (totals[key] != null) totals[key] += 1;
+      });
+      document.querySelectorAll('[data-stream-filter]').forEach((tab) => {
+        const key = tab.dataset.streamFilter || 'all';
+        const base = tab.dataset.label || tab.textContent.replace(/\s*\(\d+\)\s*$/, '');
+        tab.dataset.label = base;
+        tab.textContent = `${base} (${totals[key] || 0})`;
+      });
+    }
+
+    async function refreshStreamsFromApi() {
+      try {
+        const res = await streamApi('/streams');
+        const data = await res.json().catch(() => []);
+        streamsData = Array.isArray(data) ? data : [];
+      } catch {
+        streamsData = [];
+      }
+      updateStreamFilterTabCounts(streamsData);
+      renderStreamsList(streamsData);
+    }
+
     function closeStreamActionsMenu() {
       openStreamMenuId = null;
       document.querySelectorAll('.stream-actions-menu').forEach((m) => m.remove());
@@ -378,8 +288,8 @@
       anchorBtn.closest('.stream-actions-wrap')?.appendChild(menu);
     }
 
-    function handleStreamAction(streamId, action) {
-      const streams = loadStreamsFromLs();
+    async function handleStreamAction(streamId, action) {
+      const streams = streamsData.slice();
       const idx = streams.findIndex((s) => s.id === streamId);
       if (idx < 0) return;
       const stream = streams[idx];
@@ -389,22 +299,24 @@
         return;
       }
       if (action === 'duplicate') {
-        const copy = {
-          ...stream,
-          id: `dup_${Date.now()}`,
-          roomSlug: `${stream.roomSlug || stream.id}-copy`,
-          title: `${stream.title} (copy)`,
-          status: 'draft',
-          peakViewers: null,
-          scheduledAt: null,
-          endedAt: null,
-          updatedAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-        };
-        streams.splice(idx + 1, 0, copy);
-        saveStreamsToLs(streams);
-        renderStreamsList(streams);
-        showToast('Stream duplicated.');
+        try {
+          const res = await streamApi('/streams', {
+            method: 'POST',
+            body: JSON.stringify({
+              title: `Copy of ${stream.title}`,
+              subject: stream.subject || 'General Research',
+              privacy: stream.privacy || 'public',
+              status: 'draft',
+              platforms: Array.isArray(stream.platforms) ? stream.platforms : [],
+              thumbnailColor: stream.thumbnailColor || '#7c3aed',
+            }),
+          });
+          if (!res.ok) throw new Error('duplicate_failed');
+          await refreshStreamsFromApi();
+          showToast('Stream duplicated.');
+        } catch {
+          showToast('Could not duplicate stream.', 'error');
+        }
         return;
       }
       if (action === 'copy') {
@@ -414,10 +326,14 @@
         return;
       }
       if (action === 'delete') {
-        streams.splice(idx, 1);
-        saveStreamsToLs(streams);
-        renderStreamsList(streams);
-        showToast('Stream deleted.');
+        try {
+          const res = await streamApi(`/streams/${encodeURIComponent(stream.id)}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('delete_failed');
+          await refreshStreamsFromApi();
+          showToast('Stream deleted');
+        } catch {
+          showToast('Could not delete stream.', 'error');
+        }
       }
     }
 
@@ -442,7 +358,7 @@
       const filterEmptyEl = document.getElementById('streamsFilterEmpty');
       if (!listEl) return;
 
-      const streams = Array.isArray(allStreams) ? allStreams : loadStreamsFromLs();
+      const streams = Array.isArray(allStreams) ? allStreams : streamsData;
       const filtered = filterStreamsList(streams);
 
       closeStreamActionsMenu();
@@ -472,10 +388,8 @@
 
         const thumbWrap = document.createElement('div');
         thumbWrap.className = 'stream-row-thumb';
-        const canvas = document.createElement('canvas');
-        canvas.setAttribute('aria-hidden', 'true');
-        drawStreamThumb(canvas, stream.title);
-        thumbWrap.appendChild(canvas);
+        thumbWrap.style.background = stream.thumbnailColor || '#7c3aed';
+        thumbWrap.textContent = subjectInitial(stream.subject);
 
         const main = document.createElement('div');
         main.className = 'stream-row-main';
@@ -510,11 +424,11 @@
 
         const viewers = document.createElement('div');
         viewers.className = 'stream-viewers';
-        if (stream.status === 'draft' || stream.peakViewers == null) {
+        if (String(stream.status || '').toLowerCase() === 'draft' || stream.viewerPeak == null) {
           viewers.textContent = '—';
         } else {
           const peak = document.createElement('strong');
-          peak.textContent = String(Number(stream.peakViewers) || 0);
+          peak.textContent = String(Number(stream.viewerPeak) || 0);
           viewers.append(peak, document.createTextNode(' peak'));
         }
 
@@ -552,14 +466,17 @@
           document.querySelectorAll('[data-stream-filter]').forEach((t) => t.classList.remove('active'));
           tab.classList.add('active');
           streamsFilter = tab.dataset.streamFilter || 'all';
-          renderStreamsList(loadStreamsFromLs());
+          renderStreamsList(streamsData);
         });
       });
 
       const search = document.getElementById('streamsSearchInput');
       search?.addEventListener('input', () => {
         streamsSearchQuery = search.value;
-        renderStreamsList(loadStreamsFromLs());
+        if (streamsSearchTimer) clearTimeout(streamsSearchTimer);
+        streamsSearchTimer = setTimeout(() => {
+          renderStreamsList(streamsData);
+        }, 300);
       });
 
       document.addEventListener('click', (e) => {
@@ -567,9 +484,8 @@
       });
     }
 
-    initDemoStreamsIfNeeded();
     bindStreamsToolbar();
-    renderStreamsList(loadStreamsFromLs());
+    refreshStreamsFromApi();
 
     let analyticsPollTimer = null;
 
@@ -592,9 +508,6 @@
 
     function applyDashboard(data) {
       if (data?.user) applyUserToSidebar(data.user);
-      const merged = mergeApiStreams(data?.streams);
-      saveStreamsToLs(merged);
-      renderStreamsList(merged);
       const active = data?.activeMeeting;
       if (active) {
         document.getElementById('pageTitle').textContent = active.title || 'Go live';
@@ -621,32 +534,21 @@
     }
 
     // -----------------------------
-    // Destinations (Restream-like mock)
+    // Destinations (API-backed)
     // -----------------------------
-    const DEST_LS_CONNECTIONS = 'researchium_dest_connections_v1';
-    const DEST_LS_TOGGLES = 'researchium_dest_toggles_v1';
-
-    const DESTINATIONS = [
-      { key: 'youtube', name: 'YouTube', icon: '▶', defaultRtmp: 'rtmp://a.rtmp.youtube.com/live2', username: '@YouTubeHost' },
-      { key: 'twitch', name: 'Twitch', icon: '🎮', defaultRtmp: 'rtmp://live.twitch.tv/app', username: '@TwitchStreamer' },
-      { key: 'facebook', name: 'Facebook Live', icon: 'FB', defaultRtmp: 'rtmp://live-api-s.facebook.com:80/rtmp/', username: '@FacebookHost' },
-      { key: 'linkedin', name: 'LinkedIn', icon: 'IN', defaultRtmp: 'rtmp://rtmp.linkedin.com/live', username: '@LinkedInHost' },
-      { key: 'twitter', name: 'Twitter/X', icon: '𝕏', defaultRtmp: 'rtmp://upload.twitter.com/live', username: '@XHost' },
-      { key: 'tiktok', name: 'TikTok', icon: '♪', defaultRtmp: 'rtmp://webcast-api.tiktok.com/live', username: '@TikTokHost' },
-      { key: 'instagram', name: 'Instagram Live', icon: '📸', defaultRtmp: 'rtmp://instagram-rtmp.example/live', username: '@InstagramHost' },
-      { key: 'kick', name: 'Kick', icon: '⚡', defaultRtmp: 'rtmp://video.kick.com/app', username: '@KickHost' },
-      { key: 'custom', name: 'Custom RTMP', icon: '⚙', defaultRtmp: 'rtmp://127.0.0.1:1935/live', username: '@CustomRTMP' },
-    ];
+    const DESTINATIONS = (multistreamApi?.platforms || []).map((p) => ({
+      key: p.id,
+      id: p.id,
+      name: p.name,
+      color: p.color,
+      defaultRtmp: p.rtmpBase,
+      icon: String(p.name || '?').trim().charAt(0).toUpperCase(),
+    }));
 
     const destState = {
-      connections: safeJsonParse(safeLsGet(DEST_LS_CONNECTIONS), {}),
-      toggles: safeJsonParse(safeLsGet(DEST_LS_TOGGLES), {}),
+      connections: {}, // key -> { id, connected, enabled, error, streamKey, rtmpUrl, ... }
+      toggles: {},     // key -> bool
     };
-
-    function persistDestState() {
-      safeLsSet(DEST_LS_CONNECTIONS, JSON.stringify(destState.connections));
-      safeLsSet(DEST_LS_TOGGLES, JSON.stringify(destState.toggles));
-    }
 
     function getDest(key) {
       return DESTINATIONS.find((d) => d.key === key) || null;
@@ -655,22 +557,20 @@
     function computeEnabledPlatforms() {
       return DESTINATIONS.filter((d) => {
         const conn = destState.connections[d.key];
-        return Boolean(destState.toggles[d.key]) && conn?.connected === true;
+        return Boolean(conn?.connected) && Boolean(destState.toggles[d.key]);
       });
     }
 
     function setGoLiveUI() {
       const btn = document.getElementById('btnGoLiveAll');
-      const enabled = computeEnabledPlatforms();
-      const count = enabled.length;
-      if (btn) {
-        btn.textContent = `● Go live to ${count} platform${count === 1 ? '' : 's'}`;
-        btn.classList.toggle('is-ready', count >= 2);
-      }
+      const count = computeEnabledPlatforms().length;
+      if (!btn) return;
+      btn.textContent = `● Go live to ${count} platform${count === 1 ? '' : 's'}`;
+      btn.classList.toggle('is-ready', count > 0);
+      btn.disabled = count < 1;
       renderActiveDestinationsRow();
     }
 
-    // Modal state
     let modalPlatformKey = null;
     const destinationsModal = document.getElementById('destinationsConnectModal');
     const modalTitle = document.getElementById('destinationsConnectTitle');
@@ -679,17 +579,69 @@
     const modalSave = document.getElementById('destinationsConnectSave');
     const modalStreamKey = document.getElementById('destinationsStreamKey');
     const modalRtmpUrl = document.getElementById('destinationsRtmpUrl');
+    let modalKeyRevealBtn = null;
+
+    function normalizeDestinations(rows) {
+      destState.connections = {};
+      destState.toggles = {};
+      DESTINATIONS.forEach((platform) => {
+        const row = (rows || []).find((r) => String(r.platform || '').toLowerCase() === platform.key);
+        if (!row) return;
+        const connected = true;
+        const enabled = Boolean(row.enabled);
+        destState.connections[platform.key] = {
+          id: row.id,
+          connected,
+          enabled,
+          error: false,
+          name: row.name || platform.name,
+          streamKey: row.streamKey || '',
+          rtmpUrl: row.rtmpUrl || platform.defaultRtmp,
+          platform: platform.key,
+        };
+        destState.toggles[platform.key] = enabled;
+      });
+    }
+
+    async function refreshDestinationsFromApi() {
+      if (!multistreamApi) return;
+      try {
+        const rows = await multistreamApi.listDestinations();
+        normalizeDestinations(Array.isArray(rows) ? rows : []);
+      } catch {
+        // Keep the panel interactive and mark unknown cards as disconnected.
+        normalizeDestinations([]);
+      }
+      renderDestinationsMock();
+      setGoLiveUI();
+    }
+
+    function ensureModalKeyToggle() {
+      if (!modalStreamKey || modalKeyRevealBtn) return;
+      modalKeyRevealBtn = document.createElement('button');
+      modalKeyRevealBtn.type = 'button';
+      modalKeyRevealBtn.className = 'btn btn-ghost btn-small destinations-key-toggle';
+      modalKeyRevealBtn.textContent = 'Show';
+      modalKeyRevealBtn.addEventListener('click', () => {
+        const reveal = modalStreamKey.type === 'password';
+        modalStreamKey.type = reveal ? 'text' : 'password';
+        modalKeyRevealBtn.textContent = reveal ? 'Hide' : 'Show';
+      });
+      modalStreamKey.insertAdjacentElement('afterend', modalKeyRevealBtn);
+    }
 
     function openConnectModal(platformKey) {
       const d = getDest(platformKey);
       if (!d) return;
       modalPlatformKey = platformKey;
       if (modalTitle) modalTitle.textContent = `Connect ${d.name}`;
-
-      const conn = destState.connections[platformKey] || {};
-      if (modalStreamKey) modalStreamKey.value = '';
-      if (modalRtmpUrl) modalRtmpUrl.value = conn.rtmpUrl || d.defaultRtmp;
-
+      const existing = destState.connections[d.key];
+      if (modalRtmpUrl) modalRtmpUrl.value = existing?.rtmpUrl || d.defaultRtmp || '';
+      if (modalStreamKey) {
+        modalStreamKey.value = existing?.streamKey || '';
+        modalStreamKey.type = 'password';
+      }
+      if (modalKeyRevealBtn) modalKeyRevealBtn.textContent = 'Show';
       if (destinationsModal) {
         destinationsModal.hidden = false;
         destinationsModal.setAttribute('aria-hidden', 'false');
@@ -707,196 +659,128 @@
       document.body.style.overflow = '';
     }
 
-    modalClose?.addEventListener('click', closeConnectModal);
-    modalCancel?.addEventListener('click', closeConnectModal);
-    destinationsModal?.addEventListener('click', (e) => {
-      if (e.target === destinationsModal) closeConnectModal();
-    });
-
-    modalSave?.addEventListener('click', () => {
-      if (!modalPlatformKey) return;
+    async function saveConnectionFromModal() {
+      if (!modalPlatformKey || !multistreamApi) return;
       const d = getDest(modalPlatformKey);
       if (!d) return;
-
       const streamKey = String(modalStreamKey?.value || '').trim();
       const rtmpUrl = String(modalRtmpUrl?.value || '').trim();
-
-      // Mock validation: keys/URLs must not be empty.
+      const existing = destState.connections[d.key];
       if (!streamKey || !rtmpUrl) {
-        destState.connections[d.key] = {
-          connected: false,
-          error: true,
-          errorMessage: 'Stream Key and RTMP URL are required.',
-          rtmpUrl,
-        };
-        destState.toggles[d.key] = false;
-        persistDestState();
-        renderDestinationsMock();
-        setGoLiveUI();
-        showToast(`${d.name}: Please enter Stream Key and RTMP URL.`, 'error');
+        showToast('Stream key and RTMP URL are required.', 'error');
         return;
       }
+      try {
+        if (existing?.id) {
+          await multistreamApi.updateDestination(existing.id, {
+            rtmpUrl,
+            streamKey,
+            enabled: true,
+          });
+        } else {
+          await multistreamApi.createDestination({
+            name: d.name,
+            platform: d.key,
+            rtmpUrl,
+            streamKey,
+            enabled: true,
+          });
+        }
+        closeConnectModal();
+        await refreshDestinationsFromApi();
+        showToast(`${d.name} connected!`, 'success');
+      } catch (err) {
+        showToast(err?.message || 'Failed to connect destination.', 'error');
+      }
+    }
 
-      destState.connections[d.key] = {
-        connected: true,
-        error: false,
-        errorMessage: '',
-        username: d.username,
-        streamKey,
-        rtmpUrl,
-      };
-      // Connected platforms are enabled by default for the next stream.
-      destState.toggles[d.key] = true;
-      persistDestState();
-      renderDestinationsMock();
-      setGoLiveUI();
-      closeConnectModal();
-      showToast(`${d.name} connected.`, 'success');
-    });
+    async function disconnectPlatform(platformKey) {
+      const conn = destState.connections[platformKey];
+      if (!conn?.id || !multistreamApi) return;
+      try {
+        await multistreamApi.deleteDestination(conn.id);
+        await refreshDestinationsFromApi();
+      } catch {
+        showToast('Failed to disconnect destination.', 'error');
+      }
+    }
 
-    function disconnectPlatform(platformKey) {
-      if (!getDest(platformKey)) return;
-      delete destState.connections[platformKey];
-      destState.toggles[platformKey] = false;
-      persistDestState();
-      renderDestinationsMock();
-      setGoLiveUI();
-      showToast('Disconnected.', 'success');
+    async function updateDestinationToggle(platformKey, enabled) {
+      const conn = destState.connections[platformKey];
+      if (!conn?.id || !multistreamApi) return;
+      try {
+        await multistreamApi.updateDestination(conn.id, { enabled });
+        destState.toggles[platformKey] = Boolean(enabled);
+        if (destState.connections[platformKey]) {
+          destState.connections[platformKey].enabled = Boolean(enabled);
+        }
+        setGoLiveUI();
+      } catch {
+        showToast('Failed to update destination.', 'error');
+      }
+    }
+
+    function platformCircleSvg(d) {
+      return `
+        <svg viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+          <circle cx="22" cy="22" r="22" fill="${escapeHtml(d.color || '#6366f1')}"></circle>
+          <text x="22" y="27" text-anchor="middle" font-size="17" font-weight="800" fill="#fff" font-family="Plus Jakarta Sans,system-ui,sans-serif">${escapeHtml(d.icon)}</text>
+        </svg>
+      `;
     }
 
     function buildPlatformCard(d) {
       const conn = destState.connections[d.key];
       const connected = Boolean(conn?.connected);
       const error = Boolean(conn?.error);
-      const username = conn?.username || d.username;
+      const enabled = Boolean(destState.toggles[d.key]);
 
-      const card = document.createElement('div');
+      const card = document.createElement('article');
       card.className = 'platform-card';
-      // Fade only truly "Not connected" platforms (error stays visible).
-      if (!connected && !error) card.classList.add('is-disabled');
-      card.dataset.platformKey = d.key;
+      if (connected) card.classList.add('is-connected');
 
-      // Header
-      const head = document.createElement('div');
-      head.className = 'platform-card-head platform-card-head';
+      const statusClass = connected ? 'platform-status--connected' : error ? 'platform-status--error' : 'platform-status--idle';
+      const statusLabel = connected ? 'Connected' : error ? 'Error' : 'Not connected';
 
-      const logo = document.createElement('div');
-      logo.className = 'platform-logo';
-      logo.textContent = d.icon;
-
-      const meta = document.createElement('div');
-      meta.className = 'platform-meta';
-
-      const nameRow = document.createElement('div');
-      nameRow.className = 'platform-name';
-      nameRow.textContent = d.name;
-
-      const statusRow = document.createElement('div');
-      statusRow.className = 'platform-status';
-
-      const dot = document.createElement('span');
-      dot.className = 'status-dot';
-      if (connected) dot.classList.add('status-dot--connected');
-      else if (error) dot.classList.add('status-dot--error');
-
-      const statusText = connected ? 'Connected' : error ? 'Error' : 'Not connected';
-      const statusSpan = document.createElement('span');
-      statusSpan.textContent = statusText;
-
-      statusRow.appendChild(dot);
-      statusRow.appendChild(statusSpan);
-      if (connected) {
-        const user = document.createElement('span');
-        user.className = 'platform-username';
-        user.textContent = ` ${username}`;
-        statusRow.appendChild(user);
-      }
-
-      meta.appendChild(nameRow);
-      meta.appendChild(statusRow);
-
-      head.appendChild(logo);
-      head.appendChild(meta);
-
-      // Toggle row
-      const toggleRow = document.createElement('div');
-      toggleRow.className = 'platform-toggle-row';
-
-      const toggleLabel = document.createElement('div');
-      toggleLabel.className = 'platform-toggle-label';
-      toggleLabel.textContent = 'Use for next stream';
-
-      const destSwitchLabel = document.createElement('label');
-      destSwitchLabel.className = 'dest-switch';
-
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.className = 'dest-toggle';
-      input.dataset.platformKey = d.key;
-      input.disabled = !connected;
-      input.checked = Boolean(destState.toggles[d.key]) && connected;
-
-      const slider = document.createElement('span');
-      slider.className = 'dest-slider';
-
-      destSwitchLabel.appendChild(input);
-      destSwitchLabel.appendChild(slider);
-
-      toggleRow.appendChild(toggleLabel);
-      toggleRow.appendChild(destSwitchLabel);
-
-      // Actions row
-      const actions = document.createElement('div');
-      actions.className = 'platform-actions';
+      card.innerHTML = `
+        <div class="platform-card-head">
+          <div class="platform-logo">${platformCircleSvg(d)}</div>
+          <div class="platform-meta">
+            <div class="platform-name">${escapeHtml(d.name)}</div>
+            <div class="platform-status ${statusClass}">
+              <span class="platform-status-dot"></span>
+              <span>${statusLabel}</span>
+            </div>
+          </div>
+        </div>
+        ${connected ? `
+          <div class="platform-toggle-row">
+            <span class="platform-toggle-label">Include in next stream</span>
+            <label class="dest-switch">
+              <input type="checkbox" class="dest-toggle" ${enabled ? 'checked' : ''}/>
+              <span class="dest-slider"></span>
+            </label>
+          </div>
+          <div class="platform-actions">
+            <button type="button" class="btn btn-ghost btn-small js-edit">Edit</button>
+            <button type="button" class="btn btn-ghost btn-small js-disconnect">Disconnect</button>
+          </div>
+        ` : `
+          <div class="platform-actions platform-actions--single">
+            <button type="button" class="btn btn-primary platform-connect-btn js-connect" style="background:${escapeHtml(d.color || '#6366f1')}">${escapeHtml('Connect')}</button>
+          </div>
+        `}
+      `;
 
       if (connected) {
-        const disconnect = document.createElement('button');
-        disconnect.type = 'button';
-        disconnect.className = 'platform-disconnect-link';
-        disconnect.textContent = 'Disconnect';
-        disconnect.dataset.action = 'disconnect';
-        disconnect.dataset.platformKey = d.key;
-        actions.appendChild(disconnect);
-      } else if (error) {
-        const retry = document.createElement('button');
-        retry.type = 'button';
-        retry.className = 'platform-retry-btn';
-        retry.textContent = 'Retry';
-        retry.dataset.action = 'retry';
-        retry.dataset.platformKey = d.key;
-        actions.appendChild(retry);
+        card.querySelector('.dest-toggle')?.addEventListener('change', (e) => {
+          updateDestinationToggle(d.key, e.target.checked);
+        });
+        card.querySelector('.js-edit')?.addEventListener('click', () => openConnectModal(d.key));
+        card.querySelector('.js-disconnect')?.addEventListener('click', () => disconnectPlatform(d.key));
       } else {
-        const connect = document.createElement('button');
-        connect.type = 'button';
-        connect.className = 'btn btn-primary platform-connect-btn';
-        connect.textContent = 'Connect';
-        connect.dataset.action = 'connect';
-        connect.dataset.platformKey = d.key;
-        actions.appendChild(connect);
+        card.querySelector('.js-connect')?.addEventListener('click', () => openConnectModal(d.key));
       }
-
-      card.appendChild(head);
-      card.appendChild(toggleRow);
-      card.appendChild(actions);
-
-      // Toggle listener (mock-only)
-      input.addEventListener('change', () => {
-        destState.toggles[d.key] = input.checked;
-        persistDestState();
-        setGoLiveUI();
-        // Update card visual (faded/unchecked)
-        // eslint-disable-next-line no-use-before-define
-        renderDestinationsMock();
-      });
-
-      // Action listeners
-      const connectBtn = actions.querySelector('[data-action="connect"]');
-      connectBtn?.addEventListener('click', () => openConnectModal(d.key));
-      const retryBtn = actions.querySelector('[data-action="retry"]');
-      retryBtn?.addEventListener('click', () => openConnectModal(d.key));
-      const disconnectBtn = actions.querySelector('[data-action="disconnect"]');
-      disconnectBtn?.addEventListener('click', () => disconnectPlatform(d.key));
-
       return card;
     }
 
@@ -904,44 +788,29 @@
       const grid = document.getElementById('platformGrid');
       if (!grid) return;
       grid.innerHTML = '';
-      DESTINATIONS.forEach((d) => {
-        grid.appendChild(buildPlatformCard(d));
-      });
+      DESTINATIONS.forEach((d) => grid.appendChild(buildPlatformCard(d)));
     }
 
+    ensureModalKeyToggle();
+    modalClose?.addEventListener('click', closeConnectModal);
+    modalCancel?.addEventListener('click', closeConnectModal);
+    destinationsModal?.addEventListener('click', (e) => {
+      if (e.target === destinationsModal) closeConnectModal();
+    });
+    modalSave?.addEventListener('click', saveConnectionFromModal);
+
     document.getElementById('btnRefreshPlatforms')?.addEventListener('click', () => {
-      renderDestinationsMock();
-      setGoLiveUI();
+      refreshDestinationsFromApi();
     });
 
     document.getElementById('btnGoLiveAll')?.addEventListener('click', async () => {
-      const enabled = computeEnabledPlatforms();
-      const count = enabled.length;
-      if (count < 2) {
-        showToast('Select at least 2 connected platforms to go live everywhere.', 'error');
+      const count = computeEnabledPlatforms().length;
+      if (!count) {
+        showToast('Add a destination first', 'error');
         return;
       }
-
-      const box = document.getElementById('multistreamIngest');
-      if (box) {
-        box.hidden = false;
-        box.textContent = JSON.stringify(
-          enabled.map((d) => {
-            const conn = destState.connections[d.key];
-            return {
-              platform: d.name,
-              username: conn?.username || d.username,
-              rtmpUrl: conn?.rtmpUrl || d.defaultRtmp,
-            };
-          }),
-          null,
-          2
-        );
-      }
-
-      showToast(`Mock: Go live to ${count} platforms.`, 'success');
-      // Keep UI button state synced.
-      setGoLiveUI();
+      showPanel('go-live');
+      await document.getElementById('goLiveBtn')?.click();
     });
 
     function mountReactComponents(activeSlug) {
@@ -996,17 +865,15 @@
         if (mounted) {
           document.getElementById('viewerCount')?.closest('span')?.setAttribute('hidden', '');
           document.getElementById('viewerBreakdown')?.setAttribute('hidden', '');
-          // Ensure mock destinations UI is visible regardless of React bundle status.
+          // Ensure destinations UI is visible regardless of React bundle status.
           const grid = document.getElementById('platformGrid');
           if (grid) grid.hidden = false;
-          renderDestinationsMock();
-          setGoLiveUI();
+          refreshDestinationsFromApi();
         } else {
           showBuildBanner();
           const grid = document.getElementById('platformGrid');
           if (grid) grid.hidden = false;
-          renderDestinationsMock();
-          setGoLiveUI();
+          refreshDestinationsFromApi();
         }
       })
       .catch((err) => {
@@ -1034,8 +901,7 @@
     if (params.get('panel') === 'destinations') showPanel('destinations');
     if (params.get('oauth') === 'connected') {
       showPanel('destinations');
-      renderDestinationsMock();
-      setGoLiveUI();
+      refreshDestinationsFromApi();
     }
 
     const modal = document.getElementById('newStreamModal');
@@ -1071,7 +937,17 @@
       hint.classList.toggle('is-hidden', !checked);
     }
 
+    let editingScheduleId = null;
+
     function openScheduleModal(opts = {}) {
+      editingScheduleId = opts.editId || null;
+      const modalTitle = document.getElementById('scheduleModalTitle');
+      if (modalTitle) {
+        modalTitle.textContent = editingScheduleId ? 'Edit scheduled class' : 'Schedule class';
+      }
+      const deleteBtn = document.getElementById('scheduleDeleteBtn');
+      if (deleteBtn) deleteBtn.hidden = !editingScheduleId;
+
       populateSchedulePlatformChecks();
       const form = document.getElementById('scheduleForm');
       form?.reset();
@@ -1080,8 +956,17 @@
       if (dateEl) dateEl.value = opts.date || formatScheduleDateInput(new Date());
       if (timeEl) timeEl.value = opts.time || '19:00';
       const notify = document.getElementById('scheduleNotify');
-      if (notify) notify.checked = true;
+      if (notify) notify.checked = opts.notifyStudents !== false;
+      if (opts.title) document.getElementById('scheduleTitle').value = opts.title;
+      if (opts.subject) document.getElementById('scheduleSubject').value = opts.subject;
+      if (opts.description != null) document.getElementById('scheduleDescription').value = opts.description;
+      if (opts.repeat) document.getElementById('scheduleRepeat').value = opts.repeat;
       updateScheduleNotifyHint();
+      if (opts.platforms) {
+        document.querySelectorAll('#schedulePlatformChecks input').forEach((input) => {
+          input.checked = opts.platforms.includes(input.value);
+        });
+      }
       showModalStep(stepSchedule);
       modal.hidden = false;
       modal.classList.add('open');
@@ -1113,11 +998,7 @@
 
     document.getElementById('btnSchedule')?.addEventListener('click', () => openScheduleModal());
 
-    document.getElementById('btnNewStream')?.addEventListener('click', () => {
-      auth
-        .openBrowserStudio({ forceNew: true })
-        .catch(() => showToast('Could not start studio. Is the stream API running?', 'error'));
-    });
+    document.getElementById('btnNewStream')?.addEventListener('click', openModal);
     document.getElementById('modalClose')?.addEventListener('click', closeModal);
     document.querySelectorAll('.modal-close-inner, .modal-close-schedule').forEach((btn) => {
       btn.addEventListener('click', closeModal);
@@ -1144,9 +1025,37 @@
       });
     });
 
-    document.getElementById('btnRtmpDone')?.addEventListener('click', () => {
+    document.getElementById('btnRtmpDone')?.addEventListener('click', async () => {
+      const title = String(document.getElementById('streamTitleInput')?.value || '').trim();
+      const subject = String(document.getElementById('streamCategorySelect')?.value || 'General Research');
+      const privacy = document.querySelector('input[name="streamPrivacy"]:checked')?.value || 'public';
+      if (!title) {
+        showToast('Enter stream title first', 'error');
+        closeModal();
+        showPanel('go-live');
+        document.getElementById('streamTitleInput')?.focus();
+        return;
+      }
+      try {
+        const res = await streamApi('/streams', {
+          method: 'POST',
+          body: JSON.stringify({
+            title,
+            subject,
+            privacy,
+            status: 'draft',
+            platforms: [],
+            thumbnailColor: '#7c3aed',
+          }),
+        });
+        if (!res.ok) throw new Error('create_failed');
+        await refreshStreamsFromApi();
+        showToast('Stream created');
+      } catch {
+        showToast('Could not create stream.', 'error');
+      }
       closeModal();
-      showPanel('go-live');
+      showPanel('streams');
     });
 
     document.getElementById('btnCreateFirstStream')?.addEventListener('click', openModal);
@@ -1179,7 +1088,7 @@
         chip.setAttribute('aria-label', d.name);
         chip.addEventListener('click', () => {
           destState.toggles[d.key] = !destState.toggles[d.key];
-          persistDestState();
+          updateDestinationToggle(d.key, Boolean(destState.toggles[d.key]));
           setGoLiveUI();
           renderDestinationsMock();
         });
@@ -1230,6 +1139,44 @@
         applyThumb(e.dataTransfer?.files?.[0]);
       });
 
+      // Persist Go Live stream setup across panel switches.
+      const STREAM_SETUP_LS = 'researchium_stream_setup_v1';
+      const streamCategorySelect = document.getElementById('streamCategorySelect');
+      const privacyRadios = document.querySelectorAll('input[name="streamPrivacy"]');
+
+      function readStreamSetup() {
+        const title = String(streamTitleInput?.value || '').trim();
+        const subject = String(streamCategorySelect?.value || 'General Research');
+        const privacy =
+          document.querySelector('input[name="streamPrivacy"]:checked')?.value || 'public';
+        return { title, subject, privacy };
+      }
+
+      function saveStreamSetup() {
+        try {
+          sessionStorage.setItem(STREAM_SETUP_LS, JSON.stringify(readStreamSetup()));
+        } catch {
+          /* ignore */
+        }
+      }
+
+      function restoreStreamSetup() {
+        const saved = safeJsonParse(sessionStorage.getItem(STREAM_SETUP_LS), null);
+        if (!saved) return;
+        if (streamTitleInput && typeof saved.title === 'string') streamTitleInput.value = saved.title;
+        if (streamCategorySelect && typeof saved.subject === 'string') streamCategorySelect.value = saved.subject;
+        if (saved.privacy) {
+          privacyRadios.forEach((r) => {
+            if (r.value === saved.privacy) r.checked = true;
+          });
+        }
+      }
+
+      restoreStreamSetup();
+      streamTitleInput?.addEventListener('input', saveStreamSetup);
+      streamCategorySelect?.addEventListener('change', saveStreamSetup);
+      privacyRadios.forEach((r) => r.addEventListener('change', saveStreamSetup));
+
       if (params.get('studio') === '1') {
         showPanel('go-live');
         const raw = sessionStorage.getItem('researchium_studio_session');
@@ -1246,65 +1193,63 @@
       }
     }
 
-    function createStreamKey() {
-      const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-      const make = () =>
-        Array.from({ length: 4 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
-      return `${make()}-${make()}-${make()}-${make()}`;
-    }
+    const TOKEN = () => sessionStorage.getItem('studio_token');
+    const API = (path, options = {}) => {
+      const headers = { ...(options.headers || {}) };
+      const token = TOKEN();
+      if (token) headers.Authorization = `Bearer ${token}`;
+      return fetch(`/api/stream${path}`, { ...options, headers });
+    };
 
-    const STREAM_KEY_LS = 'researchium_encoder_stream_key_v1';
-    let currentStreamKey = safeLsGet(STREAM_KEY_LS) || createStreamKey();
-
-    function updateStreamKeyUi(masked = true) {
-      const keyEl = document.getElementById('streamKeyDisplay');
-      const revealBtn = document.getElementById('btnRevealKey');
-      if (!keyEl) return;
-      if (masked) {
-        keyEl.textContent = '••••-••••-••••-••••';
-        if (revealBtn) revealBtn.textContent = 'Show';
-      } else {
-        keyEl.textContent = currentStreamKey;
-        if (revealBtn) revealBtn.textContent = 'Hide';
-      }
-    }
-
-    function bindEncoderActions() {
-      updateStreamKeyUi(true);
-      safeLsSet(STREAM_KEY_LS, currentStreamKey);
-
-      document.getElementById('btnCopyRtmp')?.addEventListener('click', () => {
-        copyText('rtmp://127.0.0.1:1935/live', document.getElementById('btnCopyRtmp'));
-      });
-      document.getElementById('btnRevealKey')?.addEventListener('click', () => {
-        const reveal = document.getElementById('btnRevealKey');
-        const nowMasked = reveal?.textContent === 'Hide';
-        updateStreamKeyUi(!nowMasked);
-      });
-      document.getElementById('btnCopyStreamKey')?.addEventListener('click', () => {
-        copyText(currentStreamKey, document.getElementById('btnCopyStreamKey'));
-      });
-      document.getElementById('btnRegenerateKey')?.addEventListener('click', () => {
-        currentStreamKey = createStreamKey();
-        safeLsSet(STREAM_KEY_LS, currentStreamKey);
-        const reveal = document.getElementById('btnRevealKey');
-        const shouldMask = reveal?.textContent !== 'Hide';
-        updateStreamKeyUi(shouldMask);
-        showToast('Stream key regenerated.');
-      });
-    }
+    const STREAM_KEY_MASK_UI = '••••-••••-••••-••••';
+    let streamKeyValue = null; // real stream key from backend
+    let streamKeyRevealed = false;
+    let rtmpUrlValue = null;
 
     let goLiveIsLive = false;
     let liveSeconds = 0;
     let liveTicker = null;
-    let bitrateTicker = null;
+    let statusPollTimer = null;
 
-    function setLiveUi(nextLive) {
+    function formatDurationHMS(totalSeconds) {
+      const s = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+      const h = String(Math.floor(s / 3600)).padStart(2, '0');
+      const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const rem = String(s % 60).padStart(2, '0');
+      return `${h}:${m}:${rem}`;
+    }
+
+    function updateStreamKeyUi() {
+      const revealBtn = document.getElementById('btnRevealKey');
+      const keyEl = document.getElementById('streamKeyDisplay');
+      const modalKeyEl = document.getElementById('rtmpKey');
+      if (revealBtn) revealBtn.textContent = streamKeyRevealed ? 'Hide' : 'Show';
+      const shown = streamKeyRevealed ? String(streamKeyValue || '') : STREAM_KEY_MASK_UI;
+      if (keyEl) keyEl.textContent = shown;
+      if (modalKeyEl) modalKeyEl.textContent = shown;
+    }
+
+    function setRtmpUrlUi(url) {
+      const el = document.getElementById('rtmpUrl');
+      if (!el) return;
+      el.textContent = String(url || '');
+    }
+
+    function clearLiveIntervals() {
+      if (liveTicker) clearInterval(liveTicker);
+      if (statusPollTimer) clearInterval(statusPollTimer);
+      liveTicker = null;
+      statusPollTimer = null;
+    }
+
+    function setLiveUi(nextLive, status = {}) {
       goLiveIsLive = nextLive;
       const dot = document.getElementById('statusDot');
       const label = document.getElementById('statusLabel');
       const btn = document.getElementById('goLiveBtn');
       const endBtn = document.getElementById('btnEndStream');
+      const viewerEl = document.getElementById('viewerCount');
+      const bitrateEl = document.getElementById('bitrate');
 
       if (nextLive) {
         dot?.classList.add('live');
@@ -1314,19 +1259,34 @@
           btn.disabled = true;
         }
         if (endBtn) endBtn.hidden = false;
-        liveSeconds = 0;
-        document.getElementById('duration').textContent = '00:00:00';
+
+        liveSeconds = Number(status.durationSeconds) || 0;
+        document.getElementById('duration').textContent = formatDurationHMS(liveSeconds);
+
+        if (viewerEl) viewerEl.textContent = String(status.viewers ?? 0);
+        if (bitrateEl) bitrateEl.textContent = `${Number(status.bitrate ?? 0) || 0} kbps`;
+
+        clearLiveIntervals();
         liveTicker = setInterval(() => {
           liveSeconds += 1;
-          const h = String(Math.floor(liveSeconds / 3600)).padStart(2, '0');
-          const m = String(Math.floor((liveSeconds % 3600) / 60)).padStart(2, '0');
-          const s = String(liveSeconds % 60).padStart(2, '0');
-          document.getElementById('duration').textContent = `${h}:${m}:${s}`;
+          document.getElementById('duration').textContent = formatDurationHMS(liveSeconds);
         }, 1000);
-        bitrateTicker = setInterval(() => {
-          const next = 3200 + Math.floor(Math.random() * 1800);
-          document.getElementById('bitrate').textContent = `${next} kbps`;
-        }, 2500);
+
+        statusPollTimer = setInterval(async () => {
+          try {
+            const res = await fetch('/api/stream/status', { cache: 'no-store' });
+            const s = await res.json().catch(() => null);
+            if (!s) return;
+            if (!s.live) {
+              setLiveUi(false);
+              return;
+            }
+            if (viewerEl) viewerEl.textContent = String(s.viewers ?? 0);
+            if (bitrateEl) bitrateEl.textContent = `${Number(s.bitrate ?? 0) || 0} kbps`;
+          } catch {
+            /* ignore poll errors */
+          }
+        }, 10000);
       } else {
         dot?.classList.remove('live');
         if (label) label.textContent = 'Offline';
@@ -1335,10 +1295,10 @@
           btn.disabled = false;
         }
         if (endBtn) endBtn.hidden = true;
-        clearInterval(liveTicker);
-        clearInterval(bitrateTicker);
+        clearLiveIntervals();
         document.getElementById('duration').textContent = '00:00:00';
         document.getElementById('bitrate').textContent = '— kbps';
+        if (viewerEl) viewerEl.textContent = '0';
       }
     }
 
@@ -1350,9 +1310,97 @@
       for (const step of ['3', '2', '1', 'LIVE!']) {
         text.textContent = step;
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => setTimeout(resolve, 750));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
       overlay.hidden = true;
+    }
+
+    async function loadGoLiveFromApi() {
+      // Stream key + RTMP URL
+      try {
+        const keyRes = await API('/key', { method: 'GET' });
+        const keyData = await keyRes.json().catch(() => null);
+        if (keyRes.ok && keyData?.streamKey && keyData?.rtmpUrl) {
+          streamKeyValue = keyData.streamKey;
+          rtmpUrlValue = keyData.rtmpUrl;
+          setRtmpUrlUi(rtmpUrlValue);
+          streamKeyRevealed = false;
+          updateStreamKeyUi();
+        }
+      } catch {
+        /* ignore — UI will stay masked */
+      }
+
+      // Stream status
+      try {
+        const res = await fetch('/api/stream/status', { cache: 'no-store' });
+        const status = await res.json().catch(() => null);
+        if (status) {
+          setLiveUi(Boolean(status.live), status);
+          const viewerEl = document.getElementById('viewerCount');
+          const durationEl = document.getElementById('duration');
+          const bitrateEl = document.getElementById('bitrate');
+          if (viewerEl) viewerEl.textContent = String(status.viewers ?? 0);
+          if (durationEl) durationEl.textContent = formatDurationHMS(status.durationSeconds);
+          if (bitrateEl) bitrateEl.textContent = `${Number(status.bitrate ?? 0) || 0} kbps`;
+        }
+      } catch {
+        // default UI already indicates offline
+      }
+    }
+
+    function bindEncoderActions() {
+      streamKeyRevealed = false;
+      streamKeyValue = streamKeyValue || null;
+      updateStreamKeyUi();
+
+      // RTMP URL copy
+      document.getElementById('btnCopyRtmp')?.addEventListener('click', () => {
+        const el = document.getElementById('rtmpUrl');
+        const url = el?.textContent || rtmpUrlValue || '';
+        copyText(url, document.getElementById('btnCopyRtmp'));
+        showToast('Copied!', 'success');
+      });
+
+      // Show/Hide key
+      document.getElementById('btnRevealKey')?.addEventListener('click', () => {
+        streamKeyRevealed = !streamKeyRevealed;
+        updateStreamKeyUi();
+      });
+
+      // Copy key
+      document.getElementById('btnCopyStreamKey')?.addEventListener('click', () => {
+        const real = String(streamKeyValue || '');
+        if (!real) {
+          showToast('Stream key not loaded yet.', 'error');
+          return;
+        }
+        copyText(real, document.getElementById('btnCopyStreamKey'));
+        showToast('Copied!', 'success');
+      });
+
+      // Regenerate key
+      document.getElementById('btnRegenerateKey')?.addEventListener('click', async () => {
+        try {
+          const res = await API('/key/regenerate', { method: 'POST' });
+          const data = await res.json().catch(() => null);
+          if (res.ok && data?.streamKey) {
+            streamKeyValue = data.streamKey;
+            rtmpUrlValue = data.rtmpUrl || rtmpUrlValue;
+            setRtmpUrlUi(rtmpUrlValue);
+            // keep current reveal mode
+            updateStreamKeyUi();
+            showToast('New stream key generated', 'success');
+          } else {
+            showToast(data?.error || 'Failed to regenerate stream key.', 'error');
+          }
+        } catch {
+          showToast('Cannot regenerate right now.', 'error');
+        }
+      });
+
+      // Load RTMP key + status once authenticated.
+      void loadGoLiveFromApi();
     }
 
     async function initStudioPreview() {
@@ -1386,36 +1434,55 @@
     let lastPinnedMsg = null;
 
     const PLATFORM_BADGE = {
-      youtube: { label: 'Y', cls: 'platform-badge--youtube' },
-      twitch: { label: 'T', cls: 'platform-badge--twitch' },
-      facebook: { label: 'F', cls: 'platform-badge--facebook' },
-      linkedin: { label: 'L', cls: 'platform-badge--linkedin' },
-      twitter: { label: 'X', cls: 'platform-badge--twitter' },
-      tiktok: { label: '♪', cls: 'platform-badge--tiktok' },
-      instagram: { label: 'IG', cls: 'platform-badge--instagram' },
-      kick: { label: 'K', cls: 'platform-badge--kick' },
-      custom: { label: 'C', cls: 'platform-badge--custom' },
+      youtube: { label: 'YT', cls: 'platform-badge--youtube' },
+      twitch: { label: 'TW', cls: 'platform-badge--twitch' },
+      facebook: { label: 'FB', cls: 'platform-badge--facebook' },
+      linkedin: { label: 'LI', cls: 'platform-badge--linkedin' },
+      all: { label: 'ALL', cls: 'platform-badge--all' },
     };
 
     const CHAT_NAMES = [
-      'Aarav', 'Diya', 'Rahul', 'Priya', 'Amit', 'Neha', 'Rohan', 'Deepika', 'Sanya', 'Kabir',
-      'Tara', 'Vikram', 'Meera', 'Arjun', 'Isha', 'Nikhil', 'Ananya', 'Aditya',
+      'Aarav', 'Diya', 'Rahul', 'Priya', 'Amit', 'Neha', 'Rohan', 'Sanya', 'Kabir', 'Tara',
+      'Vikram', 'Meera', 'Arjun', 'Isha', 'Nikhil', 'Ananya', 'Aditya', 'Simran', 'Kunal', 'Ritika',
     ];
 
     const CHAT_TEXTS = [
       'Great explanation!',
-      'Can you clarify the last step?',
-      'This example helped a lot.',
-      'What happens if we change the assumption?',
-      'Sir/Maam, please repeat that part.',
-      'Nice! Any resources for practice?',
-      'Thanks for the live session.',
-      'Does this work for edge cases too?',
-      'That was super helpful.',
+      'Can you repeat that?',
+      "What's the formula for this case?",
+      'Amazing class 🔥',
+      'Can you share notes?',
+      'Subscribed!',
+      'How do we derive this step?',
+      'Please show one more example.',
+      'Is this in the syllabus?',
+      'What is the intuition behind it?',
+      'Can you go a bit slower?',
+      'Got it, thank you!',
+      'Will this come in the exam?',
+      'Can you confirm the final answer?',
+      'What if the boundary condition changes?',
+      'Where can we practice more?',
+      'Can you explain the graph?',
+      'This trick is really useful.',
+      'Any shortcut for calculations?',
+      'How to avoid common mistakes here?',
+      'Can you summarize the steps?',
+      'Which chapter is this from?',
+      'Please pin the key formula.',
+      'Doubt: why is this negative?',
+      'Is there an alternate method?',
+      'Nice! ✅',
+      'Can you share the PDF?',
+      'That makes sense now.',
+      'Could you recap the previous point?',
+      'Thanks sir/maam 🙏',
     ];
 
     function getConnectedPlatformKeys() {
-      return DESTINATIONS.filter((d) => destState.connections[d.key]?.connected).map((d) => d.key);
+      const keys = DESTINATIONS.filter((d) => destState.connections[d.key]?.connected).map((d) => d.key);
+      // Fallback platforms for chat demo if none connected.
+      return keys.length ? keys : ['youtube', 'twitch', 'facebook', 'linkedin'];
     }
 
     function formatRelativeTime(ts) {
@@ -1430,9 +1497,9 @@
     function updateChatTimeLabels() {
       const feed = document.getElementById('chatFeed');
       if (!feed) return;
-      feed.querySelectorAll('.chat-message').forEach((node) => {
+      feed.querySelectorAll('.chat-msg').forEach((node) => {
         const ts = Number(node.dataset.createdAt || '0');
-        const timeEl = node.querySelector('.chat-time');
+        const timeEl = node.querySelector('.msg-time');
         if (timeEl && ts) timeEl.textContent = formatRelativeTime(ts);
       });
     }
@@ -1440,9 +1507,9 @@
     function applyChatFiltersToFeed() {
       const feed = document.getElementById('chatFeed');
       if (!feed) return;
-      feed.querySelectorAll('.chat-message').forEach((node) => {
+      feed.querySelectorAll('.chat-msg').forEach((node) => {
         const key = node.dataset.platformKey;
-        const show = Boolean(chatFilter[key]);
+        const show = key === 'all' ? true : Boolean(chatFilter[key]);
         // Hidden messages stay in DOM so counts/pinning can still work.
         node.hidden = !show;
       });
@@ -1463,17 +1530,7 @@
 
       list.innerHTML = '';
 
-      if (!hasPlatforms) {
-        list.innerHTML = '<div class="chat-platform-empty">Connect destinations to enable unified chat.</div>';
-        stopUnifiedChatSimulation();
-        const allToggle = document.getElementById('chatAllPlatformsToggle');
-        if (allToggle) allToggle.checked = false;
-        // Disable per-platform filtering until platforms exist.
-        const simToggle = document.getElementById('chatSimulateToggle');
-        if (simToggle) simToggle.disabled = true;
-        return;
-      }
-
+      // Always allow chat simulation; when no destinations are connected, we use fallback platforms.
       const simToggle = document.getElementById('chatSimulateToggle');
       if (simToggle) simToggle.disabled = false;
 
@@ -1502,9 +1559,10 @@
         });
 
         const badge = document.createElement('span');
-        const meta = PLATFORM_BADGE[key] || PLATFORM_BADGE.custom;
+        const meta = PLATFORM_BADGE[key] || PLATFORM_BADGE.youtube;
         badge.className = `platform-badge ${meta.cls}`;
         badge.textContent = meta.label;
+        badge.dataset.platform = key;
 
         const name = getDest(key)?.name || key;
         const nameEl = document.createElement('span');
@@ -1529,12 +1587,15 @@
       if (master) master.checked = connectedKeys.every((k) => Boolean(chatFilter[k]));
     }
 
+    let pinnedProgressTimer = null;
     function closePinnedMessage() {
       const overlay = document.getElementById('pinnedMessageOverlay');
       if (overlay) overlay.hidden = true;
       lastPinnedMsg = null;
       if (pinnedDismissTimer) clearTimeout(pinnedDismissTimer);
       pinnedDismissTimer = null;
+      if (pinnedProgressTimer) clearInterval(pinnedProgressTimer);
+      pinnedProgressTimer = null;
     }
 
     function renderPinnedMessage(msg) {
@@ -1543,7 +1604,7 @@
       const body = document.getElementById('pinnedMessageBody');
       if (!overlay || !body) return;
 
-      const meta = PLATFORM_BADGE[msg.platformKey] || PLATFORM_BADGE.custom;
+      const meta = PLATFORM_BADGE[msg.platformKey] || PLATFORM_BADGE.youtube;
       body.innerHTML = '';
 
       const wrapper = document.createElement('div');
@@ -1559,6 +1620,7 @@
       const badge = document.createElement('span');
       badge.className = `platform-badge ${meta.cls}`;
       badge.textContent = meta.label;
+      badge.dataset.platform = msg.platformKey;
 
       const username = document.createElement('div');
       username.style.fontWeight = '900';
@@ -1577,13 +1639,27 @@
       time.className = 'chat-time';
       time.textContent = formatRelativeTime(msg.createdAt);
 
+      const progressWrap = document.createElement('div');
+      progressWrap.className = 'pinned-progress';
+      const progressBar = document.createElement('div');
+      progressBar.className = 'pinned-progress-bar';
+      progressWrap.appendChild(progressBar);
+
       wrapper.appendChild(head);
       wrapper.appendChild(text);
       wrapper.appendChild(time);
+      wrapper.appendChild(progressWrap);
       body.appendChild(wrapper);
 
       overlay.hidden = false;
       if (pinnedDismissTimer) clearTimeout(pinnedDismissTimer);
+      if (pinnedProgressTimer) clearInterval(pinnedProgressTimer);
+      const startedAt = Date.now();
+      pinnedProgressTimer = setInterval(() => {
+        const t = Date.now() - startedAt;
+        const pct = Math.max(0, Math.min(1, t / 30000));
+        progressBar.style.width = `${Math.round((1 - pct) * 100)}%`;
+      }, 200);
       pinnedDismissTimer = setTimeout(closePinnedMessage, 30000);
     }
 
@@ -1596,53 +1672,51 @@
       if (!feed) return;
 
       const msgEl = document.createElement('div');
-      msgEl.className = 'chat-message';
+      msgEl.className = 'chat-msg';
       msgEl.dataset.platformKey = msg.platformKey;
       msgEl.dataset.createdAt = String(msg.createdAt);
 
-      const meta = PLATFORM_BADGE[msg.platformKey] || PLATFORM_BADGE.custom;
-
-      const head = document.createElement('div');
-      head.className = 'chat-message-head';
+      const meta = PLATFORM_BADGE[msg.platformKey] || PLATFORM_BADGE.youtube;
 
       const badge = document.createElement('span');
       badge.className = `platform-badge ${meta.cls}`;
+      badge.dataset.platform = msg.platformKey;
       badge.textContent = meta.label;
 
-      const username = document.createElement('div');
-      username.className = 'chat-username';
+      const username = document.createElement('span');
+      username.className = 'msg-user';
       username.textContent = msg.username;
 
-      head.appendChild(badge);
-      head.appendChild(username);
+      const text = document.createElement('span');
+      text.className = 'msg-text';
+      text.textContent = msg.text;
+
+      const time = document.createElement('span');
+      time.className = 'msg-time';
+      time.textContent = formatRelativeTime(msg.createdAt);
 
       const pinBtn = document.createElement('button');
       pinBtn.type = 'button';
-      pinBtn.className = 'chat-pin-btn';
-      pinBtn.textContent = 'Pin to screen';
+      pinBtn.className = 'msg-pin';
+      pinBtn.title = 'Pin';
+      pinBtn.textContent = '📌';
       pinBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         pinMessage(msg);
       });
 
-      const text = document.createElement('div');
-      text.className = 'chat-text';
-      text.textContent = msg.text;
-
-      const time = document.createElement('div');
-      time.className = 'chat-time';
-      time.textContent = formatRelativeTime(msg.createdAt);
-
-      msgEl.appendChild(head);
-      msgEl.appendChild(pinBtn);
+      msgEl.appendChild(badge);
+      msgEl.appendChild(username);
       msgEl.appendChild(text);
       msgEl.appendChild(time);
+      msgEl.appendChild(pinBtn);
 
       const nearBottom = feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 60;
       feed.appendChild(msgEl);
-      if (!chatFilter[msg.platformKey]) msgEl.hidden = true;
-      if (nearBottom) feed.scrollTop = feed.scrollHeight;
+      if (msg.platformKey !== 'all' && !chatFilter[msg.platformKey]) msgEl.hidden = true;
+      // Spec: always auto-scroll to bottom on new message.
+      if (nearBottom || true) feed.scrollTop = feed.scrollHeight;
     }
 
     function simulateChatTick() {
@@ -1650,7 +1724,6 @@
       if (!simToggle?.checked) return;
 
       const connectedKeys = getConnectedPlatformKeys();
-      if (!connectedKeys.length) return;
 
       const platformKey = connectedKeys[Math.floor(Math.random() * connectedKeys.length)];
       const username = CHAT_NAMES[Math.floor(Math.random() * CHAT_NAMES.length)];
@@ -1670,7 +1743,7 @@
 
       renderChatMessage(msg);
 
-      const nextDelay = 3000 + Math.random() * 2000;
+      const nextDelay = 2000 + Math.random() * 3000;
       unifiedChatSimTimer = setTimeout(simulateChatTick, nextDelay);
     }
 
@@ -1717,25 +1790,13 @@
         if (!text) return;
         replyInput.value = '';
 
-        const sendKeys = getConnectedPlatformKeys();
-        if (!sendKeys.length) {
-          showToast('Select at least one platform to send.', 'error');
-          return;
-        }
-
-        // Mock: send to all selected platforms.
-        showToast('Sent to all platforms', 'success');
-
-        sendKeys.forEach((platformKey) => {
-          chatCounts[platformKey] = (chatCounts[platformKey] ?? 0) + 1;
-          updateChatCountsUi(platformKey);
-          renderChatMessage({
-            id: `y_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-            platformKey,
-            username: 'You',
-            text,
-            createdAt: Date.now(),
-          });
+        showToast('Sent to all platforms (mock)', 'success');
+        renderChatMessage({
+          id: `y_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+          platformKey: 'all',
+          username: 'You',
+          text,
+          createdAt: Date.now(),
         });
       });
 
@@ -1773,8 +1834,7 @@
     document.querySelectorAll('.nav-item[data-panel]').forEach((btn) => {
       if (btn.dataset.panel === 'destinations') {
         btn.addEventListener('click', () => {
-          renderDestinationsMock();
-          setGoLiveUI();
+          refreshDestinationsFromApi();
         });
       }
       if (btn.dataset.panel === 'chat') {
@@ -1786,198 +1846,789 @@
         btn.addEventListener('click', () => initAnalyticsChart());
       }
       if (btn.dataset.panel === 'schedule') {
-        btn.addEventListener('click', () => renderScheduleAll());
+        btn.addEventListener('click', () => refreshScheduleFromApi());
       }
       btn.addEventListener('click', () => showPanel(btn.dataset.panel));
     });
 
     document.getElementById('goLiveBtn')?.addEventListener('click', async () => {
       if (goLiveIsLive) return;
-      const title = String(document.getElementById('streamTitleInput')?.value || '').trim();
+      const titleInput = document.getElementById('streamTitleInput');
+      const title = String(titleInput?.value || '').trim();
       if (!title) {
-        showToast('Please enter a stream title before going live.', 'error');
-        document.getElementById('streamTitleInput')?.focus();
+        titleInput?.focus();
+        titleInput?.animate(
+          [
+            { transform: 'translateX(-8px)' },
+            { transform: 'translateX(8px)' },
+            { transform: 'translateX(-6px)' },
+            { transform: 'translateX(6px)' },
+            { transform: 'translateX(0)' },
+          ],
+          { duration: 420 }
+        );
         return;
       }
-      if (computeEnabledPlatforms().length < 1) {
-        showToast('Select at least one active destination.', 'error');
+
+      const enabled = computeEnabledPlatforms();
+      if (!enabled || enabled.length < 1) {
+        showToast('Add a destination first', 'error');
         return;
       }
+
+      // Countdown overlay (3 → 2 → 1 → LIVE!)
       await runCountdown();
-      setLiveUi(true);
-      showToast('You are now live.');
+
+      const subject = String(document.getElementById('streamCategorySelect')?.value || 'General Research');
+      const privacy =
+        document.querySelector('input[name="streamPrivacy"]:checked')?.value || 'public';
+      const platforms = enabled.map((d) => d.key);
+
+      try {
+        await API('/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            live: true,
+            title,
+            viewers: 0,
+            bitrate: 0,
+            durationSeconds: 0,
+          }),
+        });
+
+        // Save stream entry.
+        await API('/streams', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            subject,
+            privacy,
+            status: 'live',
+            platforms,
+            thumbnailColor: '#7c3aed',
+          }),
+        });
+      } catch {
+        showToast('Failed to start stream. Try again.', 'error');
+        setLiveUi(false);
+        return;
+      }
+
+      setLiveUi(true, { viewers: 0, bitrate: 0, durationSeconds: 0 });
     });
 
     document.getElementById('btnEndStream')?.addEventListener('click', () => {
+      // Fire-and-forget (UI updates immediately, but backend will persist live:false).
+      API('/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ live: false }),
+      }).catch(() => {});
       setLiveUi(false);
-      showToast('Stream ended.');
+      showToast('Stream ended', 'success');
     });
 
     // -----------------------------
-    // Analytics panel (mock chart)
+    // Analytics panel (API-driven)
     // -----------------------------
-    const ANALYTICS_CHART = {
-      labels: ['May 21', 'May 22', 'May 23', 'May 24', 'May 25', 'May 26', 'May 27'],
-      youtube: [120, 165, 210, 190, 320, 280, 410],
-      twitch: [42, 58, 55, 72, 95, 108, 128],
+    const ANALYTICS_RANGE = {
+      '7d': { label: 'Last 7 days', days: 7 },
+      '30d': { label: 'Last 30 days', days: 30 },
+      all: { label: 'All time', days: null },
     };
 
-    let analyticsChartBuilt = false;
+    const CHART_SIZE = { w: 700, h: 200 };
+    const CHART_PAD = { top: 18, right: 18, bottom: 38, left: 56 };
+    const CHART_COLORS = {
+      youtube: '#8b5cf6',
+      twitch: '#f59e0b',
+    };
 
-    function buildBezierPath(points) {
-      if (points.length < 2) return '';
-      let d = `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
-      for (let i = 0; i < points.length - 1; i += 1) {
-        const p0 = points[i - 1] || points[i];
-        const p1 = points[i];
-        const p2 = points[i + 1];
-        const p3 = points[i + 2] || p2;
-        const cp1x = p1.x + (p2.x - p0.x) / 6;
-        const cp1y = p1.y + (p2.y - p0.y) / 6;
-        const cp2x = p2.x - (p3.x - p1.x) / 6;
-        const cp2y = p2.y - (p3.y - p1.y) / 6;
-        d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    let analyticsUiInitialized = false;
+    let analyticsRangeKey = '7d';
+    let analyticsCachedStreams = null;
+    let analyticsCachedDestinations = null;
+
+    let analyticsCanvas = null;
+    let analyticsCtx = null;
+    let analyticsTooltip = null;
+    let analyticsResizeObserver = null;
+    let analyticsChartPointerBound = false;
+
+    let analyticsChartPoints = null; // { labels, yt, tw, xs, yts, tws, maxY }
+
+    let analyticsPlatformRowsForCsv = [];
+
+    function formatCompactDate(d) {
+      if (!(d instanceof Date) || Number.isNaN(d.valueOf())) return '';
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${months[d.getMonth()]} ${d.getDate()}`;
+    }
+
+    function formatTopStreamDate(createdAtIso, subject) {
+      const d = new Date(createdAtIso || Date.now());
+      const date = formatCompactDate(d);
+      const subj = String(subject || 'General Research').trim();
+      return `${date} · ${subj}`;
+    }
+
+    function randomBetweenInt(min, maxInclusive) {
+      return Math.floor(min + Math.random() * (maxInclusive - min + 1));
+    }
+
+    function getPlatformMeta(key) {
+      const normalized = String(key || '').toLowerCase();
+      const map = {
+        youtube: { icon: 'Y', name: 'YouTube' },
+        twitch: { icon: 'T', name: 'Twitch' },
+        facebook: { icon: 'F', name: 'Facebook' },
+        linkedin: { icon: 'L', name: 'LinkedIn' },
+        twitter: { icon: 'X', name: 'X (Twitter)' },
+        tiktok: { icon: '♪', name: 'TikTok' },
+        instagram: { icon: 'IG', name: 'Instagram' },
+        kick: { icon: 'K', name: 'Kick' },
+        custom: { icon: 'C', name: 'Custom' },
+      };
+      return map[normalized] || { icon: '?', name: normalized || 'Custom' };
+    }
+
+    function ensureAnalyticsUi() {
+      if (analyticsUiInitialized) return;
+      analyticsUiInitialized = true;
+
+      const chartWrap = document.getElementById('analyticsChartWrap');
+      const existingSvg = document.getElementById('analyticsChartSvg');
+      analyticsTooltip = document.getElementById('analyticsChartTooltip');
+      if (!chartWrap || !analyticsTooltip) return;
+
+      if (existingSvg) existingSvg.hidden = true;
+
+      analyticsCanvas = document.createElement('canvas');
+      analyticsCanvas.id = 'analyticsChartCanvas';
+      analyticsCanvas.width = CHART_SIZE.w;
+      analyticsCanvas.height = CHART_SIZE.h;
+      analyticsCanvas.className = 'analytics-chart-canvas';
+      chartWrap.insertBefore(analyticsCanvas, analyticsTooltip);
+      analyticsCtx = analyticsCanvas.getContext('2d', { alpha: true });
+
+      // Range controls (above chart)
+      const chartCard = chartWrap.closest('.analytics-chart-card');
+      const head = chartCard?.querySelector('.analytics-card-head');
+      if (head && !document.getElementById('analyticsRangeControls')) {
+        const controls = document.createElement('div');
+        controls.id = 'analyticsRangeControls';
+        controls.className = 'analytics-range-controls';
+        Object.entries(ANALYTICS_RANGE).forEach(([key, meta]) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `btn btn-ghost btn-small analytics-range-btn${key === analyticsRangeKey ? ' active' : ''}`;
+          btn.dataset.analyticsRange = key;
+          btn.textContent = meta.label;
+          btn.addEventListener('click', () => {
+            if (analyticsRangeKey === key) return;
+            analyticsRangeKey = key;
+            controls.querySelectorAll('.analytics-range-btn').forEach((b) => b.classList.toggle('active', b.dataset.analyticsRange === key));
+            renderAnalyticsChartFromCache().catch(() => {});
+          });
+          controls.appendChild(btn);
+        });
+        head.appendChild(controls);
       }
-      return d;
+
+      // Export CSV button (above per-platform table)
+      const panelEl = document.getElementById('panel-analytics');
+      const perPlatformCard = panelEl?.querySelector('.analytics-card-title')?.closest('.analytics-card');
+      // Only target the card titled exactly "Per-platform breakdown"
+      const perPlatformTitle = perPlatformCard?.querySelector('.analytics-card-title');
+      const perPlatformSection = panelEl?.querySelector('.analytics-card')?.closest ? panelEl : panelEl;
+      const perPlatformCards = panelEl?.querySelectorAll('.analytics-card');
+      const breakdownCard = Array.from(perPlatformCards || []).find((c) => c.querySelector('.analytics-card-title')?.textContent?.trim() === 'Per-platform breakdown');
+      const tableWrap = breakdownCard?.querySelector('.analytics-table-wrap');
+      const headingEl = breakdownCard?.querySelector('.analytics-card-title');
+      if (headingEl && tableWrap && !document.getElementById('analyticsExportCsvBtn')) {
+        const exportBtn = document.createElement('button');
+        exportBtn.type = 'button';
+        exportBtn.id = 'analyticsExportCsvBtn';
+        exportBtn.className = 'btn btn-ghost btn-small';
+        exportBtn.textContent = 'Export CSV';
+        exportBtn.addEventListener('click', () => exportAnalyticsPlatformCsv());
+        headingEl.insertAdjacentElement('afterend', exportBtn);
+      }
+
+      if (analyticsResizeObserver) analyticsResizeObserver.disconnect();
+      analyticsResizeObserver = new ResizeObserver(() => {
+        // Redraw on resize and keep tooltip positioning correct.
+        void renderAnalyticsChartFromCache(true);
+      });
+      analyticsResizeObserver.observe(chartWrap);
+
+      // Initial visible state
+      tooltipHide();
     }
 
-    function buildAreaPath(points, baselineY) {
-      const line = buildBezierPath(points);
-      if (!line || !points.length) return '';
-      const last = points[points.length - 1];
-      const first = points[0];
-      return `${line} L ${last.x.toFixed(2)} ${baselineY} L ${first.x.toFixed(2)} ${baselineY} Z`;
+    function tooltipHide() {
+      if (analyticsTooltip) analyticsTooltip.hidden = true;
     }
 
-    function initAnalyticsChart() {
-      if (analyticsChartBuilt) return;
-      const svg = document.getElementById('analyticsChartSvg');
-      const wrap = document.getElementById('analyticsChartWrap');
-      const tooltip = document.getElementById('analyticsChartTooltip');
-      if (!svg || !wrap) return;
-      analyticsChartBuilt = true;
+    function computeRangeFilteredStreams(rangeKey, streams) {
+      const meta = ANALYTICS_RANGE[rangeKey] || ANALYTICS_RANGE['7d'];
+      if (meta.days == null) return streams.slice().sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+      const now = Date.now();
+      const cutoff = now - meta.days * 24 * 60 * 60 * 1000;
+      return streams
+        .filter((s) => {
+          const t = new Date(s.createdAt || 0).valueOf();
+          return t && t >= cutoff;
+        })
+        .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+    }
 
-      const W = 720;
-      const H = 280;
-      const pad = { top: 24, right: 20, bottom: 40, left: 48 };
+    function choose7Points(rangeKey, filteredStreams) {
+      // Always output exactly 7 points for the chart.
+      const n = 7;
+      const streamsSorted = (filteredStreams || []).slice();
+      if (streamsSorted.length === 0) {
+        const base = [
+          { date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), yt: 0, tw: 0 },
+          { date: new Date(), yt: 0, tw: 0 },
+        ];
+        return base;
+      }
+
+      const count = streamsSorted.length;
+      const pickStreamToPoint = (s) => {
+        const d = new Date(s.createdAt || Date.now());
+        const yt = Array.isArray(s.platforms) && s.platforms.includes('youtube') ? Number(s.viewerPeak || 0) : 0;
+        const tw = Array.isArray(s.platforms) && s.platforms.includes('twitch') ? Number(s.viewerPeak || 0) : 0;
+        return { date: d, yt, tw };
+      };
+
+      // Match the spec: use the last 7 streams when available.
+      if (count >= n) {
+        return streamsSorted.slice(count - n).map(pickStreamToPoint);
+      }
+
+      const chosen = [];
+      for (let i = 0; i < n; i += 1) {
+        const idx = count === 1 ? 0 : Math.floor((i * (count - 1)) / (n - 1));
+        const s = streamsSorted[idx] || streamsSorted[count - 1];
+        chosen.push(pickStreamToPoint(s));
+      }
+
+      // If density is low, add a bit of mock variation.
+      if (count < n) {
+        const jitter = rangeKey === '7d' ? 0.18 : rangeKey === '30d' ? 0.26 : 0.32;
+        return chosen.map((p, i) => {
+          const factor = 1 + (Math.random() - 0.5) * jitter;
+          const trending = 1 + (i - (n - 1) / 2) * (jitter / 5);
+          return { ...p, yt: Math.max(0, Math.round(p.yt * factor * trending)), tw: Math.max(0, Math.round(p.tw * factor)) };
+        });
+      }
+
+      return chosen;
+    }
+
+    function drawAnalyticsChart(series) {
+      if (!analyticsCanvas || !analyticsCtx) return;
+
+      const ctx = analyticsCtx;
+      const W = CHART_SIZE.w;
+      const H = CHART_SIZE.h;
+      const pad = CHART_PAD;
+
       const chartW = W - pad.left - pad.right;
       const chartH = H - pad.top - pad.bottom;
-      const n = ANALYTICS_CHART.labels.length;
+      const n = series.labels.length;
 
-      const allVals = [...ANALYTICS_CHART.youtube, ...ANALYTICS_CHART.twitch];
-      const maxY = Math.ceil((Math.max(...allVals) * 1.12) / 50) * 50 || 100;
-      const ySteps = 4;
+      const maxY = Math.max(1, Math.ceil((Math.max(...series.yt, ...series.tw) * 1.12) / 10) * 10);
 
       const xAt = (i) => pad.left + (i / Math.max(n - 1, 1)) * chartW;
       const yAt = (v) => pad.top + chartH - (v / maxY) * chartH;
-      const baseY = pad.top + chartH;
+      const baselineY = pad.top + chartH;
 
-      const ns = 'http://www.w3.org/2000/svg';
-      const mk = (tag, attrs) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        return el;
-      };
+      // Handle DPR for crispness; draw in fixed 700x200 coordinates.
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.round(W * dpr);
+      const targetH = Math.round(H * dpr);
+      if (analyticsCanvas.width !== targetW) analyticsCanvas.width = targetW;
+      if (analyticsCanvas.height !== targetH) analyticsCanvas.height = targetH;
 
-      svg.innerHTML = '';
-      const dotsG = mk('g', { id: 'analyticsChartDots' });
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
 
-      for (let i = 0; i <= ySteps; i += 1) {
-        const val = Math.round((maxY / ySteps) * i);
-        const y = yAt(val);
-        svg.appendChild(
-          mk('line', {
-            class: 'analytics-chart-grid-line',
-            x1: pad.left,
-            x2: W - pad.right,
-            y1: y,
-            y2: y,
-          })
-        );
-        const label = mk('text', {
-          class: 'analytics-chart-y-label',
-          x: pad.left - 8,
-          y: y + 4,
-          'text-anchor': 'end',
-        });
-        label.textContent = String(val);
-        svg.appendChild(label);
+      ctx.save();
+
+      // Background is already from wrapper; we only draw chart elements.
+
+      // Grid lines
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      const gridSteps = 4;
+      for (let i = 0; i <= gridSteps; i += 1) {
+        const y = pad.top + (i / gridSteps) * chartH;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
       }
 
-      ANALYTICS_CHART.labels.forEach((lbl, i) => {
-        const text = mk('text', {
-          class: 'analytics-chart-axis-label',
-          x: xAt(i),
-          y: H - 10,
-          'text-anchor': 'middle',
+      // Vertical grid lines
+      for (let i = 0; i < n; i += 1) {
+        if (i === 0 || i === n - 1) continue;
+        const x = xAt(i);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, baselineY);
+        ctx.stroke();
+      }
+
+      function buildSmoothPath(points) {
+        // Cubic "Catmull-Rom like" smoothing.
+        ctx.beginPath();
+        if (!points.length) return;
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 0; i < points.length - 1; i += 1) {
+          const p0 = points[i - 1] || points[i];
+          const p1 = points[i];
+          const p2 = points[i + 1];
+          const p3 = points[i + 2] || p2;
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2y = p2.y - (p3.y - p1.y) / 6;
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+        }
+      }
+
+      function fillUnderLine(points, color) {
+        // Fill gradient under the curve.
+        const grad = ctx.createLinearGradient(0, pad.top, 0, baselineY);
+        grad.addColorStop(0, color.replace(')', ', 0.28)').replace('rgba', 'rgba'));
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+
+        buildSmoothPath(points);
+        const last = points[points.length - 1];
+        const first = points[0];
+        ctx.lineTo(last.x, baselineY);
+        ctx.lineTo(first.x, baselineY);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function strokeLine(points, color) {
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        buildSmoothPath(points);
+        ctx.stroke();
+      }
+
+      // Points
+      const ytPoints = series.yt.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
+      const twPoints = series.tw.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
+
+      // Area fills
+      // Convert hex to rgba-ish by drawing gradients via CSS-like colors; we use fixed alpha stops.
+      const ytColor = 'rgba(139, 92, 246, 0.90)';
+      const twColor = 'rgba(245, 158, 11, 0.90)';
+
+      // YouTube fill
+      {
+        const grad = ctx.createLinearGradient(0, pad.top, 0, baselineY);
+        grad.addColorStop(0, 'rgba(139, 92, 246, 0.28)');
+        grad.addColorStop(1, 'rgba(139, 92, 246, 0)');
+        ctx.save();
+        buildSmoothPath(ytPoints);
+        ctx.lineTo(ytPoints[ytPoints.length - 1].x, baselineY);
+        ctx.lineTo(ytPoints[0].x, baselineY);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Twitch fill
+      {
+        const grad = ctx.createLinearGradient(0, pad.top, 0, baselineY);
+        grad.addColorStop(0, 'rgba(245, 158, 11, 0.26)');
+        grad.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        ctx.save();
+        buildSmoothPath(twPoints);
+        ctx.lineTo(twPoints[twPoints.length - 1].x, baselineY);
+        ctx.lineTo(twPoints[0].x, baselineY);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Lines
+      strokeLine(ytPoints, ytColor);
+      strokeLine(twPoints, twColor);
+
+      // Dots
+      const drawDots = (pts, fillColor) => {
+        ctx.fillStyle = fillColor;
+        pts.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          ctx.fill();
         });
-        text.textContent = lbl;
-        svg.appendChild(text);
+      };
+      drawDots(ytPoints, 'rgba(139, 92, 246, 1)');
+      drawDots(twPoints, 'rgba(245, 158, 11, 1)');
+
+      // X labels
+      ctx.font = '700 11px var(--font)';
+      ctx.fillStyle = 'rgba(92, 101, 120, 0.95)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      series.labels.forEach((lbl, i) => {
+        ctx.fillText(String(lbl), xAt(i), baselineY + 8);
       });
 
-      const ytPoints = ANALYTICS_CHART.youtube.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
-      const twPoints = ANALYTICS_CHART.twitch.map((v, i) => ({ x: xAt(i), y: yAt(v) }));
+      ctx.restore();
 
-      function addSeries(points, areaCls, lineCls) {
-        svg.appendChild(mk('path', { class: `analytics-chart-area ${areaCls}`, d: buildAreaPath(points, baseY) }));
-        svg.appendChild(mk('path', { class: `analytics-chart-line ${lineCls}`, d: buildBezierPath(points) }));
+      analyticsChartPoints = {
+        labels: series.labels,
+        yt: series.yt,
+        tw: series.tw,
+        xs: series.labels.map((_, i) => xAt(i)),
+        yts: ytPoints.map((p) => p.y),
+        tws: twPoints.map((p) => p.y),
+        maxY,
+        baselineY,
+        pad,
+      };
+    }
+
+    function renderTooltipAtIndex(i, clientY = null) {
+      if (!analyticsChartPoints || !analyticsTooltip) return;
+      const wrap = document.getElementById('analyticsChartWrap');
+      if (!wrap) return;
+
+      const rect = analyticsCanvas.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      const cssW = rect.width || CHART_SIZE.w;
+      const cssH = rect.height || CHART_SIZE.h;
+      const sx = cssW / CHART_SIZE.w;
+      const sy = cssH / CHART_SIZE.h;
+
+      const xCss = wrapRect.left + analyticsChartPoints.xs[i] * sx - wrapRect.left;
+      const yCss = clientY != null ? clientY - wrapRect.top : analyticsChartPoints.yts[i] * sy; // position above mouse
+
+      const ytVal = analyticsChartPoints.yt[i] ?? 0;
+      const twVal = analyticsChartPoints.tw[i] ?? 0;
+      analyticsTooltip.hidden = false;
+      analyticsTooltip.innerHTML =
+        `<strong>${escapeHtml(String(analyticsChartPoints.labels[i]))}</strong>` +
+        `<span>YouTube: <strong class="analytics-tooltip-yt">${escapeHtml(String(ytVal))}</strong> viewers</span>` +
+        `<span>Twitch: <strong class="analytics-tooltip-tw">${escapeHtml(String(twVal))}</strong> viewers</span>`;
+      analyticsTooltip.style.left = `${xCss}px`;
+      analyticsTooltip.style.top = `${Math.max(0, yCss)}px`;
+    }
+
+    function bindChartPointerInteractions() {
+      if (!analyticsCanvas) return;
+      if (analyticsChartPointerBound) return;
+      analyticsChartPointerBound = true;
+      analyticsCanvas.addEventListener('mousemove', (e) => {
+        if (!analyticsChartPoints) return;
+        const rect = analyticsCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const sx = x / (rect.width || 1);
+        const idx = Math.round(sx * (analyticsChartPoints.labels.length - 1));
+        const i = Math.max(0, Math.min(analyticsChartPoints.labels.length - 1, idx));
+        renderTooltipAtIndex(i, e.clientY);
+      });
+      analyticsCanvas.addEventListener('mouseleave', () => tooltipHide());
+    }
+
+    function computeChartSeries(rangeKey, streams) {
+      const filtered = computeRangeFilteredStreams(rangeKey, streams || []);
+      const chosen = choose7Points(rangeKey, filtered);
+      const labels = chosen.map((p) => formatCompactDate(p.date));
+      const yt = chosen.map((p) => p.yt);
+      const tw = chosen.map((p) => p.tw);
+      return { labels, yt, tw };
+    }
+
+    async function renderAnalyticsChartFromCache(force = false) {
+      if (!analyticsUiInitialized) ensureAnalyticsUi();
+      const streams = analyticsCachedStreams;
+      if (!streams) {
+        // If there's no cache yet, refresh everything.
+        await refreshAnalyticsPanel().catch(() => {});
+        return;
       }
 
-      addSeries(ytPoints, 'analytics-chart-area--yt', 'analytics-chart-line--yt');
-      addSeries(twPoints, 'analytics-chart-area--tw', 'analytics-chart-line--tw');
-      svg.appendChild(dotsG);
+      const series = computeChartSeries(analyticsRangeKey, streams);
+      drawAnalyticsChart(series);
+      // Bind interactions once.
+      bindChartPointerInteractions();
+    }
 
-      function hideTooltip() {
-        if (tooltip) tooltip.hidden = true;
-        dotsG.innerHTML = '';
-      }
+    function getPanelAnalyticsEls() {
+      const panelEl = document.getElementById('panel-analytics');
+      if (!panelEl) return null;
+      return {
+        panelEl,
+        statGrid: panelEl.querySelector('.analytics-stat-grid'),
+        topGrid: panelEl.querySelector('.analytics-top-grid'),
+        perPlatformCards: Array.from(panelEl.querySelectorAll('.analytics-card')).filter((c) => c.querySelector('.analytics-card-title')),
+        breakdownCard: Array.from(panelEl.querySelectorAll('.analytics-card')).find((c) => c.querySelector('.analytics-card-title')?.textContent?.trim() === 'Per-platform breakdown'),
+      };
+    }
 
-      function showTooltip(i) {
-        if (!tooltip) return;
-        const yt = ANALYTICS_CHART.youtube[i];
-        const tw = ANALYTICS_CHART.twitch[i];
-        tooltip.hidden = false;
-        tooltip.innerHTML =
-          `<strong>${escapeHtml(ANALYTICS_CHART.labels[i])}</strong>` +
-          `<span>YouTube: <strong class="analytics-tooltip-yt">${escapeHtml(String(yt))}</strong> viewers</span>` +
-          `<span>Twitch: <strong class="analytics-tooltip-tw">${escapeHtml(String(tw))}</strong> viewers</span>`;
+    function updateStatCards({ totalStreams, endedCount, peakViewers, platformsConnected }) {
+      const panelEl = document.getElementById('panel-analytics');
+      if (!panelEl) return;
 
-        const svgRect = svg.getBoundingClientRect();
-        const scaleX = svgRect.width / W;
-        const scaleY = svgRect.height / H;
-        tooltip.style.left = `${xAt(i) * scaleX}px`;
-        tooltip.style.top = `${pad.top * scaleY}px`;
+      const cards = Array.from(panelEl.querySelectorAll('.analytics-stat-card'));
+      const setByLabel = (needle, valueHtml) => {
+        const card = cards.find((c) => c.querySelector('.analytics-stat-label')?.textContent?.trim() === needle);
+        const valEl = card?.querySelector('.analytics-stat-value');
+        if (valEl) valEl.textContent = valueHtml;
+      };
 
-        dotsG.innerHTML = '';
-        [
-          [yt, 'analytics-chart-dot--yt'],
-          [tw, 'analytics-chart-dot--tw'],
-        ].forEach(([v, cls]) => {
-          const c = mk('circle', {
-            class: `analytics-chart-dot ${cls} analytics-chart-dot--visible`,
-            cx: xAt(i),
-            cy: yAt(v),
-          });
-          dotsG.appendChild(c);
+      // "Total Hours Streamed" is based on ended streams (mock: streams * 1.5hrs).
+      const hoursStreamed = endedCount * 1.5;
+      setByLabel('Total Hours Streamed', `${hoursStreamed.toFixed(1)} hrs`);
+      setByLabel('Peak Viewers (all time)', new Intl.NumberFormat().format(peakViewers || 0));
+      setByLabel('Total Streams', String(totalStreams || 0));
+      setByLabel('Platforms Connected', String(platformsConnected || 0));
+    }
+
+    function updateTopStreams(streams) {
+      const panelEl = document.getElementById('panel-analytics');
+      const topGrid = panelEl?.querySelector('.analytics-top-grid');
+      if (!topGrid) return;
+
+      const ended = (streams || []).filter((s) => String(s.status || '').toLowerCase() === 'ended');
+      const sorted = ended.length ? ended : (streams || []);
+      sorted.sort((a, b) => Number(b.viewerPeak || 0) - Number(a.viewerPeak || 0));
+      const top3 = sorted.slice(0, 3);
+
+      const cards = Array.from(topGrid.querySelectorAll('.analytics-top-card'));
+      for (let i = 0; i < cards.length; i += 1) {
+        const card = cards[i];
+        const stream = top3[i];
+        if (!stream) {
+          card.hidden = true;
+          continue;
+        }
+        card.hidden = false;
+
+        const title = card.querySelector('.analytics-top-title');
+        const date = card.querySelector('.analytics-top-date');
+        const peak = card.querySelector('.analytics-top-peak strong');
+        const platformsWrap = card.querySelector('.analytics-top-platforms');
+        const engagementBar = card.querySelector('.analytics-engagement-bar');
+        const engagementLabel = card.querySelector('.analytics-engagement-label');
+
+        const subj = stream.subject || 'General Research';
+        title.textContent = String(stream.title || 'Untitled');
+        date.textContent = formatTopStreamDate(stream.createdAt, subj);
+        peak.textContent = new Intl.NumberFormat().format(Number(stream.viewerPeak || 0));
+
+        const platformKeys = Array.isArray(stream.platforms) ? stream.platforms : [];
+        platformsWrap.innerHTML = '';
+        platformKeys.forEach((pk) => {
+          const meta = getPlatformMeta(pk);
+          const span = document.createElement('span');
+          span.className = `stream-platform-icon stream-platform-icon--${String(pk).toLowerCase()}`;
+          span.textContent = meta.icon;
+          platformsWrap.appendChild(span);
         });
+        if (platformKeys.length === 0) {
+          platformsWrap.textContent = '—';
+        }
+
+        if (String(stream.status || '').toLowerCase() === 'ended') {
+          const engagement = randomBetweenInt(50, 98);
+          if (engagementBar) engagementBar.style.width = `${engagement}%`;
+          if (engagementLabel) engagementLabel.textContent = `${engagement}% engagement score`;
+        } else {
+          if (engagementBar) engagementBar.style.width = `0%`;
+          if (engagementLabel) engagementLabel.textContent = '—';
+        }
+      }
+    }
+
+    function updatePlatformBreakdown(destinations, streams) {
+      const panelEl = document.getElementById('panel-analytics');
+      const breakdownCard = Array.from(panelEl?.querySelectorAll('.analytics-card') || []).find(
+        (c) => c.querySelector('.analytics-card-title')?.textContent?.trim() === 'Per-platform breakdown'
+      );
+      const tbody = breakdownCard?.querySelector('tbody');
+      if (!tbody) return;
+
+      const enabled = (destinations || []).filter((d) => Boolean(d.enabled));
+      const streamsArr = streams || [];
+
+      const rows = enabled.map((d) => {
+        const platformKey = String(d.platform || 'custom').toLowerCase();
+        const related = streamsArr.filter((s) => Array.isArray(s.platforms) && s.platforms.includes(platformKey));
+        const streamCount = related.length;
+        const peak = related.reduce((mx, s) => Math.max(mx, Number(s.viewerPeak || 0)), 0);
+
+        // Avg viewers: mock computed from peak.
+        const avg = Math.max(0, Math.round(peak * (0.18 + Math.random() * 0.28)));
+        const totalWatchTimeHours = (avg * streamCount) / 1800; // mock
+
+        return {
+          platformKey,
+          streamCount,
+          avg,
+          peak,
+          totalWatchTimeHours,
+          status: 'Connected',
+        };
+      });
+
+      const maxAvg = Math.max(1, ...rows.map((r) => r.avg));
+      analyticsPlatformRowsForCsv = rows.map((r) => ({
+        platform: getPlatformMeta(r.platformKey).name,
+        streams: r.streamCount,
+        avgViewers: r.avg,
+        peak: r.peak,
+        totalWatchTimeHours: r.totalWatchTimeHours,
+        status: r.status,
+      }));
+
+      // Render table
+      tbody.innerHTML = '';
+      if (rows.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="6" style="color:var(--text2);padding:18px">No connected destinations yet.</td>`;
+        tbody.appendChild(tr);
+        return;
       }
 
-      const bandW = chartW / Math.max(n - 1, 1);
-      for (let i = 0; i < n; i += 1) {
-        const bx = i === 0 ? pad.left : xAt(i) - bandW / 2;
-        const width = i === 0 || i === n - 1 ? bandW / 2 + 2 : bandW;
-        const band = mk('rect', {
-          class: 'analytics-chart-hover-band',
-          x: bx,
-          y: pad.top,
-          width,
-          height: chartH,
-        });
-        band.addEventListener('mouseenter', () => showTooltip(i));
-        band.addEventListener('mousemove', () => showTooltip(i));
-        band.addEventListener('mouseleave', hideTooltip);
-        svg.appendChild(band);
+      rows.forEach((r) => {
+        const meta = getPlatformMeta(r.platformKey);
+        const pct = Math.round((r.avg / maxAvg) * 100);
+        const barHtml = `
+          <div class="analytics-avg-viewers">
+            <div style="font-weight:900;color:#fff">${new Intl.NumberFormat().format(r.avg)}</div>
+            <div class="analytics-avg-viewers-bartrack" aria-hidden="true">
+              <div class="analytics-avg-viewers-barfill" style="width:${pct}%;"></div>
+            </div>
+          </div>
+        `;
+        const watchTime = `${r.totalWatchTimeHours.toFixed(1)} hrs`;
+        const statusHtml =
+          r.status === 'Connected'
+            ? '<span class="analytics-status analytics-status--connected">Connected</span>'
+            : '<span class="analytics-status">—</span>';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <span class="analytics-platform-cell">
+              <span class="stream-platform-icon stream-platform-icon--${escapeHtml(r.platformKey)}">${escapeHtml(meta.icon)}</span>
+              ${escapeHtml(meta.name)}
+            </span>
+          </td>
+          <td>${r.streamCount}</td>
+          <td>${barHtml}</td>
+          <td>${new Intl.NumberFormat().format(r.peak)}</td>
+          <td>${watchTime}</td>
+          <td>${statusHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStatsAndLists(streams, destinations) {
+      const totalStreams = (streams || []).length;
+      const ended = (streams || []).filter((s) => String(s.status || '').toLowerCase() === 'ended');
+      const endedCount = ended.length;
+      const peakViewers = Math.max(0, ...streams.map((s) => Number(s.viewerPeak || 0)));
+      const platformsConnected = (destinations || []).filter((d) => Boolean(d.enabled)).length;
+
+      updateStatCards({ totalStreams, endedCount, peakViewers, platformsConnected });
+      updateTopStreams(streams);
+      updatePlatformBreakdown(destinations, streams);
+    }
+
+    function exportAnalyticsPlatformCsv() {
+      // Use the cached breakdown rows from the last render.
+      const rows = analyticsPlatformRowsForCsv || [];
+      if (!rows.length) {
+        showToast('No platform breakdown data to export.', 'error');
+        return;
       }
+
+      const header = ['Platform', 'Streams', 'Avg Viewers', 'Peak', 'Total Watch Time (hrs)', 'Status'];
+      const lines = [header.join(',')];
+      rows.forEach((r) => {
+        const line = [
+          escapeCsv(r.platform),
+          String(r.streams ?? 0),
+          String(r.avgViewers ?? 0),
+          String(r.peak ?? 0),
+          String((r.totalWatchTimeHours ?? 0).toFixed(1)),
+          escapeCsv(r.status),
+        ].join(',');
+        lines.push(line);
+      });
+
+      const csv = lines.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'researchium_platform_breakdown.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeCsv(value) {
+      const s = String(value ?? '');
+      // Quote if it contains special chars
+      if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      return s;
+    }
+
+    async function refreshAnalyticsPanel() {
+      ensureAnalyticsUi();
+      try {
+        const [streams, destinations] = await Promise.all([
+          API('/streams').then((r) => r.json()),
+          API('/destinations').then((r) => r.json()),
+        ]);
+        const safeStreams = Array.isArray(streams) ? streams : [];
+        const safeDestinations = Array.isArray(destinations) ? destinations : [];
+
+        analyticsCachedStreams = safeStreams;
+        analyticsCachedDestinations = safeDestinations;
+
+        updateStatsAndLists(safeStreams, safeDestinations);
+        await renderAnalyticsChartFromCache(true);
+      } catch {
+        showToast('Failed to load analytics.', 'error');
+      }
+    }
+
+    function initAnalyticsChart() {
+      // Keep the old entrypoint name: it is called by nav + page init.
+      void refreshAnalyticsPanel();
     }
 
     if (params.get('panel') === 'analytics') {
@@ -1986,14 +2637,26 @@
     }
 
     // -----------------------------
-    // Schedule manager
+    // Schedule manager (API-backed)
     // -----------------------------
-    const SCHEDULE_LS_KEY = 'researchium_schedule_v1';
+    let scheduleData = [];
     let scheduleViewMode = 'month';
     let scheduleCursor = new Date();
     scheduleCursor.setDate(1);
     scheduleCursor.setHours(0, 0, 0, 0);
     let selectedScheduleDayKey = null;
+
+    const SCHEDULE_PLATFORM_COLORS = {
+      youtube: '#FF0000',
+      twitch: '#9146FF',
+      facebook: '#1877F2',
+      linkedin: '#0A66C2',
+      twitter: '#000000',
+      tiktok: '#010101',
+      kick: '#53FC18',
+      instagram: '#E1306C',
+      custom: '#6366f1',
+    };
 
     function formatScheduleDateInput(d) {
       const y = d.getFullYear();
@@ -2006,45 +2669,30 @@
       return formatScheduleDateInput(d);
     }
 
-    function loadScheduleEvents() {
-      return safeJsonParse(safeLsGet(SCHEDULE_LS_KEY), []);
+    function getScheduleEntryDate(entry) {
+      if (entry?.scheduledAt) return new Date(entry.scheduledAt);
+      if (entry?.date && entry?.time) {
+        const t = String(entry.time).length === 5 ? `${entry.time}:00` : String(entry.time);
+        return new Date(`${entry.date}T${t}`);
+      }
+      if (entry?.startAt) return new Date(entry.startAt);
+      return new Date();
     }
 
-    function saveScheduleEvents(events) {
-      safeLsSet(SCHEDULE_LS_KEY, JSON.stringify(events));
+    function scheduleEntryDayKey(entry) {
+      return scheduleDateKey(getScheduleEntryDate(entry));
     }
 
-    function initDemoScheduleIfNeeded() {
-      if (safeLsGet(SCHEDULE_LS_KEY)) return;
-      const now = new Date();
-      const today7 = new Date(now);
-      today7.setHours(19, 0, 0, 0);
-      const tomorrow6 = new Date(now);
-      tomorrow6.setDate(tomorrow6.getDate() + 1);
-      tomorrow6.setHours(18, 0, 0, 0);
-
-      saveScheduleEvents([
-        {
-          id: 'sch-demo-1',
-          title: 'Real Analysis · Sequences',
-          subject: 'Mathematics',
-          startAt: today7.toISOString(),
-          platforms: ['youtube', 'twitch'],
-          repeat: 'none',
-          description: '',
-          notifyStudents: true,
-        },
-        {
-          id: 'sch-demo-2',
-          title: 'Molecular Biology · Central Dogma',
-          subject: 'Biology',
-          startAt: tomorrow6.toISOString(),
-          platforms: ['youtube'],
-          repeat: 'none',
-          description: '',
-          notifyStudents: true,
-        },
-      ]);
+    async function refreshScheduleFromApi() {
+      try {
+        const res = await API('/schedule');
+        const data = await res.json().catch(() => []);
+        scheduleData = Array.isArray(data) ? data : [];
+      } catch {
+        scheduleData = [];
+        showToast('Failed to load schedule.', 'error');
+      }
+      renderScheduleAll();
     }
 
     function isSameDay(a, b) {
@@ -2109,7 +2757,27 @@
     }
 
     function eventsOnDay(dayKey) {
-      return loadScheduleEvents().filter((e) => scheduleDateKey(new Date(e.startAt)) === dayKey);
+      return scheduleData.filter((e) => scheduleEntryDayKey(e) === dayKey);
+    }
+
+    function getScheduleDotColor(entry) {
+      const key = Array.isArray(entry.platforms) && entry.platforms[0];
+      return SCHEDULE_PLATFORM_COLORS[key] || SCHEDULE_PLATFORM_COLORS.custom;
+    }
+
+    function fillScheduleModalFromEntry(entry) {
+      const d = getScheduleEntryDate(entry);
+      openScheduleModal({
+        editId: entry.id,
+        date: entry.date || formatScheduleDateInput(d),
+        time: entry.time || `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
+        title: entry.title,
+        subject: entry.subject,
+        description: entry.description || '',
+        repeat: entry.repeat || 'none',
+        notifyStudents: Boolean(entry.notifyStudents),
+        platforms: entry.platforms || [],
+      });
     }
 
     function renderPlatformIcons(container, platformKeys) {
@@ -2165,6 +2833,7 @@
           row.className = 'schedule-day-event';
           const dot = document.createElement('span');
           dot.className = 'schedule-day-event-dot';
+          dot.style.background = getScheduleDotColor(ev);
           row.appendChild(dot);
           const text = document.createElement('span');
           text.textContent = ev.title;
@@ -2191,13 +2860,14 @@
 
     function openScheduleDaySidebar(day) {
       const sidebar = document.getElementById('scheduleDaySidebar');
+      const backdrop = document.getElementById('scheduleDrawerBackdrop');
       const heading = document.getElementById('scheduleDayHeading');
       const list = document.getElementById('scheduleDayList');
       if (!sidebar || !list) return;
 
       const key = scheduleDateKey(day);
       const events = eventsOnDay(key).sort(
-        (a, b) => new Date(a.startAt) - new Date(b.startAt)
+        (a, b) => getScheduleEntryDate(a) - getScheduleEntryDate(b)
       );
 
       if (heading) heading.textContent = formatScheduleDayHeading(day);
@@ -2209,27 +2879,64 @@
         events.forEach((ev) => {
           const card = document.createElement('div');
           card.className = 'schedule-day-card';
-          const time = document.createElement('div');
-          time.className = 'schedule-day-card-time';
-          time.textContent = formatScheduleTime(new Date(ev.startAt));
+
+          const head = document.createElement('div');
+          head.className = 'schedule-day-card-head';
+
+          const chip = document.createElement('span');
+          chip.className = 'schedule-time-chip schedule-day-card-chip';
+          chip.textContent = formatScheduleTime(getScheduleEntryDate(ev)).toUpperCase();
+
+          const editBtn = document.createElement('button');
+          editBtn.type = 'button';
+          editBtn.className = 'btn btn-ghost btn-small';
+          editBtn.textContent = 'Edit';
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fillScheduleModalFromEntry(ev);
+          });
+
+          head.append(chip, editBtn);
+
           const title = document.createElement('div');
           title.className = 'schedule-day-card-title';
           title.textContent = ev.title;
+
+          const subject = document.createElement('div');
+          subject.className = 'schedule-day-card-subject';
+          subject.textContent = ev.subject || 'General Research';
+
           const plats = document.createElement('div');
           plats.className = 'schedule-day-card-platforms';
           renderPlatformIcons(plats, ev.platforms);
-          card.append(time, title, plats);
+
+          card.append(head, title, subject, plats);
           list.appendChild(card);
         });
       }
 
-      sidebar.hidden = false;
+      sidebar.classList.add('is-open');
+      sidebar.setAttribute('aria-hidden', 'false');
+      if (backdrop) {
+        backdrop.hidden = false;
+        backdrop.classList.add('is-open');
+        backdrop.setAttribute('aria-hidden', 'false');
+      }
       sidebar.dataset.selectedDate = key;
     }
 
     function closeScheduleDaySidebar() {
       const sidebar = document.getElementById('scheduleDaySidebar');
-      if (sidebar) sidebar.hidden = true;
+      const backdrop = document.getElementById('scheduleDrawerBackdrop');
+      if (sidebar) {
+        sidebar.classList.remove('is-open');
+        sidebar.setAttribute('aria-hidden', 'true');
+      }
+      if (backdrop) {
+        backdrop.classList.remove('is-open');
+        backdrop.hidden = true;
+        backdrop.setAttribute('aria-hidden', 'true');
+      }
       selectedScheduleDayKey = null;
       renderScheduleCalendar();
     }
@@ -2238,9 +2945,9 @@
       const list = document.getElementById('scheduleUpcomingList');
       if (!list) return;
       const now = new Date();
-      const upcoming = loadScheduleEvents()
-        .filter((e) => new Date(e.startAt) >= now)
-        .sort((a, b) => new Date(a.startAt) - new Date(b.startAt))
+      const upcoming = scheduleData
+        .filter((e) => getScheduleEntryDate(e) >= now)
+        .sort((a, b) => getScheduleEntryDate(a) - getScheduleEntryDate(b))
         .slice(0, 5);
 
       list.innerHTML = '';
@@ -2256,8 +2963,8 @@
 
         const chip = document.createElement('div');
         chip.className = 'schedule-time-chip';
-        if (isSameDay(new Date(ev.startAt), today)) chip.classList.add('schedule-time-chip--today');
-        chip.textContent = formatUpcomingChip(ev.startAt);
+        if (isSameDay(getScheduleEntryDate(ev), today)) chip.classList.add('schedule-time-chip--today');
+        chip.textContent = formatUpcomingChip(getScheduleEntryDate(ev).toISOString());
 
         const main = document.createElement('div');
         main.className = 'schedule-upcoming-main';
@@ -2280,20 +2987,7 @@
         editBtn.textContent = 'Edit';
         editBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const d = new Date(ev.startAt);
-          openScheduleModal({
-            date: formatScheduleDateInput(d),
-            time: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
-          });
-          document.getElementById('scheduleTitle').value = ev.title;
-          document.getElementById('scheduleSubject').value = ev.subject;
-          document.getElementById('scheduleDescription').value = ev.description || '';
-          document.getElementById('scheduleRepeat').value = ev.repeat || 'none';
-          document.getElementById('scheduleNotify').checked = Boolean(ev.notifyStudents);
-          updateScheduleNotifyHint();
-          document.querySelectorAll('#schedulePlatformChecks input').forEach((input) => {
-            input.checked = (ev.platforms || []).includes(input.value);
-          });
+          fillScheduleModalFromEntry(ev);
         });
         const liveBtn = document.createElement('button');
         liveBtn.type = 'button';
@@ -2301,10 +2995,7 @@
         liveBtn.textContent = 'Go live now';
         liveBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          showPanel('go-live');
-          const titleInput = document.getElementById('streamTitleInput');
-          if (titleInput) titleInput.value = ev.title;
-          showToast('Stream setup opened. Click Go live when ready.');
+          void goLiveFromSchedule(ev);
         });
         actions.append(editBtn, liveBtn);
 
@@ -2318,7 +3009,54 @@
       renderScheduleUpcoming();
     }
 
-    function saveScheduleFromForm(e) {
+    async function deleteScheduleItem(id) {
+      if (!id) return;
+      try {
+        const res = await API(`/schedule/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          showToast(data.error || 'Failed to delete schedule item.', 'error');
+          return;
+        }
+        editingScheduleId = null;
+        closeModal();
+        closeScheduleDaySidebar();
+        await refreshScheduleFromApi();
+        showToast('Schedule item removed.', 'success');
+      } catch {
+        showToast('Failed to delete schedule item.', 'error');
+      }
+    }
+
+    async function goLiveFromSchedule(entry) {
+      const title = String(entry?.title || '').trim() || 'Live stream';
+      try {
+        await API('/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            live: true,
+            title,
+            viewers: 0,
+            bitrate: 0,
+            durationSeconds: 0,
+          }),
+        });
+      } catch {
+        showToast('Failed to set live status.', 'error');
+        return;
+      }
+
+      const titleInput = document.getElementById('streamTitleInput');
+      if (titleInput) titleInput.value = title;
+      const category = document.getElementById('streamCategorySelect');
+      if (category && entry?.subject) category.value = entry.subject;
+      showToast('You are live! Open Go Live to manage your stream.', 'success');
+      showPanel('go-live');
+      setLiveUi(true, { viewers: 0, bitrate: 0, durationSeconds: 0 });
+    }
+
+    async function saveScheduleFromForm(e) {
       e.preventDefault();
       const title = String(document.getElementById('scheduleTitle')?.value || '').trim();
       const subject = document.getElementById('scheduleSubject')?.value || 'General Research';
@@ -2329,38 +3067,55 @@
         return;
       }
 
-      const [hh, mm] = time.split(':').map(Number);
-      const start = new Date(`${date}T00:00:00`);
-      start.setHours(hh, mm || 0, 0, 0);
-
       const platforms = [];
       document.querySelectorAll('#schedulePlatformChecks input:checked').forEach((input) => {
         platforms.push(input.value);
       });
 
-      const events = loadScheduleEvents();
-      events.push({
-        id: `sch_${Date.now()}`,
+      const payload = {
         title,
         subject,
-        startAt: start.toISOString(),
-        platforms,
+        date,
+        time,
         repeat: document.getElementById('scheduleRepeat')?.value || 'none',
         description: document.getElementById('scheduleDescription')?.value || '',
+        platforms,
         notifyStudents: Boolean(document.getElementById('scheduleNotify')?.checked),
-      });
-      saveScheduleEvents(events);
+      };
 
-      closeModal();
-      renderScheduleAll();
-      const key = scheduleDateKey(start);
-      selectedScheduleDayKey = key;
-      openScheduleDaySidebar(start);
-      showToast(
-        document.getElementById('scheduleNotify')?.checked
-          ? 'Class scheduled. Email notification will be sent.'
-          : 'Class scheduled.'
-      );
+      try {
+        if (editingScheduleId) {
+          await API(`/schedule/${encodeURIComponent(editingScheduleId)}`, { method: 'DELETE' });
+        }
+        const res = await API('/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          showToast(data.error || 'Failed to save schedule.', 'error');
+          return;
+        }
+
+        editingScheduleId = null;
+        closeModal();
+        await refreshScheduleFromApi();
+
+        const start = getScheduleEntryDate({ date, time, scheduledAt: `${date}T${time.length === 5 ? `${time}:00` : time}` });
+        const key = scheduleDateKey(start);
+        selectedScheduleDayKey = key;
+        openScheduleDaySidebar(start);
+
+        const dateLabel = start.toLocaleDateString([], {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+        });
+        showToast(`Class scheduled for ${dateLabel}!`, 'success');
+      } catch {
+        showToast('Failed to save schedule.', 'error');
+      }
     }
 
     function bindScheduleUi() {
@@ -2388,12 +3143,17 @@
         const date = sidebar?.dataset.selectedDate || formatScheduleDateInput(new Date());
         openScheduleModal({ date, time: '19:00' });
       });
-      document.getElementById('scheduleForm')?.addEventListener('submit', saveScheduleFromForm);
+      document.getElementById('scheduleForm')?.addEventListener('submit', (ev) => {
+        void saveScheduleFromForm(ev);
+      });
+      document.getElementById('scheduleDeleteBtn')?.addEventListener('click', () => {
+        if (editingScheduleId) void deleteScheduleItem(editingScheduleId);
+      });
+      document.getElementById('scheduleDrawerBackdrop')?.addEventListener('click', closeScheduleDaySidebar);
     }
 
-    initDemoScheduleIfNeeded();
     bindScheduleUi();
-    renderScheduleAll();
+    void refreshScheduleFromApi();
 
     initGoLiveSetup();
     bindEncoderActions();

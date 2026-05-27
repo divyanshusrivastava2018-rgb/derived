@@ -1,4 +1,7 @@
-<meta charset="UTF-8" />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Live Classes – Researchium</title>
     <meta name="description" content="Join live classes and doubt labs, then continue with curated recordings and playlist-based learning on Researchium." />
@@ -40,10 +43,11 @@
             >Open playlist on YouTube</a
           >
           <a
-            href="/stream-dashboard.html"
-            id="stream-dashboard-entry"
-            class="btn-ghost u-inline-block u-rounded-pill stream-dashboard-entry"
-            >Streamer dashboard</a
+            href="https://www.youtube.com/watch?v=9jhxdr_qmaM&list=PLIowxflsb4xC5P98ChXATyDaGEAPpV4RN"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-ghost u-inline-block u-rounded-pill"
+            >Watch on YouTube</a
           >
         </div>
       </div>
@@ -77,19 +81,10 @@
       </div>
     </footer>
 
-        <script defer src="/js/researchium-core.js"></script>
+    <script defer src="/js/researchium-core.js"></script>
     <script defer src="/js/cms-hero.js"></script>
     <script defer src="/js/live-schedule.js"></script>
     <script defer src="/js/youtube-playlist.js"></script>
-    <script defer src="/js/stream-dashboard-gate.js"></script>
-    <script defer>
-      document.addEventListener('DOMContentLoaded', function () {
-        var link = document.getElementById('stream-dashboard-entry');
-        if (link && window.StreamDashboardGate) {
-          StreamDashboardGate.bindLink(link);
-        }
-      });
-    </script>
-      <script defer src="/js/gtag-lazy.js"></script>
+    <script defer src="/js/gtag-lazy.js"></script>
   </body>
 </html>

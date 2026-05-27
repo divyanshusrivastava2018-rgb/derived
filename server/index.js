@@ -1,4 +1,7 @@
 require('./load-env').loadEnv();
+if (!process.env.STREAM_STUDIO_EMAIL) {
+  console.warn('⚠️  STREAM_STUDIO_EMAIL not set — stream studio login will fail');
+}
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -23,7 +26,8 @@ const platformRouter = require('./routes/platform');
 const adminLeadsRouter = require('./routes/adminLeads');
 const adminDashboardRouter = require('./routes/adminDashboard');
 const adminStreamStudioRouter = require('./routes/adminStreamStudio');
-const streamAuthRouter = require('./routes/streamAuth');
+const streamRouter = require('./routes/stream');
+const streamStudioStore = require('./lib/streamStudioStore');
 const uploadsRouter = require('./routes/uploads');
 const rssRouter = require('./routes/rss');
 const sitemapRouter = require('./routes/sitemap');
@@ -46,6 +50,8 @@ const UPLOAD_DIR = path.join(__dirname, 'uploads');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+streamStudioStore.init();
 
 store.readAll();
 siteStore.readSite();
@@ -218,7 +224,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/admin', adminLeadsRouter);
 app.use('/api/admin', adminDashboardRouter);
 app.use('/api/admin/stream-studio', adminStreamStudioRouter);
-app.use('/api/stream/auth', streamAuthRouter);
+app.use('/api/stream', streamRouter);
 app.use('/api/admin', adminImportRouter);
 app.use('/api/home', homeRouter);
 app.use('/api/platform', platformRouter);

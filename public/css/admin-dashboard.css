@@ -2,7 +2,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap");
 
-.adm-dash-root {
+.wp-admin-page.adm-dash-active {
   --adm-bg: #f4f6fb;
   --adm-bg2: #ffffff;
   --adm-bg3: #f8fafc;
@@ -31,9 +31,6 @@
   --adm-shadow: 0 4px 24px rgba(26, 32, 44, 0.08);
   --adm-font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   --adm-mono: "DM Mono", ui-monospace, monospace;
-}
-
-.wp-admin-page.adm-dash-active {
   background: var(--adm-bg);
   font-family: var(--adm-font);
   color: var(--adm-text);

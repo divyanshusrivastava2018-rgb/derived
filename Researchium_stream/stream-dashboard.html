@@ -322,6 +322,8 @@
           <button type="button" class="btn btn-primary" id="btnSchedulePanel">+ Schedule class</button>
         </div>
 
+        <div class="schedule-drawer-backdrop" id="scheduleDrawerBackdrop" hidden aria-hidden="true"></div>
+
         <div class="schedule-layout">
           <div class="schedule-calendar-wrap">
             <div class="schedule-weekday-row" aria-hidden="true">
@@ -330,7 +332,7 @@
             <div class="schedule-calendar-grid" id="scheduleCalendarGrid" role="grid"></div>
           </div>
 
-          <aside class="schedule-day-sidebar" id="scheduleDaySidebar" hidden>
+          <aside class="schedule-day-sidebar" id="scheduleDaySidebar" aria-hidden="true">
             <div class="schedule-day-sidebar-head">
               <h3 id="scheduleDayHeading">Wednesday, May 28</h3>
               <button type="button" class="schedule-sidebar-close" id="scheduleSidebarClose" aria-label="Close day panel">×</button>
@@ -597,7 +599,10 @@
           </label>
           <p class="schedule-notify-hint" id="scheduleNotifyHint">Email notification will be sent</p>
 
-          <button type="submit" class="btn btn-primary schedule-save-btn">Save class</button>
+          <div class="schedule-form-actions">
+            <button type="button" class="btn btn-ghost schedule-delete-btn" id="scheduleDeleteBtn" hidden>Delete</button>
+            <button type="submit" class="btn btn-primary schedule-save-btn">Save class</button>
+          </div>
         </form>
       </div>
     </div>

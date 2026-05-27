@@ -1,0 +1,619 @@
+/**
+ * Eduleb-inspired theme (https://themewagon.github.io/eduleb/)
+ * Scoped to body.eduleb-theme — Researchium content & routes unchanged.
+ */
+body.eduleb-theme {
+  --ed-primary: #ff6b35;
+  --ed-primary-dark: #e85a28;
+  --ed-navy: #1a1f3c;
+  --ed-violet: #5b4cdb;
+  --ed-heading: #1e293b;
+  --ed-text: #475569;
+  --ed-muted: #94a3b8;
+  --ed-bg: #f5f7fb;
+  --ed-card: #ffffff;
+  --ed-radius: 14px;
+  --ed-shadow: 0 12px 40px rgba(26, 31, 60, 0.08);
+
+  --ac-primary: var(--ed-primary);
+  --ac-primary-light: #ff8f66;
+  --ac-primary-dark: var(--ed-primary-dark);
+  --ac-page: var(--ed-bg);
+  --ac-text: var(--ed-heading);
+  --ac-muted: var(--ed-text);
+  --yo-primary: var(--ed-primary);
+  --gold: var(--ed-primary);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  background: var(--ed-bg);
+  color: var(--ed-text);
+}
+
+body.eduleb-theme h1,
+body.eduleb-theme h2,
+body.eduleb-theme h3 {
+  color: var(--ed-heading);
+}
+
+/* Header — Eduleb top bar */
+body.eduleb-theme .site-header {
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+body.eduleb-theme .site-nav__search input {
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+body.eduleb-theme .site-nav__search button {
+  background: var(--ed-primary);
+  border-radius: 50px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+}
+
+body.eduleb-theme .site-nav__signin {
+  color: var(--ed-heading);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+body.eduleb-theme .site-nav__signup {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border-radius: 50px;
+  background: var(--ed-navy);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+body.eduleb-theme .page-hero {
+  background: linear-gradient(135deg, #fff5f0 0%, #f0f4ff 100%);
+  border-bottom: 1px solid #eef2f7;
+}
+
+body.eduleb-theme .page-hero h1 .gold {
+  color: var(--ed-primary);
+}
+
+body.eduleb-theme .btn-gold {
+  background: var(--ed-primary) !important;
+  color: #fff !important;
+  border-radius: 50px;
+}
+
+body.eduleb-theme .btn-ghost {
+  border-color: var(--ed-primary);
+  color: var(--ed-primary);
+  border-radius: 50px;
+}
+
+body.eduleb-theme .site-nav__sub,
+body.eduleb-theme .site-nav__cta {
+  background: var(--ed-primary);
+  color: #fff !important;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 700;
+  border: none;
+}
+
+body.eduleb-theme .site-nav__link--active,
+body.eduleb-theme .site-nav__link:hover {
+  color: var(--ed-primary);
+}
+
+body.eduleb-theme .yo-quickstrip {
+  display: none;
+}
+
+/* Hero */
+.ed-hero {
+  position: relative;
+  padding: 4rem 1.25rem 5rem;
+  background: linear-gradient(135deg, #fff5f0 0%, #f0f4ff 45%, #fff 100%);
+  overflow: hidden;
+}
+
+.ed-hero::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.08);
+  top: -120px;
+  right: -80px;
+  pointer-events: none;
+}
+
+.ed-hero__inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ed-hero__inner h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.15;
+  max-width: 720px;
+  margin: 0 auto 1rem;
+  letter-spacing: -0.03em;
+}
+
+.ed-hero__lead {
+  font-size: 1.05rem;
+  color: var(--ed-text);
+  max-width: 560px;
+  margin: 0 auto 1.75rem;
+  line-height: 1.65;
+}
+
+.ed-hero-search {
+  display: flex;
+  max-width: 520px;
+  margin: 0 auto 1.5rem;
+  background: #fff;
+  border-radius: 50px;
+  padding: 6px;
+  box-shadow: var(--ed-shadow);
+  border: 1px solid #e2e8f0;
+}
+
+.ed-hero-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 18px;
+  font-size: 15px;
+  outline: none;
+  min-width: 0;
+}
+
+.ed-hero-search button {
+  border: none;
+  background: var(--ed-primary);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ed-hero__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ed-btn-primary {
+  display: inline-block;
+  background: var(--ed-primary);
+  color: #fff !important;
+  font-weight: 700;
+  padding: 12px 26px;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+}
+
+.ed-btn-outline {
+  display: inline-block;
+  border: 2px solid var(--ed-navy);
+  color: var(--ed-navy) !important;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 50px;
+  background: transparent;
+}
+
+/* Stats band */
+.ed-stats {
+  background: #fff;
+  margin-top: -2.5rem;
+  position: relative;
+  z-index: 2;
+  padding: 0 1.25rem 2rem;
+}
+
+.ed-stats__grid {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  background: #fff;
+  border-radius: var(--ed-radius);
+  box-shadow: var(--ed-shadow);
+  padding: 1.5rem 1rem;
+}
+
+.ed-stat {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.ed-stat strong {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ed-primary);
+  line-height: 1.2;
+}
+
+.ed-stat span {
+  font-size: 0.8rem;
+  color: var(--ed-muted);
+  text-transform: capitalize;
+}
+
+/* Sections */
+.ed-section {
+  padding: 4rem 1.25rem;
+}
+
+.ed-section--white {
+  background: #fff;
+}
+
+.ed-section--muted {
+  background: var(--ed-bg);
+}
+
+.ed-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.ed-head {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+}
+
+.ed-head h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.ed-head p {
+  color: var(--ed-text);
+  line-height: 1.65;
+}
+
+.ed-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ed-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* Journey / features 01–04 */
+.ed-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.ed-feature {
+  background: var(--ed-card);
+  border-radius: var(--ed-radius);
+  padding: 1.5rem;
+  border: 1px solid #eef2f7;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ed-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ed-shadow);
+}
+
+.ed-feature__num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: rgba(255, 107, 53, 0.25);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.ed-feature h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ed-feature p {
+  font-size: 0.9rem;
+  color: var(--ed-text);
+  line-height: 1.55;
+}
+
+/* Categories */
+.ed-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.ed-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ed-heading);
+  transition: all 0.2s;
+}
+
+.ed-cat:hover {
+  border-color: var(--ed-primary);
+  color: var(--ed-primary);
+  background: #fff8f5;
+}
+
+/* Course cards (home-platform renders .ed-course-card) */
+.ed-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+body.eduleb-theme .ed-course-card,
+body.eduleb-theme .et-course-card {
+  background: #fff;
+  border-radius: var(--ed-radius);
+  overflow: hidden;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+body.eduleb-theme .ed-course-card:hover,
+body.eduleb-theme .et-course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--ed-shadow);
+}
+
+body.eduleb-theme .et-course-thumb {
+  position: relative;
+  aspect-ratio: 16/10;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+body.eduleb-theme .et-course-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.eduleb-theme .et-course-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--ed-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+body.eduleb-theme .et-course-body {
+  padding: 1rem 1.1rem 0.5rem;
+  flex: 1;
+}
+
+body.eduleb-theme .et-course-body h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0.5rem 0;
+}
+
+body.eduleb-theme .et-course-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.1rem 1rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: 13px;
+  color: var(--ed-muted);
+}
+
+body.eduleb-theme .et-course-price {
+  font-weight: 800;
+  color: var(--ed-primary);
+}
+
+/* Live cards */
+body.eduleb-theme .yo-live-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+body.eduleb-theme .yo-live-card {
+  background: #fff;
+  border-radius: var(--ed-radius);
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+/* Testimonials */
+.ed-testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+body.eduleb-theme .yo-story-card,
+body.eduleb-theme .ed-testimonial {
+  background: #fff;
+  border-radius: var(--ed-radius);
+  padding: 1.5rem;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+body.eduleb-theme .yo-story-card blockquote {
+  font-style: italic;
+  color: var(--ed-text);
+  line-height: 1.65;
+  margin-top: 1rem;
+}
+
+/* Split about */
+.ed-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.ed-split__visual {
+  border-radius: var(--ed-radius);
+  background: linear-gradient(145deg, #ffe8de, #e8e4ff);
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+}
+
+.ed-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0;
+}
+
+.ed-checklist li {
+  padding: 0.4rem 0 0.4rem 1.75rem;
+  position: relative;
+  color: var(--ed-text);
+}
+
+.ed-checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--ed-primary);
+  font-weight: 800;
+}
+
+/* CTA band */
+.ed-cta-band {
+  background: linear-gradient(135deg, var(--ed-navy) 0%, #2d3561 100%);
+  color: #fff;
+  text-align: center;
+  padding: 3.5rem 1.25rem;
+  border-radius: var(--ed-radius);
+  margin: 0 1.25rem 3rem;
+  max-width: calc(1140px - 2.5rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ed-cta-band h2 {
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.ed-cta-band p {
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer */
+body.eduleb-theme .site-footer-extended {
+  background: var(--ed-navy);
+  color: #cbd5e1;
+}
+
+body.eduleb-theme .footer-links h4,
+body.eduleb-theme .footer-brand-block {
+  color: #fff;
+}
+
+body.eduleb-theme .footer-links a {
+  color: #94a3b8;
+}
+
+body.eduleb-theme .footer-links a:hover {
+  color: var(--ed-primary);
+}
+
+body.eduleb-theme .footer-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+/* Benefits pills → ed feature mini */
+body.eduleb-theme .yo-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+body.eduleb-theme .yo-benefit-pill {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--ed-radius);
+  padding: 1rem;
+  text-decoration: none;
+  color: var(--ed-heading);
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s;
+}
+
+body.eduleb-theme .yo-benefit-pill:hover {
+  border-color: var(--ed-primary);
+}
+
+body.eduleb-theme .yo-btn-primary,
+body.eduleb-theme .btn-gold {
+  background: var(--ed-primary) !important;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+}
+
+body.eduleb-theme .yo-link {
+  color: var(--ed-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .ed-split {
+    grid-template-columns: 1fr;
+  }
+  .ed-stats {
+    margin-top: -1rem;
+  }
+}

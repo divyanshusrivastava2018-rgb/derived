@@ -7,13 +7,14 @@ function getSigningSecret() {
   return memberCookie.getMemberSecret();
 }
 
-function signHostToken() {
+function signHostToken(email) {
   const secret = getSigningSecret();
   if (!secret) return null;
 
   const now = Math.floor(Date.now() / 1000);
   const payload = {
     role: 'host',
+    email: String(email || '').trim().toLowerCase(),
     iat: now,
     exp: now + TOKEN_TTL_SEC
   };
@@ -63,7 +64,12 @@ function verifyHostToken(token) {
     return null;
   }
 
-  return { role: payload.role, exp: payload.exp, iat: payload.iat };
+  return {
+    role: payload.role,
+    email: payload.email,
+    exp: payload.exp,
+    iat: payload.iat
+  };
 }
 
 function parseBearerToken(req) {

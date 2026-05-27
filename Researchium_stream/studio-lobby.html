@@ -671,8 +671,9 @@
   <script>
     const auth = window.ResearchiumStudio;
     const media = window.ResearchiumMedia;
-    const STREAM_AUTH_API_BASE =
-      window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+    const API_BASE = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3000' 
+      : '';
     const viewAuth = document.getElementById('viewAuth');
     const viewLobby = document.getElementById('viewLobby');
     const panels = {
@@ -804,7 +805,7 @@
       const el = document.getElementById('apiStatus');
       if (!el) return true;
       try {
-        const res = await fetch(`${STREAM_AUTH_API_BASE}/healthz`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE}/healthz`, { cache: 'no-store' });
         const data = await res.json().catch(() => ({}));
         if (data.ok === true) {
           el.classList.remove('show');
@@ -997,46 +998,57 @@
       }
     }
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      clearLoginPasswordError();
-      setLoginLoading(true);
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
+    async function studioLogin(email, password) {
+      const btn = document.querySelector('button[type=submit], #signInBtn');
+      if (!btn) return;
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      
       try {
-        const res = await fetch(`${STREAM_AUTH_API_BASE}/api/stream/auth/login`, {
+        const res = await fetch(`${API_BASE}/api/stream/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password })
         });
-
-        let data = {};
-        try {
-          data = await res.json();
-        } catch {
-          /* ignore */
+        const data = await res.json();
+        
+        if (res.ok && data.token) {
+          sessionStorage.setItem('studio_token', data.token);
+          window.location.href = 'stream-dashboard.html';
+        } else {
+          showLoginError(data.error || 'Invalid credentials');
         }
-
-        if (res.status === 401) {
-          setLoginPasswordError('Invalid email or password');
-          shakeLoginCard();
-          return;
-        }
-
-        if (!res.ok || !data.success || !data.token) {
-          setLoginPasswordError(data.error || 'Sign-in failed. Try again.');
-          return;
-        }
-
-        saveStreamStudioToken(data.token);
-        redirectToStreamDashboard();
-      } catch {
-        setLoginPasswordError('Cannot connect to server. Try again.');
+      } catch (e) {
+        showLoginError('Cannot connect to server. Please try again.');
       } finally {
-        setLoginLoading(false);
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
       }
+    }
+
+    function showLoginError(msg) {
+      let err = document.getElementById('loginError');
+      if (!err) {
+        err = document.createElement('p');
+        err.id = 'loginError';
+        err.style.cssText = 'color:#ef4444;font-size:13px;text-align:center;margin-top:8px';
+        document.querySelector('form, .login-card')?.appendChild(err);
+      }
+      err.textContent = msg;
+      // shake animation
+      const card = document.querySelector('.modal, .login-card, form');
+      card?.animate([
+        {transform:'translateX(-8px)'},{transform:'translateX(8px)'},
+        {transform:'translateX(-6px)'},{transform:'translateX(6px)'},
+        {transform:'translateX(0)'}
+      ], { duration: 400 });
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      await studioLogin(email, password);
     });
 
     document.getElementById('forgotForm').addEventListener('submit', async (e) => {

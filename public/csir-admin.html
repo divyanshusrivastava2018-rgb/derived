@@ -23,9 +23,9 @@
           <label for="csirAdminPass">Password</label>
           <input type="password" id="csirAdminPass" autocomplete="current-password" required />
           <button type="submit" class="csir-admin-btn">Sign in</button>
-          <p id="csirAdminLoginErr" class="csir-admin-err" hidden></p>
+          <p id="csirAdminLoginErr" class="csir-admin-err" role="alert" aria-live="assertive" hidden></p>
         </form>
-        <p class="csir-admin-hint">Uses server credentials (<code>RESEARCHIUM_ADMIN_*</code>). Full dashboard: <a href="/admin.html">admin.html</a></p>
+        <p class="csir-admin-hint">Same sign-in as the <a href="/admin.html">site admin dashboard</a>.</p>
       </section>
 
       <section id="csirAdminDash" class="csir-admin-dash" hidden>
