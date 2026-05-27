@@ -171,7 +171,7 @@
       const now = new Date();
       if (stream.status === 'scheduled' && stream.scheduledAt) {
         const d = new Date(stream.scheduledAt);
-        const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         if (d.toDateString() === now.toDateString()) return `Today ${time}`;
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -345,9 +345,9 @@
       }
       try {
         const meeting = await dashboardApi.getMeeting(stream.roomSlug);
-        auth.saveStudioSession(meeting);
-        location.href = 'studio.html';
-      } catch {
+            auth.saveStudioSession(meeting);
+            location.href = 'studio.html';
+          } catch {
         showToast('Could not open this stream.', 'error');
       }
     }
@@ -1031,8 +1031,8 @@
       const privacy = document.querySelector('input[name="streamPrivacy"]:checked')?.value || 'public';
       if (!title) {
         showToast('Enter stream title first', 'error');
-        closeModal();
-        showPanel('go-live');
+      closeModal();
+      showPanel('go-live');
         document.getElementById('streamTitleInput')?.focus();
         return;
       }
@@ -1102,7 +1102,7 @@
     function setPermissionState() {
       const el = document.getElementById('browserPermissionStatus');
       if (!el || !studioMedia) return;
-      if (studioMedia.isGranted()) {
+        if (studioMedia.isGranted()) {
         el.textContent = '🟢 Mic/camera allowed';
         return;
       }
@@ -1177,12 +1177,12 @@
       streamCategorySelect?.addEventListener('change', saveStreamSetup);
       privacyRadios.forEach((r) => r.addEventListener('change', saveStreamSetup));
 
-      if (params.get('studio') === '1') {
-        showPanel('go-live');
-        const raw = sessionStorage.getItem('researchium_studio_session');
-        if (raw) {
-          try {
-            const s = JSON.parse(raw);
+    if (params.get('studio') === '1') {
+      showPanel('go-live');
+      const raw = sessionStorage.getItem('researchium_studio_session');
+      if (raw) {
+        try {
+          const s = JSON.parse(raw);
             const title = s.stream?.title || '';
             if (title && streamTitleInput) streamTitleInput.value = title;
             document.getElementById('pageTitle').textContent = title || 'Go live';

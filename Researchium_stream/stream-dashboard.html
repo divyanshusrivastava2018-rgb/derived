@@ -60,12 +60,12 @@
       </button>
     </nav>
     <div class="sidebar-footer">
-      <div class="channel-card">
+    <div class="channel-card">
         <div class="channel-card-profile">
-          <div class="channel-avatar" aria-hidden="true">RS</div>
-          <div>
-            <div class="channel-name">Research channel</div>
-            <div class="channel-sub">Researchium Studio</div>
+      <div class="channel-avatar" aria-hidden="true">RS</div>
+      <div>
+        <div class="channel-name">Research channel</div>
+        <div class="channel-sub">Researchium Studio</div>
           </div>
         </div>
         <button type="button" class="btn btn-ghost btn-studio-signout" id="btnStudioSignOut">Sign out</button>
@@ -198,16 +198,16 @@
           </div>
 
           <div class="status-metrics">
-            <div>
-              <span class="status-dot" id="statusDot"></span>
-              <strong id="statusLabel">Offline</strong>
-            </div>
-            <span id="reactViewerMount"></span>
-            <span><strong id="viewerCount">0</strong> viewers</span>
-            <span id="viewerBreakdown" class="viewer-breakdown"></span>
-            <span>Duration <strong id="duration">00:00:00</strong></span>
-            <span>Bitrate <strong id="bitrate">— kbps</strong></span>
+          <div>
+            <span class="status-dot" id="statusDot"></span>
+            <strong id="statusLabel">Offline</strong>
           </div>
+          <span id="reactViewerMount"></span>
+          <span><strong id="viewerCount">0</strong> viewers</span>
+            <span id="viewerBreakdown" class="viewer-breakdown"></span>
+          <span>Duration <strong id="duration">00:00:00</strong></span>
+          <span>Bitrate <strong id="bitrate">— kbps</strong></span>
+        </div>
 
           <button type="button" class="btn btn-danger" id="btnEndStream" hidden>■ End stream</button>
         </div>
@@ -345,7 +345,7 @@
         <section class="schedule-upcoming-section">
           <h3 class="schedule-upcoming-title">Upcoming streams</h3>
           <div class="schedule-upcoming-list" id="scheduleUpcomingList"></div>
-        </section>
+      </section>
       </section>
 
       <section class="panel" id="panel-analytics" data-panel="analytics">
@@ -373,7 +373,7 @@
             <div class="analytics-stat-value">3</div>
             <div class="analytics-stat-trend analytics-stat-trend--up">↑ +12% this month</div>
           </article>
-        </div>
+    </div>
 
         <section class="analytics-card analytics-chart-card">
           <div class="analytics-card-head">
@@ -554,7 +554,7 @@
         <div class="modal-header schedule-modal-head">
           <h2 class="modal-title" id="scheduleModalTitle">Schedule class</h2>
           <button type="button" class="modal-close modal-close-schedule" aria-label="Close">×</button>
-        </div>
+    </div>
         <form class="schedule-form" id="scheduleForm">
           <label class="field-label" for="scheduleTitle">Class title</label>
           <input class="field-input schedule-field" id="scheduleTitle" type="text" required placeholder="e.g. Real Analysis · Sequences" />
@@ -570,10 +570,10 @@
           </select>
 
           <div class="schedule-form-row">
-            <div>
+              <div>
               <label class="field-label" for="scheduleDate">Date</label>
               <input class="field-input schedule-field" id="scheduleDate" type="date" required />
-            </div>
+              </div>
             <div>
               <label class="field-label" for="scheduleTime">Time</label>
               <input class="field-input schedule-field" id="scheduleTime" type="time" required />
