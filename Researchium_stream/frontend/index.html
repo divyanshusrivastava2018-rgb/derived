@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stream components (dev)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    body { margin: 0; background: #0c0e14; padding: 24px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    h1 { color: #f1f3f9; font-size: 20px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+  <script>
+    window.RESEARCHIUM_STUDIO_URL = 'http://127.0.0.1:5050';
+    window.RESEARCHIUM_API_URL = 'http://127.0.0.1:4000';
+  </script>
+</head>
+<body>
+  <h1>Researchium stream components (Vite dev)</h1>
+  <p style="color:#9aa3b8;margin-bottom:24px">Sign in via studio-lobby first, then open this page with ?room=your-slug</p>
+  <div class="grid">
+    <div id="platforms"></div>
+    <div id="viewers"></div>
+    <div id="controls"></div>
+    <div id="chat"></div>
+  </div>
+  <script type="module" src="/src/dev.jsx"></script>
+</body>
+</html>

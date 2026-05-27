@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:4000 http://localhost:4000; img-src 'self'; frame-ancestors 'none'; base-uri 'self'"/>
+  <title>Join Studio – Researchium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --card: #fff;
+      --accent: #2563eb;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #f1f3f9;
+    }
+    .card {
+      background: var(--card);
+      color: #0f172a;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+    h1 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    p { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+    label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .err { color: #dc2626; font-size: 13px; margin-bottom: 12px; display: none; }
+    .err.show { display: block; }
+    a { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Join studio</h1>
+    <p id="roomHint">Enter your name to join as a guest.</p>
+    <div class="err" id="joinErr"></div>
+    <label for="guestName">Your name</label>
+    <input id="guestName" type="text" placeholder="Your name" autocomplete="name"/>
+    <button type="button" class="btn" id="btnJoin">Join studio</button>
+    <p style="margin-top:16px;font-size:12px;text-align:center">
+      <a href="studio-lobby.html">Host sign in</a>
+    </p>
+  </div>
+  <script src="js/studio-auth.js"></script>
+  <script src="js/studio-api.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const room = params.get('room') || '';
+    const token = params.get('token') || '';
+
+    if (!room) {
+      document.getElementById('joinErr').textContent = 'Missing room link. Ask the host for an invite.';
+      document.getElementById('joinErr').classList.add('show');
+      document.getElementById('btnJoin').disabled = true;
+    } else {
+      document.getElementById('roomHint').textContent = `Joining room: ${room}`;
+    }
+
+    document.getElementById('btnJoin').addEventListener('click', async () => {
+      const name = document.getElementById('guestName').value.trim();
+      const errEl = document.getElementById('joinErr');
+      errEl.classList.remove('show');
+      if (!name) {
+        errEl.textContent = 'Enter your name.';
+        errEl.classList.add('show');
+        return;
+      }
+      if (!token) {
+        errEl.textContent = 'Missing invite token. Use the full link from your host.';
+        errEl.classList.add('show');
+        return;
+      }
+      const btn = document.getElementById('btnJoin');
+      btn.disabled = true;
+      try {
+        const data = await window.ResearchiumStudioApi.joinRoom(room, token, name);
+        sessionStorage.setItem(
+          'researchium_studio_session',
+          JSON.stringify({
+            roomSlug: room,
+            inviteToken: token,
+            role: 'guest',
+            peerId: data.peerId,
+            signalingToken: data.signalingToken,
+            signalingUrl: data.signalingUrl,
+            guest: data.guest,
+          })
+        );
+        sessionStorage.setItem(
+          'researchium_join_profile',
+          JSON.stringify({ name, title: 'Guest' })
+        );
+        sessionStorage.setItem('researchium_media_granted', '0');
+        location.href = 'studio.html?guest=1';
+      } catch (e) {
+        errEl.textContent =
+          e.message === 'invalid_invite' ? 'Invite link expired or invalid.' : 'Could not join. Is the API running?';
+        errEl.classList.add('show');
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

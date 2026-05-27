@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
+<title>Researchium Stream — Live Knowledge Broadcasting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  /* ===== DESIGN TOKENS (Researchium Stream Studio — derived.co.in) ===== */
+  :root {
+    --bg:       #0c0e14;
+    --bg2:      #141824;
+    --bg3:      #1c2233;
+    --surface:  #1c2233;
+    --border:   rgba(255, 255, 255, 0.08);
+    --border2:  rgba(255, 255, 255, 0.14);
+    --cyan:     #8b5cf6;
+    --cyan2:    #6d28d9;
+    --violet:   #8b5cf6;
+    --violet2:  #6d28d9;
+    --gold:     #f59e0b;
+    --red:      #ef4444;
+    --green:    #10b981;
+    --text:     #f1f3f9;
+    --muted:    #9aa3b8;
+    --faint:    #5c6578;
+    --accent-soft: #c4b5fd;
+    --radius:   12px;
+    --shadow:   0 8px 32px rgba(0, 0, 0, 0.35);
+    --ff-head:  'Plus Jakarta Sans', system-ui, sans-serif;
+    --ff-mono:  'DM Mono', ui-monospace, monospace;
+    --ff-body:  'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  /* ===== RESET ===== */
+  *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--ff-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  ul { list-style: none; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 3px; }
+
+  /* ===== UTILITY ===== */
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--ff-mono); }
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--ff-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--accent-soft); background: rgba(139, 92, 246, 0.12);
+  }
+  .tag::before { content:''; width:6px; height:6px; border-radius:50%; background: var(--cyan); animation: blink 1.8s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* ===== CANVAS BACKGROUND ===== */
+  #bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; opacity: .55;
+  }
+
+  /* ===== GRID OVERLAY ===== */
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    background: rgba(12, 14, 20, 0.88);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; gap: 24px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--violet) 0%, var(--cyan2) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--ff-mono); font-size: 15px; font-weight: 500; color: #fff;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-family: var(--ff-head); font-size: 19px; font-weight: 500; letter-spacing: .01em;
+    color: #fff;
+  }
+  .logo-text span { color: var(--gold); }
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+  }
+  .nav-links a {
+    font-size: 13px; color: var(--muted); letter-spacing: .03em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a.active { color: var(--accent-soft); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 20px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all .22s; border: none; font-family: var(--ff-body);
+    letter-spacing: .02em;
+  }
+  .btn-ghost {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--border2); color: #fff; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--violet) 0%, var(--cyan2) 120%);
+    color: #fff; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 28px rgba(139, 92, 246, 0.5); transform: translateY(-1px); }
+  .btn-live {
+    background: rgba(239, 68, 68, 0.12);
+    color: var(--red); border: 1px solid rgba(239, 68, 68, 0.35);
+  }
+  .btn-live::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--red); animation: blink 1.2s ease-in-out infinite;
+  }
+  .btn-live:hover { background: rgba(239, 68, 68, 0.2); }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative; z-index: 10;
+    padding: 160px 0 100px;
+    min-height: 100vh;
+    display: flex; align-items: center;
+  }
+  .hero-inner {
+    max-width: 720px;
+  }
+  .hero-eyebrow { margin-bottom: 20px; }
+  .hero-heading {
+    font-family: var(--ff-head);
+    font-size: clamp(40px, 5.5vw, 68px);
+    font-weight: 700; line-height: 1.08;
+    color: #fff; letter-spacing: -.02em;
+    margin-bottom: 22px;
+  }
+  .hero-heading em {
+    font-style: normal; font-weight: 800;
+    background: linear-gradient(135deg, var(--violet) 0%, var(--gold) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--muted); max-width: 440px;
+    line-height: 1.75; margin-bottom: 36px;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 48px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: var(--ff-head); font-size: 32px; font-weight: 500; color: #fff;
+    letter-spacing: -.02em;
+  }
+  .stat-num span { color: var(--gold); }
+  .stat-label { font-size: 12px; color: var(--muted); font-family: var(--ff-mono); letter-spacing: .06em; }
+
+  .mini-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: rgba(255,255,255,.05); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s; font-size: 12px;
+  }
+  .mini-btn:hover { background: rgba(255,255,255,.1); }
+
+  /* ===== SECTION SHARED ===== */
+  section { position: relative; z-index: 10; }
+  .section-head {
+    text-align: center; margin-bottom: 64px;
+  }
+  .section-head .tag { margin-bottom: 16px; }
+  .section-title {
+    font-family: var(--ff-head); font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700; color: #fff; line-height: 1.1;
+    letter-spacing: -.01em; margin-bottom: 14px;
+  }
+  .section-title em { font-style: normal; font-weight: 700; color: var(--accent-soft); }
+  .section-desc { font-size: 15px; color: var(--muted); max-width: 520px; margin: 0 auto; line-height: 1.75; }
+
+  /* ===== LIVE STREAMS GRID ===== */
+  .streams-section { padding: 100px 0; }
+  .streams-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  .streams-title { font-family: var(--ff-head); font-size: 36px; font-weight: 700; color: #fff; }
+  .streams-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .scard {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+    cursor: pointer;
+  }
+  .scard:hover {
+    border-color: var(--border2); transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+  }
+  .scard-thumb {
+    aspect-ratio: 16/9; position: relative;
+    overflow: hidden;
+  }
+  .scard-canvas { width:100%;height:100%;display:block; }
+  .scard-badge {
+    position: absolute; top: 10px; left: 10px;
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
+    border-radius: 6px; padding: 4px 8px;
+    font-family: var(--ff-mono); font-size: 10px;
+  }
+  .badge-live { color: var(--red); }
+  .badge-live::before { content:'● '; animation: blink 1s infinite; }
+  .badge-upcoming { color: var(--gold); }
+  .badge-upcoming::before { content:'◆ '; }
+  .badge-recorded { color: var(--muted); }
+  .badge-recorded::before { content:'▶ '; }
+  .scard-viewers {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
+    border-radius: 6px; padding: 3px 8px;
+    font-family: var(--ff-mono); font-size: 10px; color: #fff;
+  }
+  .scard-body { padding: 14px 16px; }
+  .scard-cat {
+    font-family: var(--ff-mono); font-size: 10px; color: var(--accent-soft);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px;
+  }
+  .scard-title {
+    font-family: var(--ff-head); font-size: 17px; font-weight: 500;
+    color: #fff; line-height: 1.3; margin-bottom: 8px;
+  }
+  .scard-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--muted); font-family: var(--ff-mono);
+  }
+  .scard-avatar {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--violet), var(--cyan));
+  }
+
+  /* ===== FEATURES ===== */
+  .features-section { padding: 100px 0; }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .feat {
+    background: var(--bg3); padding: 36px 28px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background .25s;
+    position: relative; overflow: hidden;
+  }
+  .feat:hover { background: var(--surface); }
+  .feat:nth-child(3n) { border-right: none; }
+  .feat:nth-child(n+4) { border-bottom: none; }
+  .feat-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 18px;
+  }
+  .feat-title {
+    font-family: var(--ff-head); font-size: 20px; font-weight: 500;
+    color: #fff; margin-bottom: 8px;
+  }
+  .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .feat-glow {
+    position: absolute; width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+    bottom: -30px; right: -30px; pointer-events: none;
+  }
+
+  /* ===== HOW IT WORKS ===== */
+  .how-section { padding: 100px 0; }
+  .steps { display: flex; flex-direction: column; gap: 0; max-width: 800px; margin: 0 auto; }
+  .step {
+    display: grid; grid-template-columns: 64px 1fr;
+    gap: 28px; padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: var(--ff-head); font-size: 48px; font-weight: 700;
+    color: var(--faint); line-height: 1; padding-top: 4px;
+    transition: color .3s;
+  }
+  .step:hover .step-num { color: var(--cyan); }
+  .step-body {}
+  .step-title {
+    font-family: var(--ff-head); font-size: 26px; font-weight: 500;
+    color: #fff; margin-bottom: 8px;
+  }
+  .step-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .step-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .step-tag {
+    font-family: var(--ff-mono); font-size: 10px; color: var(--violet);
+    background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.22);
+    padding: 3px 9px; border-radius: 20px;
+  }
+
+  /* ===== ARCHITECTURE ===== */
+  .arch-section { padding: 100px 0; }
+  .arch-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    align-items: stretch; margin-bottom: 28px;
+  }
+  .arch-panel {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; min-height: 380px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .arch-panel-title {
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  #researchStack {
+    display: flex; flex-direction: column; gap: 8px; flex: 1;
+  }
+  .stack-layer {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; text-align: left;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px;
+    cursor: pointer; color: inherit; font-family: inherit;
+    transition: border-color .2s, transform .2s, box-shadow .2s;
+    position: relative; overflow: hidden;
+  }
+  .stack-layer:hover { border-color: var(--border2); transform: translateX(4px); }
+  .stack-layer.is-active {
+    border-color: var(--layer-color, var(--cyan));
+    box-shadow: 0 0 24px color-mix(in srgb, var(--layer-color, var(--cyan)) 25%, transparent);
+  }
+  .stack-layer-bar {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--layer-color, var(--cyan));
+    opacity: 0; transition: opacity .2s;
+  }
+  .stack-layer.is-active .stack-layer-bar { opacity: 1; }
+  .stack-layer-idx {
+    font-size: 10px; color: var(--faint); width: 22px; flex-shrink: 0;
+  }
+  .stack-layer-body { flex: 1; min-width: 0; }
+  .stack-layer-label {
+    display: block; font-size: 13px; font-weight: 500; color: #fff;
+  }
+  .stack-layer-short {
+    display: block; font-size: 11px; color: var(--muted); margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #webrtcPipeline {
+    width: 100%; height: 200px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg);
+  }
+  .pipeline-steps {
+    list-style: none; display: flex; flex-direction: column; gap: 6px;
+    font-size: 11px; color: var(--text);
+  }
+  .pipeline-steps li {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+  }
+  .pipeline-step-n {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(139, 92, 246, 0.2); color: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; flex-shrink: 0;
+  }
+  .pipeline-step-role {
+    margin-left: auto; color: var(--muted); font-size: 10px;
+  }
+  .arch-code-wrap {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .arch-code-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    font-family: var(--ff-mono); font-size: 10px; color: var(--muted);
+  }
+  .arch-code-head span:last-child { color: var(--cyan); }
+  #archCodePreview {
+    margin: 0; padding: 18px 20px;
+    font-family: var(--ff-mono); font-size: 11px; line-height: 1.65;
+    color: #a8b4e8; overflow-x: auto; white-space: pre;
+    min-height: 200px;
+  }
+  .arch-infra-wrap {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; margin-bottom: 28px;
+  }
+  .arch-infra-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; gap: 12px; flex-wrap: wrap;
+  }
+  .arch-infra-hint {
+    font-family: var(--ff-mono); font-size: 10px; color: var(--muted);
+  }
+  #infraDiagram {
+    width: 100%; height: min(520px, 72vh); min-height: 360px;
+    border-radius: 12px; border: 1px solid var(--border);
+    background: var(--bg); cursor: pointer;
+  }
+
+  /* ===== BROADCAST BANNER ===== */
+  .broadcast-section { padding: 80px 0; }
+  .broadcast-inner {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.14) 0%, rgba(245, 158, 11, 0.06) 100%);
+    border: 1px solid var(--border2);
+    border-radius: 20px; padding: 60px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 40px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .broadcast-inner::before {
+    content: '';
+    position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+    right: -100px; top: -100px; pointer-events: none;
+  }
+  .broadcast-heading {
+    font-family: var(--ff-head); font-size: clamp(28px, 3.5vw, 46px);
+    font-weight: 300; color: #fff; line-height: 1.15; margin-bottom: 12px;
+  }
+  .broadcast-heading em { font-style: normal; font-weight: 700; color: var(--gold); }
+  .broadcast-desc { font-size: 14px; color: var(--muted); max-width: 500px; line-height: 1.75; }
+  .broadcast-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ===== PRICING ===== */
+  .pricing-section { padding: 100px 0; }
+  .pricing-toggle {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 48px;
+    justify-content: center;
+  }
+  .toggle-label { font-size: 13px; color: var(--muted); font-family: var(--ff-mono); }
+  .toggle-label.active { color: #fff; }
+  .toggle-switch {
+    width: 44px; height: 24px; background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 12px; cursor: pointer; position: relative; transition: background .2s;
+  }
+  .toggle-switch.on { background: var(--violet); }
+  .toggle-knob {
+    position: absolute; top: 2px; left: 2px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; transition: transform .2s;
+  }
+  .toggle-switch.on .toggle-knob { transform: translateX(20px); }
+  .save-badge {
+    font-family: var(--ff-mono); font-size: 10px; color: var(--green);
+    background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 2px 8px; border-radius: 10px;
+  }
+  .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .plan {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px 28px;
+    transition: border-color .25s, transform .25s;
+    position: relative; overflow: hidden;
+  }
+  .plan:hover { border-color: var(--border2); transform: translateY(-4px); }
+  .plan.featured {
+    border-color: var(--violet); background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .plan.featured::before {
+    content: 'Most Popular';
+    position: absolute; top: 16px; right: 16px;
+    font-family: var(--ff-mono); font-size: 9px; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--violet);
+    background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35);
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .plan-name { font-family: var(--ff-head); font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .plan-desc { font-size: 12px; color: var(--muted); margin-bottom: 24px; font-family: var(--ff-mono); }
+  .plan-price {
+    font-family: var(--ff-head); color: #fff; margin-bottom: 24px;
+    display: flex; align-items: flex-end; gap: 4px;
+  }
+  .price-num { font-size: 52px; font-weight: 300; line-height: 1; }
+  .price-period { font-size: 14px; color: var(--muted); padding-bottom: 6px; }
+  .plan-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+  .plan-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .pf {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--muted);
+  }
+  .pf-dot {
+    width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+  }
+  .pf-dot.yes { background: rgba(16, 185, 129, 0.15); color: var(--green); }
+  .pf-dot.no  { background: rgba(255,255,255,.05); color: var(--faint); }
+  .plan .btn { width: 100%; justify-content: center; }
+  .plan.featured .btn-primary { box-shadow: 0 4px 24px rgba(139, 92, 246, 0.45); }
+
+  /* ===== DESTINATIONS ===== */
+  .destinations-section { padding: 80px 0; overflow: hidden; }
+  .dest-track-wrap { overflow: hidden; position: relative; }
+  .dest-track-wrap::before, .dest-track-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none;
+  }
+  .dest-track-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+  .dest-track-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+  .dest-track {
+    display: flex; gap: 12px; width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+  .dest-track-wrap:hover .dest-track { animation-play-state: paused; }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .dest-chip2 {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 16px;
+    font-size: 13px; color: var(--text); white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .dest-icon { font-size: 16px; }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-section { padding: 100px 0; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px;
+    transition: border-color .25s;
+  }
+  .testi:hover { border-color: var(--border2); }
+  .testi-quote {
+    font-family: var(--ff-head); font-style: normal; font-weight: 500;
+    font-size: 17px; color: var(--text); line-height: 1.55;
+    margin-bottom: 20px;
+  }
+  .testi-quote::before { content: '\201C'; color: var(--gold); }
+  .testi-quote::after  { content: '\201D'; color: var(--gold); }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .testi-name { font-size: 13px; font-weight: 500; color: #fff; }
+  .testi-role { font-size: 11px; color: var(--muted); font-family: var(--ff-mono); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 64px 0 32px; position: relative; z-index: 10;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 48px;
+  }
+  .footer-brand {}
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
+  .footer-col-title {
+    font-family: var(--ff-mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); margin-bottom: 16px;
+  }
+  .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { font-size: 13px; color: var(--muted); transition: color .2s; }
+  .footer-col a:hover { color: #fff; }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 28px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); font-family: var(--ff-mono);
+  }
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .fade-in {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== HAMBURGER (mobile) ===== */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: .2s; }
+
+  /* ===== MOBILE NAV DRAWER ===== */
+  .mobile-nav {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(4,4,15,.97); backdrop-filter: blur(20px);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-family: var(--ff-head); font-size: 28px; font-weight: 300; color: var(--muted);
+    transition: color .2s;
+  }
+  .mobile-nav a:hover { color: #fff; }
+  .mobile-close {
+    position: absolute; top: 20px; right: 24px;
+    font-size: 28px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: inherit;
+  }
+
+  /* ===== SEARCH BAR ===== */
+  .search-wrap { position: relative; max-width: 360px; }
+  .search-wrap input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 10px 40px 10px 16px;
+    font-size: 13px; font-family: var(--ff-mono); color: #fff;
+    outline: none; transition: border-color .2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15); }
+  .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .streams-grid { grid-template-columns: 1fr 1fr; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .plans-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .nav-links, .nav-right { display: none; }
+    .hamburger { display: flex; }
+    .broadcast-inner { grid-template-columns: 1fr; }
+    .arch-layout { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .streams-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND CANVAS -->
+<canvas id="bg-canvas"></canvas>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Mobile navigation">
+  <button type="button" class="mobile-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+  <a href="#streams" data-nav-close>Live Streams</a>
+  <a href="#features" data-nav-close>Features</a>
+  <a href="#architecture" data-nav-close>Architecture</a>
+  <a href="#how" data-nav-close>How It Works</a>
+  <a href="#pricing" data-nav-close>Pricing</a>
+  <a href="stream-dashboard.html" class="btn btn-primary" data-nav-close>Start Broadcasting</a>
+</div>
+
+<!-- NAVIGATION -->
+<nav role="navigation" aria-label="Main navigation">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo" aria-label="Researchium Stream home">
+      <div class="logo-mark" aria-hidden="true">R∿</div>
+      <span class="logo-text">Researchium<span>Stream</span></span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#streams" class="active">Live Streams</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="studio-lobby.html?manual=1" class="btn btn-ghost">Sign in</a>
+      <a href="stream-dashboard.html" class="btn btn-primary">Start Broadcasting</a>
+    </div>
+    <button type="button" class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <span class="tag">Live Research Broadcasting</span>
+        </div>
+        <h1 class="hero-heading">
+          Broadcast your<br/>
+          <em>research</em> to<br/>
+          the world
+        </h1>
+        <p class="hero-sub">
+          Researchium Stream is the live broadcasting platform built for scientists, academics, and researchers. Stream experiments, lectures, and discoveries to every platform simultaneously.
+        </p>
+        <div class="hero-actions">
+          <a href="stream-dashboard.html" class="btn btn-primary" style="padding:12px 28px;font-size:14px">
+            ▶ &nbsp;Start Your First Stream
+          </a>
+          <a href="#streams" class="btn btn-ghost" style="padding:12px 24px;font-size:14px">
+            Browse Live Now
+          </a>
+        </div>
+        <div class="hero-stats" role="region" aria-label="Platform statistics">
+          <div class="stat-item">
+            <div class="stat-num">12<span>K+</span></div>
+            <div class="stat-label">Researchers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">340<span>+</span></div>
+            <div class="stat-label">Institutions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">2.4<span>M</span></div>
+            <div class="stat-label">Hours streamed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE DESTINATIONS -->
+<section class="destinations-section" aria-label="Supported platforms">
+  <div class="container" style="margin-bottom:20px">
+    <div class="section-head">
+      <span class="tag">Multi-platform</span>
+      <h2 class="section-title" style="font-size:clamp(24px,3vw,40px)">Stream everywhere, simultaneously</h2>
+    </div>
+  </div>
+  <div class="dest-track-wrap">
+    <div class="dest-track" id="destTrack">
+      <!-- duplicated for seamless loop -->
+    </div>
+  </div>
+</section>
+
+<!-- LIVE STREAMS -->
+<section class="streams-section" id="streams" aria-label="Live and upcoming streams">
+  <div class="container">
+    <div class="streams-header">
+      <div>
+        <span class="tag" style="margin-bottom:10px;display:inline-flex">On air now</span>
+        <h2 class="streams-title">Research Streams</h2>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="search-wrap">
+          <input type="text" placeholder="Search topics…" aria-label="Search streams"/>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+        </div>
+        <a href="#" class="btn btn-ghost">View all →</a>
+      </div>
+    </div>
+    <div class="streams-grid" id="streamsGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features" aria-label="Features">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="tag">Platform capabilities</span>
+      <h2 class="section-title">Everything researchers <em>need</em></h2>
+      <p class="section-desc">From single-researcher livestreams to global multi-institution conferences — one platform, every tool.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">📡</div>
+        <div class="feat-title">Multi-platform broadcasting</div>
+        <p class="feat-desc">Stream simultaneously to YouTube, Twitch, LinkedIn, Facebook, and 30+ more platforms with a single click. No bandwidth overhead on your end.</p>
+        <div class="feat-glow"></div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">🔬</div>
+        <div class="feat-title">Research Studio</div>
+        <p class="feat-desc">Browser-based production suite purpose-built for science — overlays for data visualisation, equation rendering, molecular structures, and live graphs.</p>
+        <div class="feat-glow"></div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">💬</div>
+        <div class="feat-title">Unified peer Q&A</div>
+        <p class="feat-desc">Aggregate chat from all destinations into one moderated feed. Upvote questions, pin important peer insights, and respond without switching tabs.</p>
+        <div class="feat-glow"></div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">🤖</div>
+        <div class="feat-title">AI transcription & clipping</div>
+        <p class="feat-desc">Auto-generate timestamped transcripts and highlight reels from every session. 99-language support for global collaboration.</p>
+        <div class="feat-glow"></div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">🔒</div>
+        <div class="feat-title">Secure gated sessions</div>
+        <p class="feat-desc">Optional gated sessions with room tokens and TLS in production. RTMPS to destinations; WebRTC signaling uses short-lived JWTs (see Architecture).</p>
+        <div class="feat-glow"></div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon" aria-hidden="true">📊</div>
+        <div class="feat-title">Audience analytics</div>
+        <p class="feat-desc">Cross-platform watch time, drop-off points, geographic reach, and citation impact scoring — all in a single research dashboard.</p>
+        <div class="feat-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="arch-section" id="architecture" aria-label="Platform architecture">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="tag">System design</span>
+      <h2 class="section-title">From UI to <em>CDN</em></h2>
+      <p class="section-desc">Next.js and WebRTC up front; Socket.IO signaling, mediasoup SFU, FFmpeg ABR, HLS, and NGINX at the edge.</p>
+    </div>
+    <div class="arch-infra-wrap fade-in">
+      <div class="arch-infra-head">
+        <h3 class="arch-panel-title">Production deployment</h3>
+        <span class="arch-infra-hint">Click a node to view service scaffold</span>
+      </div>
+      <canvas id="infraDiagram" aria-label="Production deployment architecture diagram"></canvas>
+    </div>
+    <div class="arch-layout">
+      <div class="arch-panel fade-in">
+        <h3 class="arch-panel-title">Research platform layers</h3>
+        <div id="researchStack"></div>
+      </div>
+      <div class="arch-panel fade-in">
+        <h3 class="arch-panel-title">WebRTC media path</h3>
+        <canvas id="webrtcPipeline" aria-label="Animated WebRTC pipeline diagram"></canvas>
+        <div id="webrtcSteps"></div>
+      </div>
+    </div>
+    <div class="arch-code-wrap fade-in">
+      <div class="arch-code-head">
+        <span class="mono" id="archCodePath">services/ + apps/web</span>
+        <span class="mono" id="archCodeLabel">react</span>
+      </div>
+      <pre id="archCodePreview" aria-live="polite"></pre>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how" aria-label="How it works">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="tag">Workflow</span>
+      <h2 class="section-title">From lab bench <em>to live</em></h2>
+      <p class="section-desc">Set up in minutes. No engineering team required.</p>
+    </div>
+    <div class="steps" role="list">
+      <div class="step fade-in" role="listitem">
+        <div class="step-num" aria-hidden="true">01</div>
+        <div class="step-body">
+          <h3 class="step-title">Create your research channel</h3>
+          <p class="step-desc">Sign up and build your researcher profile — add your institution, ORCID, research domains, and co-authors. Your channel becomes your public broadcast identity.</p>
+          <div class="step-tags">
+            <span class="step-tag">ORCID integration</span>
+            <span class="step-tag">DOI linking</span>
+            <span class="step-tag">Institution badge</span>
+          </div>
+        </div>
+      </div>
+      <div class="step fade-in" role="listitem">
+        <div class="step-num" aria-hidden="true">02</div>
+        <div class="step-body">
+          <h3 class="step-title">Connect your platforms</h3>
+          <p class="step-desc">Link your YouTube, LinkedIn, Twitch, Facebook, or any custom RTMP endpoint in one click. Researchium Stream fans your signal out to all destinations in real time.</p>
+          <div class="step-tags">
+            <span class="step-tag">30+ platforms</span>
+            <span class="step-tag">Custom RTMP</span>
+            <span class="step-tag">OAuth one-click</span>
+          </div>
+        </div>
+      </div>
+      <div class="step fade-in" role="listitem">
+        <div class="step-num" aria-hidden="true">03</div>
+        <div class="step-body">
+          <h3 class="step-title">Set up your stream</h3>
+          <p class="step-desc">Use Research Studio in your browser, or connect OBS, vMix, or any RTMP encoder. Add your lab camera, screen share, slides, data overlays, and invite remote co-presenters via link.</p>
+          <div class="step-tags">
+            <span class="step-tag">Browser studio</span>
+            <span class="step-tag">OBS/vMix/Ecamm</span>
+            <span class="step-tag">Guest invite link</span>
+            <span class="step-tag">Data overlays</span>
+          </div>
+        </div>
+      </div>
+      <div class="step fade-in" role="listitem">
+        <div class="step-num" aria-hidden="true">04</div>
+        <div class="step-body">
+          <h3 class="step-title">Go live & engage your audience</h3>
+          <p class="step-desc">Hit broadcast. All platforms go live simultaneously. Manage your unified Q&A feed, respond to peer questions, and watch real-time analytics across channels from one dashboard.</p>
+          <div class="step-tags">
+            <span class="step-tag">One-click broadcast</span>
+            <span class="step-tag">Unified chat</span>
+            <span class="step-tag">Live analytics</span>
+          </div>
+        </div>
+      </div>
+      <div class="step fade-in" role="listitem">
+        <div class="step-num" aria-hidden="true">05</div>
+        <div class="step-body">
+          <h3 class="step-title">Archive & share your findings</h3>
+          <p class="step-desc">Every session is automatically transcribed, chaptered, and saved. AI generates highlight clips, and the full recording is indexed for citation and DOI assignment through our academic partners.</p>
+          <div class="step-tags">
+            <span class="step-tag">Auto-transcript</span>
+            <span class="step-tag">AI clips</span>
+            <span class="step-tag">DOI assignment</span>
+            <span class="step-tag">VOD library</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" aria-label="Testimonials from researchers">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="tag">Community voices</span>
+      <h2 class="section-title">Trusted by <em>leading</em> researchers</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi fade-in">
+        <p class="testi-quote">We streamed our entire 3-day symposium to seven platforms at once. The unified chat meant we never missed a question from the remote attendees.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#8b5cf6,#f59e0b)"></div>
+          <div>
+            <div class="testi-name">Prof. Lena Hartmann</div>
+            <div class="testi-role mono">Computational Biology · ETH Zürich</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi fade-in">
+        <p class="testi-quote">The auto-transcript and AI clipping feature alone saved my team 40 hours of post-production per conference. Remarkable.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#8b5cf6)"></div>
+          <div>
+            <div class="testi-name">Dr. James O. Adeyemi</div>
+            <div class="testi-role mono">Climate Physics · MIT</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi fade-in">
+        <p class="testi-quote">My weekly lab stream grew from 80 to 14,000 subscribers in four months. Researchium Stream made science communication effortless.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6d28d9,#ef4444)"></div>
+          <div>
+            <div class="testi-name">Yuki Tanaka, PhD</div>
+            <div class="testi-role mono">Materials Science · Kyoto University</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BROADCAST CTA BANNER -->
+<section class="broadcast-section" aria-label="Call to action">
+  <div class="container">
+    <div class="broadcast-inner fade-in">
+      <div>
+        <span class="tag" style="margin-bottom:16px">Ready to broadcast?</span>
+        <h2 class="broadcast-heading">Your research deserves a<br/><em>global audience</em></h2>
+        <p class="broadcast-desc">Join 12,000+ researchers already broadcasting their work. Start free — no credit card required.</p>
+      </div>
+      <div class="broadcast-actions">
+        <a href="stream-dashboard.html" class="btn btn-primary" style="padding:14px 32px;font-size:14px;white-space:nowrap">▶ &nbsp;Start broadcasting free</a>
+        <a href="#" class="btn btn-live" style="padding:12px 24px;font-size:14px;white-space:nowrap">Browse live streams</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing" aria-label="Pricing plans">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="tag">Pricing</span>
+      <h2 class="section-title">Plans for every <em>researcher</em></h2>
+      <p class="section-desc">From individual scientists to entire research institutions.</p>
+    </div>
+
+    <div class="pricing-toggle" role="group" aria-label="Billing cycle toggle">
+      <span class="toggle-label active" id="monthlyLabel">Monthly</span>
+      <div class="toggle-switch" id="billingToggle" role="switch" aria-checked="false" tabindex="0">
+        <div class="toggle-knob"></div>
+      </div>
+      <span class="toggle-label" id="annualLabel">Annual</span>
+      <span class="save-badge" id="saveBadge" style="opacity:0">Save 20%</span>
+    </div>
+
+    <div class="plans-grid" role="list">
+      <div class="plan fade-in" role="listitem">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc mono">Solo researchers & students</div>
+        <div class="plan-price">
+          <span class="price-num" id="price1">$0</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features" aria-label="Starter plan features">
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> 2 destination platforms</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> 720p HD streaming</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> Unified chat dashboard</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> Basic analytics</li>
+          <li class="pf"><span class="pf-dot no" aria-hidden="true">—</span> <span style="color:var(--faint)">Researchium watermark</span></li>
+          <li class="pf"><span class="pf-dot no" aria-hidden="true">—</span> <span style="color:var(--faint)">AI transcription</span></li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="justify-content:center">Get started free</a>
+      </div>
+
+      <div class="plan featured fade-in" role="listitem" aria-label="Most popular plan">
+        <div class="plan-name">Scholar</div>
+        <div class="plan-desc mono">Active research broadcasters</div>
+        <div class="plan-price">
+          <span class="price-num" id="price2">$29</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features" aria-label="Scholar plan features">
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> 6 destination platforms</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> 1080p Full HD streaming</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> No watermark</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> AI transcription (50 hrs/mo)</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> AI highlight clips</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> Gated session passwords</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="justify-content:center">Start 7-day free trial</a>
+      </div>
+
+      <div class="plan fade-in" role="listitem">
+        <div class="plan-name">Institution</div>
+        <div class="plan-desc mono">Labs, departments & conferences</div>
+        <div class="plan-price">
+          <span class="price-num" id="price3">$149</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features" aria-label="Institution plan features">
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> Unlimited platforms</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> 4K passthrough streaming</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> Unlimited AI transcription</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> DOI assignment & archival</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> SSO + team management</li>
+          <li class="pf"><span class="pf-dot yes" aria-hidden="true">✓</span> White-label & API access</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="justify-content:center">Contact us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="logo-mark" aria-hidden="true">R∿</div>
+          <span class="logo-text">Researchium<span>Stream</span></span>
+        </div>
+        <p class="footer-tagline">The live broadcasting platform built for scientists, researchers, and academics worldwide.</p>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <a href="#" class="mini-btn" aria-label="Twitter/X">𝕏</a>
+          <a href="#" class="mini-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="mini-btn" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Product</div>
+        <ul role="list">
+          <li><a href="#">Research Studio</a></li>
+          <li><a href="#">Live Streams</a></li>
+          <li><a href="#">AI Clips</a></li>
+          <li><a href="#">Analytics</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Resources</div>
+        <ul role="list">
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <ul role="list">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Researchium Stream. All rights reserved.</span>
+      <span>Broadcasting knowledge, one stream at a time.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================= JAVASCRIPT ========================= -->
+<script src="js/stack-layers.js"></script>
+<script src="js/infra-stack.js"></script>
+<script src="js/webrtc-pipeline.js"></script>
+<script src="js/infra-diagram.js"></script>
+<script src="js/architecture-ui.js"></script>
+<script>
+/* ===== SECURITY HELPERS ===== */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ===== BACKGROUND PARTICLE CANVAS ===== */
+(function(){
+  const c = document.getElementById('bg-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, particles = [];
+  function resize(){
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function Particle(){
+    this.x = Math.random()*W;
+    this.y = Math.random()*H;
+    this.vx = (Math.random()-.5)*.3;
+    this.vy = (Math.random()-.5)*.3;
+    this.r  = Math.random()*1.5+.3;
+    this.a  = Math.random();
+  }
+  for(let i=0;i<110;i++) particles.push(new Particle());
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(139, 92, 246, ${p.a * 0.45})`;
+      ctx.fill();
+    });
+    // draw connecting lines
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          ctx.beginPath();
+          ctx.strokeStyle=`rgba(139, 92, 246, ${.12*(1-d/130)})`;
+          ctx.lineWidth=.5;
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ===== DESTINATIONS MARQUEE ===== */
+const dests = [
+  {n:'YouTube', i:'▶'},  {n:'Twitch', i:'🎮'}, {n:'LinkedIn', i:'in'},
+  {n:'Facebook', i:'f'}, {n:'TikTok', i:'♪'},  {n:'X (Twitter)', i:'𝕏'},
+  {n:'Kick', i:'⚡'},    {n:'ResearchGate', i:'R'},{n:'Academia.edu', i:'A'},
+  {n:'Coursera Live', i:'📚'},{n:'Custom RTMP', i:'⚙'},{n:'Vimeo', i:'V'},
+  {n:'Dailymotion', i:'D'}, {n:'Rumble', i:'🔵'},{n:'PeerTube', i:'🌐'},
+];
+const track = document.getElementById('destTrack');
+// build 2× for seamless loop
+[...dests,...dests].forEach(d=>{
+  const el = document.createElement('div');
+  el.className='dest-chip2';
+  const icon = document.createElement('span');
+  icon.className='dest-icon';
+  icon.textContent=d.i;
+  el.appendChild(icon);
+  el.appendChild(document.createTextNode(d.n));
+  track.appendChild(el);
+});
+
+/* ===== STREAM CARDS DATA ===== */
+const streams = [
+  {
+    status:'live', cat:'Quantum Physics', viewers:'1,842',
+    title:'Entangled Photon Source: Double-Slit Configuration',
+    author:'Dr. A. Mercer', inst:'MIT Photonics',
+    color1:'#8b5cf6',color2:'#f59e0b'
+  },
+  {
+    status:'live', cat:'Genomics', viewers:'934',
+    title:'CRISPR-Cas9 Off-Target Analysis in Human Stem Cells',
+    author:'Prof. Sun Wei', inst:'Peking University',
+    color1:'#10b981',color2:'#6d28d9'
+  },
+  {
+    status:'upcoming', cat:'Astrophysics', viewers:'Starts in 2h',
+    title:'JWST New Exoplanet Atmospheric Spectroscopy Results',
+    author:'Dr. Elena Russo', inst:'ESA / NASA',
+    color1:'#6d28d9',color2:'#f59e0b'
+  },
+  {
+    status:'live', cat:'Neuroscience', viewers:'2,310',
+    title:'Live fMRI Session: Neural Correlates of Creativity',
+    author:'Dr. K. Patel', inst:'Stanford NeuroLab',
+    color1:'#ef4444',color2:'#8b5cf6'
+  },
+  {
+    status:'recorded', cat:'Materials Science', viewers:'12K views',
+    title:'Graphene Superconductivity at Room Temperature — Findings',
+    author:'Yuki Tanaka', inst:'Kyoto University',
+    color1:'#8b5cf6',color2:'#10b981'
+  },
+  {
+    status:'upcoming', cat:'Climate Science', viewers:'Starts in 5h',
+    title:'Antarctic Ice Core Data: 800,000-Year CO₂ Analysis',
+    author:'Dr. James Adeyemi', inst:'NCAR / MIT',
+    color1:'#f59e0b',color2:'#6d28d9'
+  },
+];
+
+const grid = document.getElementById('streamsGrid');
+streams.forEach((s,i)=>{
+  const div = document.createElement('div');
+  div.className='scard fade-in';
+  let badgeClass = s.status==='live' ? 'badge-live' : s.status==='upcoming' ? 'badge-upcoming' : 'badge-recorded';
+  let badgeText  = s.status==='live' ? 'LIVE' : s.status==='upcoming' ? 'UPCOMING' : 'RECORDED';
+  const thumb = document.createElement('div');
+  thumb.className='scard-thumb';
+  const cv = document.createElement('canvas');
+  cv.className='scard-canvas';
+  cv.id='sc'+i;
+  cv.width=400;
+  cv.height=225;
+  thumb.appendChild(cv);
+  const badgeWrap = document.createElement('div');
+  badgeWrap.className='scard-badge';
+  const badge = document.createElement('span');
+  badge.className=badgeClass;
+  badge.textContent=badgeText;
+  badgeWrap.appendChild(badge);
+  thumb.appendChild(badgeWrap);
+  const viewers = document.createElement('div');
+  viewers.className='scard-viewers';
+  viewers.textContent=s.viewers;
+  thumb.appendChild(viewers);
+  div.appendChild(thumb);
+  const body = document.createElement('div');
+  body.className='scard-body';
+  const cat = document.createElement('div');
+  cat.className='scard-cat';
+  cat.textContent=s.cat;
+  const title = document.createElement('div');
+  title.className='scard-title';
+  title.textContent=s.title;
+  const meta = document.createElement('div');
+  meta.className='scard-meta';
+  const avatar = document.createElement('div');
+  avatar.className='scard-avatar';
+  avatar.style.background=`linear-gradient(135deg,${s.color1},${s.color2})`;
+  meta.appendChild(avatar);
+  meta.appendChild(document.createTextNode(s.author));
+  const dot = document.createElement('span');
+  dot.style.color='var(--faint)';
+  dot.textContent='·';
+  meta.appendChild(dot);
+  meta.appendChild(document.createTextNode(s.inst));
+  body.append(cat, title, meta);
+  div.appendChild(body);
+  grid.appendChild(div);
+  // draw stream thumbnail canvas
+  const cv = div.querySelector('.scard-canvas');
+  const ctx = cv.getContext('2d');
+  let t2=Math.random()*10;
+  (function animate(){
+    const W=cv.width, H=cv.height;
+    const grad = ctx.createLinearGradient(0,0,W,H);
+    grad.addColorStop(0, s.color1+'33');
+    grad.addColorStop(1, s.color2+'22');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+    // wave form
+    ctx.beginPath();
+    ctx.strokeStyle = s.color1+'99';
+    ctx.lineWidth=1.5;
+    ctx.moveTo(0,H/2);
+    for(let x=0;x<W;x++){
+      const y = H/2 + Math.sin(x*.04+t2)*18 + Math.sin(x*.09+t2*1.3)*9;
+      ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // second wave
+    ctx.beginPath();
+    ctx.strokeStyle=s.color2+'66';
+    ctx.lineWidth=1;
+    ctx.moveTo(0,H/2);
+    for(let x=0;x<W;x++){
+      const y = H/2 + Math.cos(x*.06+t2*.8)*14 + Math.cos(x*.12+t2)*6;
+      ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // dots
+    for(let j=0;j<6;j++){
+      ctx.beginPath();
+      ctx.arc(
+        (Math.sin(t2+j*1.2)+1)/2*W,
+        (Math.cos(t2*.7+j)+1)/2*H,
+        2,0,Math.PI*2
+      );
+      ctx.fillStyle=s.color1+'cc';
+      ctx.fill();
+    }
+    t2+=.012;
+    requestAnimationFrame(animate);
+  })();
+});
+
+/* ===== BILLING TOGGLE ===== */
+let isAnnual = false;
+const prices = [{mo:0,yr:0},{mo:29,yr:23},{mo:149,yr:119}];
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  const tog=document.getElementById('billingToggle');
+  tog.classList.toggle('on',isAnnual);
+  tog.setAttribute('aria-checked', isAnnual);
+  document.getElementById('monthlyLabel').classList.toggle('active',!isAnnual);
+  document.getElementById('annualLabel').classList.toggle('active',isAnnual);
+  document.getElementById('saveBadge').style.opacity=isAnnual?1:0;
+  prices.forEach((p,i)=>{
+    const el=document.getElementById('price'+(i+1));
+    if(el) el.textContent=p.mo===0?'$0':'$'+(isAnnual?p.yr:p.mo);
+  });
+}
+const billingToggle = document.getElementById('billingToggle');
+billingToggle.addEventListener('click', toggleBilling);
+billingToggle.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBilling(); }
+});
+
+document.getElementById('hamburgerBtn')?.addEventListener('click', openMobileNav);
+document.getElementById('mobileNavClose')?.addEventListener('click', closeMobileNav);
+document.querySelectorAll('[data-nav-close]').forEach(el=>{
+  el.addEventListener('click', closeMobileNav);
+});
+
+/* ===== MOBILE NAV ===== */
+function openMobileNav(){
+  document.getElementById('mobileNav').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobileNav(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+/* ===== SEARCH FILTER ===== */
+document.querySelector('.search-wrap input').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('.scard').forEach(card=>{
+    const text=card.innerText.toLowerCase();
+    card.style.display=text.includes(q)||!q?'':'none';
+  });
+});
+
+/* ===== ACTIVE NAV LINK ===== */
+const sections=[{id:'streams'},{id:'features'},{id:'architecture'},{id:'how'},{id:'pricing'}];
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{
+    const el=document.getElementById(s.id);
+    if(el&&window.scrollY>=el.offsetTop-120) cur=s.id;
+  });
+  navLinks.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
+  });
+},{passive:true});
+</script>
+</body>
+</html>

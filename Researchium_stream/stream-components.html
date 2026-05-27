@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta id="cspMeta" http-equiv="Content-Security-Policy" content=""/>
+  <title>Stream components – Researchium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/stream-components.css"/>
+</head>
+<body>
+  <header>
+    <div>
+      <strong>Researchium stream components</strong>
+      <span id="roomLabel" class="room-label"></span>
+    </div>
+    <nav class="header-nav">
+      <a href="stream-dashboard.html">Dashboard</a>
+      <a href="studio.html">Studio</a>
+      <a href="studio-lobby.html">Sign in</a>
+    </nav>
+  </header>
+  <main>
+    <div id="reactBuildBanner" class="build-banner" hidden>
+      React stream UI is not built. Run <code>cd frontend && npm install && npm run build</code> in Researchium_stream.
+    </div>
+    <section class="panel panel-full">
+      <h2>PLATFORM CONNECTIONS</h2>
+      <div id="platformsMount"></div>
+    </section>
+    <section class="panel">
+      <h2>STREAM CONTROLS</h2>
+      <div id="controlsMount"></div>
+    </section>
+    <section class="panel">
+      <h2>UNIFIED CHAT</h2>
+      <div id="chatMount"></div>
+    </section>
+    <section class="panel panel-compact">
+      <h2>VIEWER COUNT</h2>
+      <div id="viewerMount"></div>
+    </section>
+  </main>
+  <div id="streamDashToast" class="stream-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/studio-env.js"></script>
+  <script src="js/studio-csp.js"></script>
+  <script>
+    document.getElementById('cspMeta')?.setAttribute('content', window.ResearchiumCspMeta || '');
+  </script>
+  <script src="js/studio-auth.js"></script>
+  <script src="js/stream-components-loader.js"></script>
+  <script src="js/stream-components-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta id="cspMeta" http-equiv="Content-Security-Policy" content=""/>
+  <title>Researchium Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #1a1d24;
+      --card: #fff;
+      --text: #f1f3f9;
+      --muted: #9aa3b8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --purple: #8b5cf6;
+      --radius: 12px;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a { color: var(--purple); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+
+    /* Login */
+    #viewAuth {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      color: #0f172a;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 48px rgba(0,0,0,.35);
+    }
+    .login-card h1 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .login-card p {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 18px;
+    }
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(139,92,246,.15);
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: #fff;
+      margin-top: 8px;
+    }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .login-error {
+      font-size: 13px;
+      color: #dc2626;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      display: none;
+    }
+    .login-error.show { display: block; }
+    .login-card--shake {
+      animation: loginCardShake 0.45s ease;
+    }
+    @keyframes loginCardShake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-8px); }
+      30% { transform: translateX(8px); }
+      45% { transform: translateX(-6px); }
+      60% { transform: translateX(6px); }
+      75% { transform: translateX(-3px); }
+    }
+    #loginBtn {
+      position: relative;
+      margin-top: 8px;
+    }
+    .login-btn-busy { display: none; }
+    #loginBtn.is-loading .login-btn-label { visibility: hidden; }
+    #loginBtn.is-loading .login-btn-busy {
+      display: inline;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .login-api-status {
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .login-api-status.show {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .login-success {
+      display: none;
+      font-size: 13px;
+      color: #15803d;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .login-success.show { display: block; }
+    .login-hint {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 16px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .admin-managed-hint a { color: var(--accent); font-weight: 600; }
+
+    /* Lobby */
+    #viewLobby { display: none; min-height: 100vh; padding: 40px 32px; }
+    #viewLobby.active { display: block; }
+    .lobby-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 32px;
+      align-items: start;
+    }
+    .host-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .host-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      position: relative;
+    }
+    .host-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border: 2px solid var(--bg);
+      border-radius: 50%;
+    }
+    .stream-title-lg {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .btn-invite {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #2a2f3a;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-invite:hover { background: #343a47; }
+    .access-card {
+      background: var(--card);
+      color: #0f172a;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.35);
+    }
+    .access-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .preview-box {
+      aspect-ratio: 16/10;
+      background: #374151;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .preview-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-placeholder {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+    .access-card p {
+      font-size: 14px;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn-allow {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-allow:hover { background: var(--accent-hover); }
+    .btn-allow.granted { background: #16a34a; }
+    .btn-allow:disabled { opacity: 0.85; cursor: default; }
+    .perm-status {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .perm-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+    .perm-chip.prompt { background: #fef3c7; color: #b45309; }
+    .perm-chip.granted { background: #dcfce7; color: #15803d; }
+    .perm-chip.denied { background: #fee2e2; color: #b91c1c; }
+    .device-controls {
+      display: none;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+    .device-controls.show { display: grid; }
+    .device-controls label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+    .device-controls select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fff;
+    }
+    .toggle-row {
+      display: flex;
+      gap: 8px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      color: #334155;
+    }
+    .toggle-btn.off {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+    .access-error {
+      font-size: 13px;
+      color: #dc2626;
+      margin-bottom: 12px;
+      display: none;
+      line-height: 1.45;
+    }
+    .access-error.show { display: block; }
+
+    /* Ready to join modal */
+    .join-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+    .join-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .join-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+    }
+    .join-card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      color: #0f172a;
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+      max-height: 95vh;
+      overflow-y: auto;
+    }
+    .join-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      color: #64748b;
+    }
+    .join-close:hover { background: #e2e8f0; }
+    .join-card h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+    .join-preview {
+      aspect-ratio: 16/10;
+      background: #111827;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .join-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .join-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .join-media-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .media-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      padding: 4px 6px 4px 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .media-pill.off { background: #fef2f2; border-color: #fecaca; }
+    .media-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .media-pill.off .media-icon-btn { background: #fee2e2; }
+    .media-pill select {
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-family: inherit;
+      color: #475569;
+      max-width: 110px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .join-field { margin-bottom: 14px; }
+    .join-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+    .join-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .join-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .join-error {
+      font-size: 13px;
+      color: #dc2626;
+      margin-bottom: 12px;
+      display: none;
+      line-height: 1.45;
+    }
+    .join-error.show { display: block; }
+    .btn-join-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 10px;
+    }
+    .btn-join-primary:hover { background: var(--accent-hover); }
+    .btn-join-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-join-secondary {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--accent);
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-join-secondary:hover { text-decoration: underline; }
+
+    .top-link {
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    @media (max-width: 800px) {
+      .lobby-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="top-link" id="topDashboardLink" href="stream-dashboard.html">← Stream dashboard</a>
+
+  <div id="viewAuth">
+    <div class="login-card" id="panelLogin">
+      <h1>Sign in to Studio</h1>
+      <p>Log in to go live from your browser.</p>
+      <div class="login-api-status" id="apiStatus" role="status"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" autocomplete="email" required placeholder="you@gmail.com"/>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" autocomplete="current-password" required placeholder="••••••••"/>
+        </div>
+        <div class="login-error" id="loginPasswordError" role="alert"></div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <span class="login-btn-label">Sign in</span>
+          <span class="login-btn-busy" aria-hidden="true">Signing in…</span>
+        </button>
+      </form>
+      <p class="login-hint">
+        <a href="#" id="showForgot">Forgot password?</a>
+      </p>
+      <p class="login-hint admin-managed-hint">
+        Need studio access? Ask your site administrator to create an account in
+        <a href="/admin.html" target="_blank" rel="noopener">Researchium admin</a>
+        → Stream hosts.
+      </p>
+    </div>
+
+    <div class="login-card" id="panelForgot" hidden>
+      <h1>Reset password</h1>
+      <p>Enter your email and we will send reset instructions if an account exists.</p>
+      <div class="login-error" id="forgotError"></div>
+      <div class="login-success" id="forgotSuccess"></div>
+      <form id="forgotForm">
+        <div class="field">
+          <label for="forgotEmail">Email</label>
+          <input id="forgotEmail" type="email" autocomplete="email" required placeholder="you@gmail.com"/>
+        </div>
+        <button type="submit" class="btn btn-primary" id="forgotBtn">Send reset link</button>
+      </form>
+      <p class="login-hint"><a href="#" id="showLoginFromForgot">Back to sign in</a></p>
+    </div>
+
+    <div class="login-card" id="panelReset" hidden>
+      <h1>Choose a new password</h1>
+      <p>Enter a new password for your account.</p>
+      <div class="login-error" id="resetError"></div>
+      <form id="resetForm">
+        <div class="field">
+          <label for="resetPassword">New password</label>
+          <input id="resetPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters"/>
+        </div>
+        <div class="field">
+          <label for="resetPassword2">Confirm password</label>
+          <input id="resetPassword2" type="password" autocomplete="new-password" required minlength="8" placeholder="Repeat password"/>
+        </div>
+        <button type="submit" class="btn btn-primary" id="resetBtn">Update password</button>
+      </form>
+      <p class="login-hint"><a href="#" id="showLoginFromReset">Back to sign in</a></p>
+    </div>
+  </div>
+
+  <div id="viewLobby">
+    <div class="lobby-grid">
+      <div>
+        <div class="host-row">
+          <div class="host-avatar" id="hostInitials">RS</div>
+          <span><strong id="hostName">You</strong>, you're hosting this stream</span>
+        </div>
+        <h1 class="stream-title-lg" id="streamTitle">Live with Researchium</h1>
+        <button type="button" class="btn-invite" id="btnInvite">👤 Copy invite link</button>
+      </div>
+      <div class="access-card">
+        <h2>Accessing your camera</h2>
+        <div class="preview-box">
+          <span class="preview-placeholder">🎥</span>
+        </div>
+        <p id="accessHint">Set up your mic and camera before you go live.</p>
+        <button type="button" class="btn-allow" id="btnAllow">Allow mic/cam access</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="joinModal" class="join-modal" aria-hidden="true" role="dialog" aria-labelledby="joinTitle">
+    <div class="join-backdrop" id="joinBackdrop"></div>
+    <div class="join-card">
+      <button type="button" class="join-close" id="joinClose" aria-label="Close">×</button>
+      <h2 id="joinTitle">Ready to join?</h2>
+      <div class="join-preview" id="joinPreview">
+        <video id="joinVideo" autoplay muted playsinline style="display:none"></video>
+        <div class="join-avatar" id="joinAvatar">RS</div>
+      </div>
+      <div class="join-media-bar">
+        <div class="media-pill off" id="pillMic">
+          <button type="button" class="media-icon-btn" id="joinMicBtn" title="Microphone" aria-pressed="false">🎤</button>
+          <select id="joinSelectAudio" title="Microphone device" disabled></select>
+        </div>
+        <div class="media-pill off" id="pillCam">
+          <button type="button" class="media-icon-btn" id="joinCamBtn" title="Camera" aria-pressed="false">📹</button>
+          <select id="joinSelectVideo" title="Camera device" disabled></select>
+        </div>
+      </div>
+      <div class="device-row" id="joinDeviceRow" style="display:none">
+        <select id="joinSelectSpeaker" title="Speaker" disabled><option>Speaker</option></select>
+      </div>
+      <div class="join-error" id="joinError"></div>
+      <div class="join-field">
+        <label for="joinName">Your name</label>
+        <input id="joinName" type="text" autocomplete="name" placeholder="Your name"/>
+      </div>
+      <div class="join-field">
+        <label for="joinTitleField">Title (optional)</label>
+        <input id="joinTitleField" type="text" placeholder="e.g. Principal Investigator"/>
+      </div>
+      <button type="button" class="btn-join-primary" id="btnJoinEnter" disabled>Enter Studio</button>
+      <button type="button" class="btn-join-secondary" id="btnJoinNoCam">Enter Studio Without Camera</button>
+    </div>
+  </div>
+
+  <script src="js/studio-gate-config.js"></script>
+  <script src="js/studio-env.js"></script>
+  <script src="js/studio-csp.js"></script>
+  <script>
+    document.getElementById('cspMeta')?.setAttribute('content', window.ResearchiumCspMeta || '');
+  </script>
+  <script src="js/studio-auth.js"></script>
+  <script src="js/studio-media.js"></script>
+  <script>
+    const auth = window.ResearchiumStudio;
+    const media = window.ResearchiumMedia;
+    const STREAM_AUTH_API_BASE =
+      window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+    const viewAuth = document.getElementById('viewAuth');
+    const viewLobby = document.getElementById('viewLobby');
+    const panels = {
+      login: document.getElementById('panelLogin'),
+      forgot: document.getElementById('panelForgot'),
+      reset: document.getElementById('panelReset'),
+    };
+    const joinModal = document.getElementById('joinModal');
+    let studioSession = null;
+    let lobbyUser = null;
+    let resetToken = new URLSearchParams(location.search).get('reset') || '';
+
+    const AUTH_ERRORS = {
+      registration_disabled:
+        'Self-registration is disabled. Your administrator must create your studio account.',
+      invalid_credentials: 'Invalid email or password.',
+      email_password_required: 'Enter email and password.',
+      invalid_email: 'Enter a valid email address.',
+      email_exists: 'An account with this email already exists.',
+      password_too_short: 'Password must be at least 8 characters.',
+      password_too_long: 'Password is too long.',
+      name_required: 'Enter your full name.',
+      token_password_required: 'Enter a new password.',
+      invalid_reset_token: 'This reset link is invalid or has expired.',
+      email_required: 'Enter your email address.',
+      password_fields_required: 'Enter your current and new password.',
+      too_many_auth_attempts: 'Too many attempts. Wait a few minutes and try again.',
+      too_many_reset_attempts: 'Too many reset requests. Try again later.',
+      not_found: 'API is outdated or missing auth routes. Restart with: npm run dev:api',
+      network_error: 'Cannot connect to server. Try again.',
+      stream_backend_unavailable:
+        'Researchium server is offline. Run npm start from the project root (port 3000).',
+      sign_in_required: 'Sign in with your studio email and password.',
+      unauthorized: 'Session expired. Sign in again.',
+      database_unavailable:
+        'Database is offline. Start Postgres and the stream API (npm run dev:api), or ask your administrator.',
+      internal_error: 'Server error. Restart the API: npm run dev:api',
+      cors_forbidden:
+        'Browser blocked API access. Open this page at http://127.0.0.1:5500/studio-lobby.html (not file://).',
+    };
+
+    function authErrorMessage(err) {
+      if (AUTH_ERRORS[err.message]) return AUTH_ERRORS[err.message];
+      if (err.message?.includes('ECONNREFUSED') || err.message?.includes('5432')) {
+        return AUTH_ERRORS.database_unavailable;
+      }
+      if (err.status === 503) return AUTH_ERRORS.database_unavailable;
+      return `Sign-in failed (${err.message || 'unknown'}).`;
+    }
+
+    function showPanel(name) {
+      Object.entries(panels).forEach(([key, el]) => {
+        if (el) el.hidden = key !== name;
+      });
+      clearAuthMessages();
+    }
+
+    function setAuthError(elId, msg) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function clearLoginPasswordError() {
+      const el = document.getElementById('loginPasswordError');
+      if (el) {
+        el.textContent = '';
+        el.classList.remove('show');
+      }
+      document.getElementById('panelLogin')?.classList.remove('login-card--shake');
+    }
+
+    function setLoginPasswordError(msg) {
+      const el = document.getElementById('loginPasswordError');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function shakeLoginCard() {
+      const card = document.getElementById('panelLogin');
+      if (!card) return;
+      card.classList.remove('login-card--shake');
+      void card.offsetWidth;
+      card.classList.add('login-card--shake');
+    }
+
+    function setLoginLoading(loading) {
+      const btn = document.getElementById('loginBtn');
+      const form = document.getElementById('loginForm');
+      if (!btn) return;
+      btn.disabled = loading;
+      btn.classList.toggle('is-loading', loading);
+      if (form) form.setAttribute('aria-busy', loading ? 'true' : 'false');
+    }
+
+    function clearAuthMessages() {
+      clearLoginPasswordError();
+      ['forgotError', 'resetError'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = '';
+          el.classList.remove('show');
+        }
+      });
+      const ok = document.getElementById('forgotSuccess');
+      if (ok) {
+        ok.textContent = '';
+        ok.classList.remove('show');
+      }
+    }
+
+    function saveStudioSession(session) {
+      sessionStorage.setItem(
+        'researchium_studio_session',
+        JSON.stringify({
+          roomSlug: session.roomSlug,
+          peerId: session.peerId,
+          signalingToken: session.signalingToken,
+          signalingUrl: session.signalingUrl,
+          stream: session.stream,
+          studio: session.studio,
+        })
+      );
+    }
+
+    async function checkApiHealth() {
+      const el = document.getElementById('apiStatus');
+      if (!el) return true;
+      try {
+        const res = await fetch(`${STREAM_AUTH_API_BASE}/healthz`, { cache: 'no-store' });
+        const data = await res.json().catch(() => ({}));
+        if (data.ok === true) {
+          el.classList.remove('show');
+          el.textContent = '';
+          return true;
+        }
+        throw new Error('down');
+      } catch {
+        el.textContent =
+          'Researchium server is offline. Run npm start from the project root (port 3000).';
+        el.classList.add('show');
+        return false;
+      }
+    }
+
+    function dashboardUrl() {
+      return (
+        window.ResearchiumStudioEnv?.streamDashboardUrl?.() ||
+        new URL('stream-dashboard.html', location.href).href
+      );
+    }
+
+    function saveStreamStudioToken(token) {
+      sessionStorage.setItem('studio_token', token);
+      const cfg = window.ResearchiumStudioGateConfig;
+      if (cfg) {
+        sessionStorage.setItem(cfg.AUTH_KEY, cfg.AUTH_VALUE);
+      }
+    }
+
+    function redirectToStreamDashboard() {
+      location.href = dashboardUrl();
+    }
+
+    function initials(name) {
+      return (name || 'RS')
+        .split(/\s+/)
+        .map((w) => w[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+    }
+
+    function showJoinError(msg) {
+      const el = document.getElementById('joinError');
+      if (msg) {
+        el.textContent = msg;
+        el.classList.add('show');
+      } else {
+        el.textContent = '';
+        el.classList.remove('show');
+      }
+    }
+
+    function fillDeviceSelect(select, devices, selectedId, fallbackLabel) {
+      select.innerHTML = '';
+      if (!devices.length) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No device';
+        select.appendChild(opt);
+        select.disabled = true;
+        return;
+      }
+      select.disabled = false;
+      devices.forEach((d, i) => {
+        const opt = document.createElement('option');
+        opt.value = d.deviceId;
+        opt.textContent = d.label || `${fallbackLabel} ${i + 1}`;
+        if (d.deviceId === selectedId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    async function refreshJoinDevices() {
+      const { cameras, microphones, speakers } = await media.enumerateDevices();
+      const prefs = media.loadPrefs();
+      fillDeviceSelect(document.getElementById('joinSelectVideo'), cameras, prefs.videoDeviceId, 'Camera');
+      fillDeviceSelect(document.getElementById('joinSelectAudio'), microphones, prefs.audioDeviceId, 'Mic');
+      const speakerSel = document.getElementById('joinSelectSpeaker');
+      if (speakers?.length && speakerSel) {
+        fillDeviceSelect(speakerSel, speakers, prefs.speakerDeviceId, 'Speaker');
+        document.getElementById('joinDeviceRow').style.display = 'flex';
+      }
+    }
+
+    function updateJoinPreview() {
+      const video = document.getElementById('joinVideo');
+      const avatar = document.getElementById('joinAvatar');
+      const hasVideo = media.isGranted() && media.videoEnabled && media.getStream()?.getVideoTracks().length;
+      if (hasVideo) {
+        media.attachPreview(video);
+        video.style.display = 'block';
+        avatar.style.display = 'none';
+      } else {
+        video.style.display = 'none';
+        avatar.style.display = 'flex';
+        avatar.textContent = initials(document.getElementById('joinName').value);
+      }
+    }
+
+    function updateJoinMediaUI() {
+      const micOn = media.isGranted() && media.audioEnabled;
+      const camOn = media.isGranted() && media.videoEnabled;
+      document.getElementById('pillMic').classList.toggle('off', !micOn);
+      document.getElementById('pillCam').classList.toggle('off', !camOn);
+      document.getElementById('joinMicBtn').setAttribute('aria-pressed', String(micOn));
+      document.getElementById('joinCamBtn').setAttribute('aria-pressed', String(camOn));
+      const nameOk = !!document.getElementById('joinName').value.trim();
+      const enterBtn = document.getElementById('btnJoinEnter');
+      enterBtn.disabled = !nameOk;
+      enterBtn.textContent = camOn ? 'Enter Studio' : 'Enter Studio';
+      updateJoinPreview();
+    }
+
+    function openJoinModal() {
+      const user = lobbyUser || auth.getUser();
+      document.getElementById('joinName').value = user?.name || '';
+      document.getElementById('joinTitleField').value = '';
+      document.getElementById('joinAvatar').textContent = initials(user?.name);
+      showJoinError('');
+      updateJoinMediaUI();
+      refreshJoinDevices();
+      joinModal.classList.add('open');
+      joinModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('joinName').focus();
+    }
+
+    function closeJoinModal() {
+      joinModal.classList.remove('open');
+      joinModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function saveJoinProfile() {
+      sessionStorage.setItem(
+        'researchium_join_profile',
+        JSON.stringify({
+          name: document.getElementById('joinName').value.trim(),
+          title: document.getElementById('joinTitleField').value.trim(),
+        })
+      );
+    }
+
+    function enterStudio({ withoutCamera = false } = {}) {
+      const name = document.getElementById('joinName').value.trim();
+      if (!name) {
+        showJoinError('Enter your name to continue.');
+        return;
+      }
+      saveJoinProfile();
+      if (withoutCamera) {
+        media.setVideoEnabled(false);
+        media.savePrefs({ videoEnabled: false });
+      } else if (media.isGranted()) {
+        media.savePrefs();
+      }
+      sessionStorage.setItem('researchium_studio_session', JSON.stringify(studioSession));
+      sessionStorage.setItem('researchium_media_granted', media.isGranted() ? '1' : '0');
+      sessionStorage.setItem('researchium_studio_no_camera', withoutCamera ? '1' : '0');
+      location.href = 'studio.html';
+    }
+
+    async function showLobby(user, session) {
+      lobbyUser = user;
+      studioSession = session;
+      viewAuth.style.display = 'none';
+      viewLobby.classList.add('active');
+      document.getElementById('hostName').textContent = user.name.split(' ')[0] || user.name;
+      document.getElementById('hostInitials').textContent = initials(user.name);
+      document.getElementById('streamTitle').textContent = session.stream.title;
+      if (!media.hasMediaDevices()) {
+        document.getElementById('btnAllow').disabled = true;
+        document.getElementById('accessHint').textContent =
+          'This browser does not support camera or microphone access.';
+      } else if (!media.isSecureContext()) {
+        document.getElementById('accessHint').textContent =
+          'Open via http://127.0.0.1 (not file://) to use the camera.';
+      }
+    }
+
+    async function initLobby() {
+      const token = auth.getToken();
+      if (!token) return;
+      try {
+        await auth.me();
+        auth.redirectToDashboard();
+      } catch {
+        auth.logout();
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearLoginPasswordError();
+      setLoginLoading(true);
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch(`${STREAM_AUTH_API_BASE}/api/stream/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        let data = {};
+        try {
+          data = await res.json();
+        } catch {
+          /* ignore */
+        }
+
+        if (res.status === 401) {
+          setLoginPasswordError('Invalid email or password');
+          shakeLoginCard();
+          return;
+        }
+
+        if (!res.ok || !data.success || !data.token) {
+          setLoginPasswordError(data.error || 'Sign-in failed. Try again.');
+          return;
+        }
+
+        saveStreamStudioToken(data.token);
+        redirectToStreamDashboard();
+      } catch {
+        setLoginPasswordError('Cannot connect to server. Try again.');
+      } finally {
+        setLoginLoading(false);
+      }
+    });
+
+    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessages();
+      const btn = document.getElementById('forgotBtn');
+      btn.disabled = true;
+      try {
+        const data = await auth.forgotPassword(document.getElementById('forgotEmail').value.trim());
+        const ok = document.getElementById('forgotSuccess');
+        ok.textContent = data.message || 'Check your email for reset instructions.';
+        if (data.resetLink) {
+          ok.textContent += ` Dev link: ${data.resetLink}`;
+        }
+        ok.classList.add('show');
+      } catch (err) {
+        setAuthError('forgotError', authErrorMessage(err));
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthMessages();
+      if (!resetToken) {
+        setAuthError('resetError', 'Missing reset token. Request a new link.');
+        return;
+      }
+      const pw = document.getElementById('resetPassword').value;
+      const pw2 = document.getElementById('resetPassword2').value;
+      if (pw !== pw2) {
+        setAuthError('resetError', 'Passwords do not match.');
+        return;
+      }
+      const btn = document.getElementById('resetBtn');
+      btn.disabled = true;
+      try {
+        const { user } = await auth.resetPassword(resetToken, pw);
+        history.replaceState({}, '', location.pathname);
+        resetToken = '';
+        await afterAuthSuccess(user);
+      } catch (err) {
+        setAuthError('resetError', authErrorMessage(err));
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('showForgot').addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (email) document.getElementById('forgotEmail').value = email;
+      showPanel('forgot');
+    });
+    document.getElementById('showLoginFromForgot').addEventListener('click', (e) => {
+      e.preventDefault();
+      showPanel('login');
+    });
+    document.getElementById('showLoginFromReset').addEventListener('click', (e) => {
+      e.preventDefault();
+      history.replaceState({}, '', location.pathname);
+      resetToken = '';
+      showPanel('login');
+    });
+
+    document.getElementById('btnAllow').addEventListener('click', () => {
+      if (!media.hasMediaDevices() || !media.isSecureContext()) return;
+      openJoinModal();
+    });
+
+    document.getElementById('joinClose').addEventListener('click', closeJoinModal);
+    document.getElementById('joinBackdrop').addEventListener('click', closeJoinModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && joinModal.classList.contains('open')) closeJoinModal();
+    });
+
+    document.getElementById('joinName').addEventListener('input', () => {
+      document.getElementById('joinAvatar').textContent = initials(document.getElementById('joinName').value);
+      updateJoinMediaUI();
+    });
+
+    document.getElementById('joinMicBtn').addEventListener('click', async () => {
+      showJoinError('');
+      try {
+        if (!media.isGranted() || !media.getStream()?.getAudioTracks().length) {
+          await media.ensureAccess({ audio: true, video: media.videoEnabled });
+          await refreshJoinDevices();
+        } else if (media.audioEnabled) {
+          media.setAudioEnabled(false);
+        } else {
+          media.setAudioEnabled(true);
+        }
+        updateJoinMediaUI();
+      } catch (err) {
+        showJoinError(media.getErrorMessage(err));
+      }
+    });
+
+    document.getElementById('joinCamBtn').addEventListener('click', async () => {
+      showJoinError('');
+      try {
+        if (!media.isGranted() || !media.getStream()?.getVideoTracks().length) {
+          await media.ensureAccess({ video: true, audio: media.audioEnabled || true });
+          await refreshJoinDevices();
+        } else if (media.videoEnabled) {
+          media.setVideoEnabled(false);
+        } else {
+          media.setVideoEnabled(true);
+        }
+        updateJoinMediaUI();
+      } catch (err) {
+        showJoinError(media.getErrorMessage(err));
+      }
+    });
+
+    document.getElementById('joinSelectVideo').addEventListener('change', async (e) => {
+      showJoinError('');
+      try {
+        await media.switchDevice({ videoDeviceId: e.target.value });
+        updateJoinMediaUI();
+      } catch (err) {
+        showJoinError(media.getErrorMessage(err));
+      }
+    });
+
+    document.getElementById('joinSelectSpeaker')?.addEventListener('change', (e) => {
+      media.setAudioOutput(e.target.value);
+      media.savePrefs({ speakerDeviceId: e.target.value });
+    });
+
+    document.getElementById('joinSelectAudio').addEventListener('change', async (e) => {
+      showJoinError('');
+      try {
+        await media.switchDevice({ audioDeviceId: e.target.value });
+        updateJoinMediaUI();
+      } catch (err) {
+        showJoinError(media.getErrorMessage(err));
+      }
+    });
+
+    document.getElementById('btnJoinEnter').addEventListener('click', () => enterStudio());
+    document.getElementById('btnJoinNoCam').addEventListener('click', () => enterStudio({ withoutCamera: true }));
+
+    document.getElementById('btnInvite').addEventListener('click', () => {
+      const slug = studioSession?.roomSlug || '';
+      const url = `${location.origin}${location.pathname.replace('studio-lobby.html', '')}join/${slug}`;
+      navigator.clipboard?.writeText(url).then(() => {
+        document.getElementById('btnInvite').textContent = '✓ Link copied';
+      });
+    });
+
+    const topDash = document.getElementById('topDashboardLink');
+    if (topDash) topDash.href = dashboardUrl();
+
+    const urlParams = new URLSearchParams(location.search);
+    (async function initPage() {
+      await checkApiHealth();
+      if (resetToken) {
+        showPanel('reset');
+        return;
+      }
+      if (sessionStorage.getItem('studio_token')) {
+        redirectToStreamDashboard();
+        return;
+      }
+      const token = auth.getToken();
+      if (!token) {
+        showPanel('login');
+        return;
+      }
+      if (urlParams.get('manual') === '1') {
+        await initLobby();
+        return;
+      }
+      try {
+        await auth.me();
+        await auth.openMeetingDashboard();
+      } catch {
+        auth.logout();
+        showPanel('login');
+      }
+    })();
+  </script>
+</body>
+</html>

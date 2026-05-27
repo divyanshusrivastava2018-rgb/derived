@@ -1,0 +1,26 @@
+{
+  "name": "researchium-stream",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "services/api",
+    "services/signaling",
+    "services/sfu",
+    "services/transcode",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build:frontend": "npm run build -w researchium-stream-frontend",
+    "dev:studio-backend": "npm run dev -w researchium-studio-backend",
+    "dev:api": "npm run start -w @researchium/api",
+    "db:seed": "npm run seed -w @researchium/api",
+    "dev:signaling": "npm run start -w @researchium/signaling",
+    "dev:sfu": "npm run start -w @researchium/sfu",
+    "docker:up": "docker compose --env-file .env up -d",
+    "docker:down": "docker compose down"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

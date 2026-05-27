@@ -1,0 +1,165 @@
+# Researchium Stream — full stack (Postgres, Redis, RTMP, API, studio backend, nginx)
+# Usage: cp .env.example .env && docker compose up -d --build
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-researchium}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-researchium}
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./infra/sql/002_studio.sql:/docker-entrypoint-initdb.d/02-studio.sql:ro
+      - ./infra/sql/005_multistream_platforms.sql:/docker-entrypoint-initdb.d/05-multistream.sql:ro
+      - ./infra/sql/006_unified_chat.sql:/docker-entrypoint-initdb.d/06-unified-chat.sql:ro
+      - ./infra/sql/007_stream_sessions.sql:/docker-entrypoint-initdb.d/07-stream-sessions.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 8
+    networks:
+      - researchium
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - researchium
+
+  rtmp:
+    image: alfg/nginx-rtmp
+    ports:
+      - '${RTMP_PUBLIC_PORT:-1935}:1935'
+      - '${RTMP_HLS_PORT:-8088}:8088'
+    volumes:
+      - ./infra/nginx/rtmp.conf:/etc/nginx/nginx.conf:ro
+      - hls_data:/var/hls
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O- http://127.0.0.1:8088/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - researchium
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./services
+      dockerfile: api/Dockerfile
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      API_PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-researchium}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-researchium}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://127.0.0.1}
+      API_KEY: ${API_KEY:-}
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:-}
+      API_RATE_LIMIT_MAX: ${API_RATE_LIMIT_MAX:-100}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - researchium
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - '${STUDIO_BACKEND_PORT:-5000}:5000'
+    environment:
+      NODE_ENV: production
+      STUDIO_BACKEND_HOST: 0.0.0.0
+      STUDIO_BACKEND_PORT: 5000
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://${POSTGRES_USER:-researchium}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-researchium}
+      API_INTERNAL_URL: http://api:4000
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://127.0.0.1}
+      FRONTEND_URL: ${FRONTEND_URL:-http://127.0.0.1}
+      PUBLIC_STUDIO_URL: ${PUBLIC_STUDIO_URL:-http://127.0.0.1:5000}
+      MULTISTREAM_OAUTH_SUCCESS_URL: ${MULTISTREAM_OAUTH_SUCCESS_URL:-http://127.0.0.1/stream-dashboard.html?panel=destinations}
+      # RTMP ingest (local nginx-rtmp → ffmpeg distribute to platforms)
+      RTMP_INGEST_ENABLED: ${RTMP_INGEST_ENABLED:-1}
+      RTMP_INTERNAL_URL: rtmp://rtmp:1935/live
+      RTMP_SERVICE_HOST: rtmp
+      RTMP_PUBLIC_HOST: ${RTMP_PUBLIC_HOST:-localhost}
+      RTMP_PUBLIC_PORT: ${RTMP_PUBLIC_PORT:-1935}
+      RTMP_APP_NAME: live
+      RTMP_HLS_PUBLIC_URL: http://${RTMP_PUBLIC_HOST:-localhost}:${RTMP_HLS_PORT:-8088}/hls
+      FFMPEG_PATH: ffmpeg
+      # Rate limits
+      API_RATE_LIMIT_MAX: ${API_RATE_LIMIT_MAX:-200}
+      OAUTH_RATE_LIMIT_MAX: ${OAUTH_RATE_LIMIT_MAX:-40}
+      CHAT_RATE_LIMIT_MAX: ${CHAT_RATE_LIMIT_MAX:-120}
+      RTMP_RATE_LIMIT_MAX: ${RTMP_RATE_LIMIT_MAX:-30}
+      GOLIVE_RATE_LIMIT_MAX: ${GOLIVE_RATE_LIMIT_MAX:-20}
+      PLATFORM_API_RETRY_MAX: ${PLATFORM_API_RETRY_MAX:-3}
+      OAUTH_REFRESH_BUFFER_MS: ${OAUTH_REFRESH_BUFFER_MS:-300000}
+      # Platform OAuth (set in .env)
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID:-}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET:-}
+      YOUTUBE_OAUTH_REDIRECT_URI: ${YOUTUBE_OAUTH_REDIRECT_URI:-http://127.0.0.1:5000/api/multistream/oauth/youtube/callback}
+      TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID:-}
+      TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET:-}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID:-}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET:-}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID:-}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET:-}
+      RESEARCHIUM_INTEGRATION_API_KEY: ${RESEARCHIUM_INTEGRATION_API_KEY:-}
+      RESEARCHIUM_WEBHOOK_SECRET: ${RESEARCHIUM_WEBHOOK_SECRET:-}
+      RESEARCHIUM_CHAT_ENABLED: ${RESEARCHIUM_CHAT_ENABLED:-0}
+    depends_on:
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+      rtmp:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - researchium
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ${NGINX_CONF:-./nginx.dev.conf}:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./uploads:/usr/share/nginx/html/uploads:ro
+      - ./:/usr/share/nginx/html/static:ro
+    depends_on:
+      - backend
+      - api
+      - rtmp
+    networks:
+      - researchium
+    restart: unless-stopped
+
+networks:
+  researchium:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:
+  hls_data:

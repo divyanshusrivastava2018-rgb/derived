@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stream Studio – Researchium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/stream-dashboard.css"/>
+  <meta id="cspMeta" http-equiv="Content-Security-Policy" content=""/>
+  <script src="js/studio-gate-config.js"></script>
+  <script>
+    try {
+      if (!sessionStorage.getItem('studio_token')) {
+        location.replace(new URL('studio-lobby.html', location.href).href);
+      } else {
+        document.documentElement.classList.add('studio-session-pending');
+      }
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <div id="streamDashApp" class="stream-dash-app">
+  <aside class="sidebar" aria-label="Studio navigation">
+    <div class="logo">
+      <a href="researchium-stream.html">Researchium<span>Stream</span></a>
+      <div class="logo-sub">Stream Studio</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Studio</div>
+      <button type="button" class="nav-item active" data-panel="go-live" id="navGoLive">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg></span>
+        <span class="label">Go live</span>
+      </button>
+      <button type="button" class="nav-item" data-panel="streams">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="2" rx="1"/><rect x="4" y="11" width="16" height="2" rx="1"/><rect x="4" y="16" width="16" height="2" rx="1"/></svg></span>
+        <span class="label">My streams</span>
+      </button>
+      <span class="nav-item nav-item--muted">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></span>
+        <span class="label">Recordings (soon)</span>
+      </span>
+      <button type="button" class="nav-item" data-panel="chat">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z"/><path d="M8 9h8M8 13h6"/></svg></span>
+        <span class="label">Unified Chat</span>
+      </button>
+      <div class="nav-section">Manage</div>
+      <button type="button" class="nav-item" data-panel="destinations">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+        <span class="label">Destinations</span>
+      </button>
+      <button type="button" class="nav-item" data-panel="schedule">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg></span>
+        <span class="label">Live schedule</span>
+      </button>
+      <button type="button" class="nav-item" data-panel="analytics">
+        <span class="nav-icon" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 19V5M10 19V9M16 19v-6M22 19V3"/></svg></span>
+        <span class="label">Analytics</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="channel-card">
+        <div class="channel-card-profile">
+          <div class="channel-avatar" aria-hidden="true">RS</div>
+          <div>
+            <div class="channel-name">Research channel</div>
+            <div class="channel-sub">Researchium Studio</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost btn-studio-signout" id="btnStudioSignOut">Sign out</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <a class="back-link" href="researchium-stream.html">← Back to home</a>
+        <h1 class="topbar-title" id="pageTitle">Go live</h1>
+      </div>
+      <div class="topbar-right">
+        <button type="button" class="btn btn-ghost" id="btnSchedule">+ Schedule class</button>
+        <button type="button" class="btn btn-primary" id="goLiveBtn">● Go live</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="panel active" id="panel-go-live" data-panel="go-live">
+        <div class="go-live-layout">
+          <section class="go-live-card">
+            <div class="go-live-card-title">Stream setup</div>
+            <div class="go-live-fields">
+              <label class="field-label" for="streamTitleInput">Stream title</label>
+              <input
+                class="field-input"
+                id="streamTitleInput"
+                type="text"
+                placeholder="Enter stream title"
+                autocomplete="off"
+              />
+
+              <label class="field-label" for="streamCategorySelect">Category / Subject</label>
+              <select class="field-input" id="streamCategorySelect">
+                <option>Mathematics</option>
+                <option>Physics</option>
+                <option>Chemistry</option>
+                <option>Biology</option>
+                <option>Computer Science</option>
+                <option>General Research</option>
+              </select>
+
+              <label class="field-label">Thumbnail</label>
+              <label class="thumb-dropzone" id="thumbnailDropzone" for="thumbnailInput">
+                <input id="thumbnailInput" type="file" accept="image/*" hidden />
+                <img id="thumbnailPreview" alt="Thumbnail preview" hidden />
+                <div id="thumbnailHint">Drag and drop thumbnail, or click to upload</div>
+              </label>
+
+              <div>
+                <div class="field-label" style="margin-bottom:8px">Privacy</div>
+                <div class="privacy-toggle" role="radiogroup" aria-label="Privacy setting">
+                  <label class="privacy-option">
+                    <input type="radio" name="streamPrivacy" value="public" checked />
+                    <span>Public</span>
+                  </label>
+                  <label class="privacy-option">
+                    <input type="radio" name="streamPrivacy" value="unlisted" />
+                    <span>Unlisted</span>
+                  </label>
+                  <label class="privacy-option">
+                    <input type="radio" name="streamPrivacy" value="members" />
+                    <span>Members Only</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="go-live-card">
+            <div class="go-live-card-title">Choose your studio</div>
+            <div class="studio-choice-grid">
+              <article class="studio-choice-card">
+                <div class="studio-choice-head">
+                  <div class="studio-choice-icon" aria-hidden="true">🎥</div>
+                  <div>
+                    <h3>Browser Studio</h3>
+                    <p>Go live directly from your browser. No software needed.</p>
+                  </div>
+                </div>
+                <div class="studio-choice-foot">
+                  <a class="btn btn-primary" href="studio.html">Open Studio →</a>
+                  <div class="permission-status" id="browserPermissionStatus">⚪ Checking mic/cam</div>
+                </div>
+              </article>
+
+              <article class="studio-choice-card">
+                <div class="studio-choice-head">
+                  <div class="studio-choice-icon" aria-hidden="true">🖥</div>
+                  <div>
+                    <h3>External Encoder (OBS / vMix)</h3>
+                    <p>Use OBS or any RTMP encoder for pro-quality streams.</p>
+                  </div>
+                </div>
+
+                <div class="encoder-line">
+                  <strong>RTMP Server URL</strong>
+                  <code id="rtmpUrl">rtmp://127.0.0.1:1935/live</code>
+                  <button type="button" class="btn btn-ghost btn-small" id="btnCopyRtmp">Copy</button>
+                </div>
+
+                <div class="encoder-line">
+                  <strong>Stream Key</strong>
+                  <code id="streamKeyDisplay">••••-••••-••••-••••</code>
+                  <div class="encoder-actions">
+                    <button type="button" class="btn btn-ghost btn-small" id="btnRevealKey">Show</button>
+                    <button type="button" class="btn btn-ghost btn-small" id="btnCopyStreamKey">Copy</button>
+                    <button type="button" class="btn btn-ghost btn-small" id="btnRegenerateKey">Regenerate</button>
+                  </div>
+                </div>
+
+                <a class="setup-link" href="https://obsproject.com/kb/quick-start-guide" target="_blank" rel="noreferrer">Setup guide</a>
+              </article>
+            </div>
+          </section>
+
+          <section class="go-live-card">
+            <div class="go-live-card-title">Active destinations</div>
+            <div id="activeDestinationsRow" class="active-destinations-row"></div>
+            <p class="active-destinations-total" id="activeDestinationsTotal">Streaming to 0 platforms</p>
+          </section>
+        </div>
+
+        <div class="status-bar status-bar--go-live">
+          <div class="preview-box" id="livePreviewBox">
+            <video id="studioLiveVideo" autoplay muted playsinline hidden></video>
+            <div id="previewPlaceholder">Preview</div>
+          </div>
+
+          <div class="status-metrics">
+            <div>
+              <span class="status-dot" id="statusDot"></span>
+              <strong id="statusLabel">Offline</strong>
+            </div>
+            <span id="reactViewerMount"></span>
+            <span><strong id="viewerCount">0</strong> viewers</span>
+            <span id="viewerBreakdown" class="viewer-breakdown"></span>
+            <span>Duration <strong id="duration">00:00:00</strong></span>
+            <span>Bitrate <strong id="bitrate">— kbps</strong></span>
+          </div>
+
+          <button type="button" class="btn btn-danger" id="btnEndStream" hidden>■ End stream</button>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-streams" data-panel="streams">
+        <div class="streams-toolbar toolbar">
+          <div class="streams-toolbar-left">
+            <div class="tabs streams-tabs" role="tablist" aria-label="Filter streams">
+              <button type="button" class="tab active" data-stream-filter="all">All</button>
+              <button type="button" class="tab" data-stream-filter="draft">Drafts</button>
+              <button type="button" class="tab" data-stream-filter="scheduled">Scheduled</button>
+              <button type="button" class="tab" data-stream-filter="live">Live</button>
+              <button type="button" class="tab" data-stream-filter="ended">Ended</button>
+            </div>
+            <input
+              type="search"
+              id="streamsSearchInput"
+              class="streams-search field-input"
+              placeholder="Search streams…"
+              autocomplete="off"
+            />
+          </div>
+          <button type="button" class="btn btn-primary" id="btnNewStream">+ New Stream</button>
+        </div>
+
+        <div id="streamsList" class="streams-list" role="list"></div>
+
+        <div id="streamsEmpty" class="streams-empty" hidden>
+          <svg class="streams-empty-icon" viewBox="0 0 120 80" aria-hidden="true">
+            <path d="M8 52 Q30 28 52 52 T96 52" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M20 58 Q42 38 64 58 T108 58" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            <circle cx="60" cy="22" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M56 18 L60 12 L64 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <p class="streams-empty-title">No streams yet</p>
+          <p class="streams-empty-sub">Create your first broadcast to see it here.</p>
+          <button type="button" class="btn btn-primary" id="btnCreateFirstStream">+ Create your first stream</button>
+        </div>
+
+        <div id="streamsFilterEmpty" class="streams-filter-empty" hidden>
+          <p>No streams match your filters.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-chat" data-panel="chat">
+        <h2 style="font-size:18px;margin-bottom:14px">Unified Chat</h2>
+        <div class="chat-layout">
+          <div class="chat-feed-col">
+            <div class="chat-feed" id="chatFeed" aria-live="polite"></div>
+            <div class="chat-compose">
+              <input
+                id="chatReplyInput"
+                type="text"
+                placeholder="Type a reply..."
+                autocomplete="off"
+              />
+              <button type="button" class="btn btn-primary" id="chatSendBtn">Send</button>
+            </div>
+          </div>
+
+          <aside class="chat-filter-col">
+            <div class="chat-filter-block">
+              <div class="chat-filter-row">
+                <label class="chat-check">
+                  <input type="checkbox" id="chatSimulateToggle" checked />
+                  <span>Simulate chat</span>
+                </label>
+              </div>
+
+              <div class="chat-filter-row">
+                <label class="chat-check">
+                  <input type="checkbox" id="chatAllPlatformsToggle" checked />
+                  <span>All platforms</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="chat-platform-list" id="chatPlatformList"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-destinations" data-panel="destinations">
+        <h2 style="font-size:20px;margin-bottom:8px">Multi-platform streaming</h2>
+        <p style="color:var(--text2);font-size:14px;max-width:640px">
+          Connect your destinations (mock OAuth for now) and choose which platforms to include in the next stream.
+        </p>
+
+        <div class="destinations-topbar" style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button type="button" class="btn btn-primary" id="btnGoLiveAll">● Go live to 0 platforms</button>
+          <button type="button" class="btn" id="btnRefreshPlatforms">Refresh</button>
+        </div>
+
+        <div class="platform-grid" id="platformGrid"></div>
+        <div class="ingest-box" id="multistreamIngest" hidden></div>
+      </section>
+
+      <section class="panel" id="panel-schedule" data-panel="schedule">
+        <div class="schedule-topbar">
+          <div class="schedule-topbar-left">
+            <div class="schedule-view-toggle" role="group" aria-label="Calendar view">
+              <button type="button" class="schedule-view-btn active" data-schedule-view="month">Month</button>
+              <button type="button" class="schedule-view-btn" data-schedule-view="week">Week</button>
+            </div>
+            <div class="schedule-month-nav">
+              <button type="button" class="btn btn-ghost btn-small" id="schedulePrevMonth" aria-label="Previous month">&lt; Prev</button>
+              <span class="schedule-month-label" id="scheduleMonthLabel">May 2026</span>
+              <button type="button" class="btn btn-ghost btn-small" id="scheduleNextMonth" aria-label="Next month">Next &gt;</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="btnSchedulePanel">+ Schedule class</button>
+        </div>
+
+        <div class="schedule-layout">
+          <div class="schedule-calendar-wrap">
+            <div class="schedule-weekday-row" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div class="schedule-calendar-grid" id="scheduleCalendarGrid" role="grid"></div>
+          </div>
+
+          <aside class="schedule-day-sidebar" id="scheduleDaySidebar" hidden>
+            <div class="schedule-day-sidebar-head">
+              <h3 id="scheduleDayHeading">Wednesday, May 28</h3>
+              <button type="button" class="schedule-sidebar-close" id="scheduleSidebarClose" aria-label="Close day panel">×</button>
+            </div>
+            <div class="schedule-day-list" id="scheduleDayList"></div>
+            <button type="button" class="btn btn-ghost" id="scheduleAddForDay" style="width:100%;margin-top:12px">+ Add stream</button>
+          </aside>
+        </div>
+
+        <section class="schedule-upcoming-section">
+          <h3 class="schedule-upcoming-title">Upcoming streams</h3>
+          <div class="schedule-upcoming-list" id="scheduleUpcomingList"></div>
+        </section>
+      </section>
+
+      <section class="panel" id="panel-analytics" data-panel="analytics">
+        <h2 class="analytics-page-title">Analytics</h2>
+        <p class="analytics-page-sub">Performance overview across your connected platforms (mock data).</p>
+
+        <div class="analytics-stat-grid">
+          <article class="analytics-stat-card">
+            <div class="analytics-stat-label">Total Hours Streamed</div>
+            <div class="analytics-stat-value">12.4 hrs</div>
+            <div class="analytics-stat-trend analytics-stat-trend--up">↑ +12% this month</div>
+          </article>
+          <article class="analytics-stat-card">
+            <div class="analytics-stat-label">Peak Viewers (all time)</div>
+            <div class="analytics-stat-value">2,310</div>
+            <div class="analytics-stat-trend analytics-stat-trend--up">↑ +12% this month</div>
+          </article>
+          <article class="analytics-stat-card">
+            <div class="analytics-stat-label">Total Streams</div>
+            <div class="analytics-stat-value">8</div>
+            <div class="analytics-stat-trend analytics-stat-trend--up">↑ +12% this month</div>
+          </article>
+          <article class="analytics-stat-card">
+            <div class="analytics-stat-label">Platforms Connected</div>
+            <div class="analytics-stat-value">3</div>
+            <div class="analytics-stat-trend analytics-stat-trend--up">↑ +12% this month</div>
+          </article>
+        </div>
+
+        <section class="analytics-card analytics-chart-card">
+          <div class="analytics-card-head">
+            <h3>Viewers over time</h3>
+            <div class="analytics-chart-legend">
+              <span class="analytics-legend-item"><span class="analytics-legend-dot analytics-legend-dot--yt"></span> YouTube</span>
+              <span class="analytics-legend-item"><span class="analytics-legend-dot analytics-legend-dot--tw"></span> Twitch</span>
+            </div>
+          </div>
+          <div class="analytics-chart-wrap" id="analyticsChartWrap">
+            <svg class="analytics-chart-svg" id="analyticsChartSvg" viewBox="0 0 720 280" role="img" aria-label="Viewers over time chart"></svg>
+            <div class="analytics-chart-tooltip" id="analyticsChartTooltip" hidden></div>
+          </div>
+        </section>
+
+        <section class="analytics-card">
+          <h3 class="analytics-card-title">Per-platform breakdown</h3>
+          <div class="analytics-table-wrap">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Streams</th>
+                  <th>Avg Viewers</th>
+                  <th>Peak</th>
+                  <th>Total Watch Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="analytics-platform-cell"><span class="stream-platform-icon stream-platform-icon--youtube">Y</span> YouTube</span></td>
+                  <td>5</td>
+                  <td>284</td>
+                  <td>2,310</td>
+                  <td>7.2 hrs</td>
+                  <td><span class="analytics-status analytics-status--connected">Connected</span></td>
+                </tr>
+                <tr>
+                  <td><span class="analytics-platform-cell"><span class="stream-platform-icon stream-platform-icon--twitch">T</span> Twitch</span></td>
+                  <td>4</td>
+                  <td>96</td>
+                  <td>412</td>
+                  <td>3.1 hrs</td>
+                  <td><span class="analytics-status analytics-status--connected">Connected</span></td>
+                </tr>
+                <tr>
+                  <td><span class="analytics-platform-cell"><span class="stream-platform-icon stream-platform-icon--linkedin">L</span> LinkedIn</span></td>
+                  <td>2</td>
+                  <td>58</td>
+                  <td>142</td>
+                  <td>2.1 hrs</td>
+                  <td><span class="analytics-status analytics-status--connected">Connected</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="analytics-card">
+          <h3 class="analytics-card-title">Top streams</h3>
+          <div class="analytics-top-grid">
+            <article class="analytics-top-card">
+              <div class="analytics-top-head">
+                <div>
+                  <div class="analytics-top-title">CRISPR-Cas9 Workshop</div>
+                  <div class="analytics-top-date">May 25 · Biology</div>
+                </div>
+                <div class="analytics-top-peak"><strong>2,310</strong> peak</div>
+              </div>
+              <div class="analytics-top-platforms">
+                <span class="stream-platform-icon stream-platform-icon--youtube">Y</span>
+                <span class="stream-platform-icon stream-platform-icon--linkedin">L</span>
+              </div>
+              <div class="analytics-engagement">
+                <div class="analytics-engagement-bar" style="width:100%"></div>
+              </div>
+              <div class="analytics-engagement-label">98% engagement score</div>
+            </article>
+            <article class="analytics-top-card">
+              <div class="analytics-top-head">
+                <div>
+                  <div class="analytics-top-title">Real Analysis · Sequences</div>
+                  <div class="analytics-top-date">May 22 · Mathematics</div>
+                </div>
+                <div class="analytics-top-peak"><strong>412</strong> peak</div>
+              </div>
+              <div class="analytics-top-platforms">
+                <span class="stream-platform-icon stream-platform-icon--youtube">Y</span>
+                <span class="stream-platform-icon stream-platform-icon--twitch">T</span>
+              </div>
+              <div class="analytics-engagement">
+                <div class="analytics-engagement-bar" style="width:72%"></div>
+              </div>
+              <div class="analytics-engagement-label">72% engagement score</div>
+            </article>
+            <article class="analytics-top-card">
+              <div class="analytics-top-head">
+                <div>
+                  <div class="analytics-top-title">Physics Live Q&A</div>
+                  <div class="analytics-top-date">May 18 · Physics</div>
+                </div>
+                <div class="analytics-top-peak"><strong>186</strong> peak</div>
+              </div>
+              <div class="analytics-top-platforms">
+                <span class="stream-platform-icon stream-platform-icon--twitch">T</span>
+              </div>
+              <div class="analytics-engagement">
+                <div class="analytics-engagement-bar" style="width:54%"></div>
+              </div>
+              <div class="analytics-engagement-label">54% engagement score</div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="newStreamModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal">
+      <div class="modal-step active" id="modalStepChoose">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Create a new stream</h2>
+          <button type="button" class="modal-close" id="modalClose" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <button type="button" class="stream-option" data-choice="rtmp">
+            <span class="stream-option-icon" aria-hidden="true">▦</span>
+            <span class="stream-option-text">
+              <span class="stream-option-title">Encoder | RTMP</span>
+              <span class="stream-option-desc">Stream from OBS, Zoom, vMix, etc.</span>
+            </span>
+            <span class="stream-option-arrow" aria-hidden="true">›</span>
+          </button>
+          <button type="button" class="stream-option" data-choice="prerecorded">
+            <span class="stream-option-icon" aria-hidden="true">🎬</span>
+            <span class="stream-option-text">
+              <span class="stream-option-title">Pre-recorded livestream</span>
+              <span class="stream-option-desc">Turn videos or stream recordings into broadcasts.</span>
+            </span>
+            <span class="stream-option-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-step" id="modalStepRtmp">
+        <button type="button" class="modal-back" id="modalBack">← Back</button>
+        <div class="modal-header" style="padding-top:0">
+          <h2 class="modal-title">Encoder | RTMP</h2>
+          <button type="button" class="modal-close modal-close-inner" aria-label="Close">×</button>
+        </div>
+        <p style="padding:0 22px 12px;font-size:13px;color:#64748b">
+          Copy these into OBS → Settings → Stream. Then start streaming in OBS and click <strong>Go live</strong> here.
+        </p>
+        <div class="rtmp-box">
+          <div class="rtmp-label">RTMP server URL</div>
+          <div id="rtmpUrl">rtmp://127.0.0.1:1935/live</div>
+        </div>
+        <div class="rtmp-box">
+          <div class="rtmp-label">Stream key</div>
+          <div id="rtmpKey">••••-••••-•••• (request from API)</div>
+        </div>
+        <div style="padding:0 16px 20px">
+          <button type="button" class="btn btn-primary" id="btnRtmpDone" style="width:100%;justify-content:center">Done</button>
+        </div>
+      </div>
+      <div class="modal-step" id="modalStepSoon">
+        <button type="button" class="modal-back modal-back-soon">← Back</button>
+        <div class="modal-header" style="padding-top:0">
+          <h2 class="modal-title">Coming soon</h2>
+          <button type="button" class="modal-close modal-close-inner" aria-label="Close">×</button>
+        </div>
+        <p style="padding:8px 22px 24px;font-size:14px;color:#64748b;line-height:1.6">
+          Pre-recorded livestreams will be available in a future release. Use <strong>Researchium Studio</strong> or <strong>RTMP</strong> for now.
+        </p>
+      </div>
+
+      <div class="modal-step modal-step--schedule" id="modalStepSchedule">
+        <div class="modal-header schedule-modal-head">
+          <h2 class="modal-title" id="scheduleModalTitle">Schedule class</h2>
+          <button type="button" class="modal-close modal-close-schedule" aria-label="Close">×</button>
+        </div>
+        <form class="schedule-form" id="scheduleForm">
+          <label class="field-label" for="scheduleTitle">Class title</label>
+          <input class="field-input schedule-field" id="scheduleTitle" type="text" required placeholder="e.g. Real Analysis · Sequences" />
+
+          <label class="field-label" for="scheduleSubject">Subject</label>
+          <select class="field-input schedule-field" id="scheduleSubject">
+            <option>Mathematics</option>
+            <option>Physics</option>
+            <option>Chemistry</option>
+            <option>Biology</option>
+            <option>Computer Science</option>
+            <option>General Research</option>
+          </select>
+
+          <div class="schedule-form-row">
+            <div>
+              <label class="field-label" for="scheduleDate">Date</label>
+              <input class="field-input schedule-field" id="scheduleDate" type="date" required />
+            </div>
+            <div>
+              <label class="field-label" for="scheduleTime">Time</label>
+              <input class="field-input schedule-field" id="scheduleTime" type="time" required />
+            </div>
+          </div>
+
+          <label class="field-label" for="scheduleRepeat">Repeat</label>
+          <select class="field-input schedule-field" id="scheduleRepeat">
+            <option value="none">None</option>
+            <option value="weekly">Weekly</option>
+            <option value="biweekly">Bi-weekly</option>
+          </select>
+
+          <label class="field-label" for="scheduleDescription">Description</label>
+          <textarea class="field-input schedule-field schedule-textarea" id="scheduleDescription" rows="3" placeholder="Optional notes for students"></textarea>
+
+          <div class="field-label">Platforms</div>
+          <div class="schedule-platform-checks" id="schedulePlatformChecks"></div>
+
+          <label class="schedule-notify-row">
+            <input type="checkbox" id="scheduleNotify" checked />
+            <span>Auto-notify students</span>
+          </label>
+          <p class="schedule-notify-hint" id="scheduleNotifyHint">Email notification will be sent</p>
+
+          <button type="submit" class="btn btn-primary schedule-save-btn">Save class</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="destinations-modal-overlay"
+    id="destinationsConnectModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    hidden
+  >
+    <div class="destinations-modal">
+      <div class="destinations-modal-head">
+        <h3 class="destinations-modal-title" id="destinationsConnectTitle">Connect destination</h3>
+        <button type="button" class="destinations-modal-close" id="destinationsConnectClose" aria-label="Close">×</button>
+      </div>
+      <div class="destinations-modal-body">
+        <label class="field-label" for="destinationsStreamKey">Stream Key</label>
+        <input class="field-input" id="destinationsStreamKey" type="text" autocomplete="off" placeholder="Paste your stream key" />
+
+        <label class="field-label" for="destinationsRtmpUrl" style="margin-top:12px">RTMP URL</label>
+        <input class="field-input" id="destinationsRtmpUrl" type="text" autocomplete="off" placeholder="rtmp://..." />
+
+        <p class="destinations-modal-hint">
+          Mock mode: data is saved to <code>localStorage</code> only.
+        </p>
+      </div>
+      <div class="destinations-modal-actions">
+        <button type="button" class="btn btn-primary" id="destinationsConnectSave">Save</button>
+        <button type="button" class="btn btn-ghost" id="destinationsConnectCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="streamDashToast" class="stream-dash-toast" role="status" aria-live="polite" hidden></div>
+  <div class="pinned-message-overlay" id="pinnedMessageOverlay" hidden>
+    <div class="pinned-message-card">
+      <div class="pinned-message-head">
+        <div class="pinned-message-title">Pinned message</div>
+        <button type="button" class="pinned-message-close" id="pinnedMessageCloseBtn" aria-label="Close pinned message">×</button>
+      </div>
+      <div class="pinned-message-body" id="pinnedMessageBody"></div>
+    </div>
+  </div>
+  <div class="go-live-countdown" id="goLiveCountdown" hidden>
+    <div class="go-live-countdown-text" id="goLiveCountdownText">3</div>
+  </div>
+  </div>
+
+  <script src="js/studio-env.js"></script>
+  <script src="js/studio-csp.js"></script>
+  <script>
+    document.getElementById('cspMeta')?.setAttribute('content', window.ResearchiumCspMeta || '');
+  </script>
+  <script src="js/studio-safe.js"></script>
+  <script src="js/studio-auth.js"></script>
+  <script src="js/dashboard-api.js"></script>
+  <script src="js/multistream-api.js"></script>
+  <script src="js/studio-controls.js"></script>
+  <script src="js/stream-components-loader.js"></script>
+  <script src="js/studio-media.js"></script>
+  <script src="js/stream-dashboard-page.js"></script>
+</body>
+</html>

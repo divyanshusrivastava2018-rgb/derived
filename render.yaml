@@ -25,6 +25,10 @@ services:
         sync: false
       - key: RESEARCHIUM_MEMBER_SECRET
         generateValue: true
+      - key: STREAM_STUDIO_EMAIL
+        sync: false
+      - key: STREAM_STUDIO_PASSWORD
+        sync: false
       - key: HCAPTCHA_SECRET_KEY
         sync: false
       - key: CORS_ORIGIN

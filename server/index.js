@@ -22,6 +22,8 @@ const homeRouter = require('./routes/home');
 const platformRouter = require('./routes/platform');
 const adminLeadsRouter = require('./routes/adminLeads');
 const adminDashboardRouter = require('./routes/adminDashboard');
+const adminStreamStudioRouter = require('./routes/adminStreamStudio');
+const streamAuthRouter = require('./routes/streamAuth');
 const uploadsRouter = require('./routes/uploads');
 const rssRouter = require('./routes/rss');
 const sitemapRouter = require('./routes/sitemap');
@@ -30,6 +32,7 @@ const siteStore = require('./lib/siteStore');
 const gateMcqBank = require('./lib/gateMcqBank');
 const { DEV_DEFAULT_SECRET, getAdminPassword } = require('./lib/adminAuth');
 const memberCookie = require('./lib/memberCookie');
+const streamStudio = require('./lib/streamStudio');
 
 const WEAK_PASSWORDS = new Set([
   'change-me-to-a-long-random-secret',
@@ -171,25 +174,32 @@ function buildConnectSrc() {
   return [...set];
 }
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: scriptSrcExtra,
-        styleSrc: styleSrcExtra,
-        fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-        imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: buildConnectSrc(),
-        frameSrc: ["'self'", 'https://www.youtube.com', 'https://www.youtube-nocookie.com'],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        frameAncestors: ["'self'"]
-      }
-    },
-    crossOriginResourcePolicy: { policy: 'cross-origin' }
-  })
-);
+const siteHelmet = helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: scriptSrcExtra,
+      styleSrc: styleSrcExtra,
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      connectSrc: buildConnectSrc(),
+      frameSrc: ["'self'", 'https://www.youtube.com', 'https://www.youtube-nocookie.com'],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      frameAncestors: ["'self'"]
+    }
+  },
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+});
+app.use((req, res, next) => {
+  if (streamStudio.isStreamStudioPath(req.path)) {
+    return next();
+  }
+  return siteHelmet(req, res, next);
+});
+
+streamStudio.registerProxies(app);
+
 app.use(express.json({ limit: '2mb' }));
 
 const apiLimiter = rateLimit({
@@ -207,6 +217,8 @@ app.use('/api/materials', materialsRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/admin', adminLeadsRouter);
 app.use('/api/admin', adminDashboardRouter);
+app.use('/api/admin/stream-studio', adminStreamStudioRouter);
+app.use('/api/stream/auth', streamAuthRouter);
 app.use('/api/admin', adminImportRouter);
 app.use('/api/home', homeRouter);
 app.use('/api/platform', platformRouter);
@@ -222,6 +234,9 @@ app.use('/sitemap.xml', sitemapRouter);
 app.get('/healthz', (_req, res) => {
   res.json({ ok: true, service: 'researchium', uptimeSec: Math.round(process.uptime()) });
 });
+
+streamStudio.register(app);
+
 const STATIC_CACHE_MS = 7 * 24 * 60 * 60 * 1000;
 const STATIC_CACHEABLE = /\.(?:css|js|woff2?|png|jpe?g|webp|gif|svg|ico|json)$/i;
 
