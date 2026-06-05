@@ -178,16 +178,25 @@
     return out;
   }
 
+  function configuredGateApiOrigins() {
+    var meta = document.querySelector('meta[name="researchium-api-base"]');
+    var metaBase = meta && meta.getAttribute("content") ? String(meta.getAttribute("content")).trim() : "";
+    var runtimeBase =
+      window.__GATE_RUNTIME__ && window.__GATE_RUNTIME__.gateApiBase
+        ? String(window.__GATE_RUNTIME__.gateApiBase).trim()
+        : "";
+    var apiBase =
+      window.ResearchiumApi && window.ResearchiumApi.base ? String(window.ResearchiumApi.base).trim() : "";
+    return uniqueOrigins([runtimeBase, metaBase, apiBase, ""]);
+  }
+
   function resolveGateApiOrigin() {
     if (gateApiResolved) return Promise.resolve(gateApiOrigin);
     if (gateApiResolvePromise) return gateApiResolvePromise;
 
     gateApiResolvePromise = whenCoreReady()
       .then(function () {
-        var candidates = uniqueOrigins([
-          "",
-          window.ResearchiumApi && window.ResearchiumApi.base ? window.ResearchiumApi.base : ""
-        ]);
+        var candidates = configuredGateApiOrigins();
 
         var chain = Promise.resolve(false);
         candidates.forEach(function (origin) {

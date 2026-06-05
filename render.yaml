@@ -32,4 +32,6 @@ services:
       - key: HCAPTCHA_SECRET_KEY
         sync: false
       - key: CORS_ORIGIN
-        sync: false
+        value: https://www.derived.co.in,https://derived.co.in,https://divyanshusrivastava2018-rgb.github.io
+      - key: GATE_API_BASE
+        value: https://derived.onrender.com

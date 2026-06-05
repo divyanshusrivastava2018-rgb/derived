@@ -60,6 +60,34 @@
     }, 4000);
   }
 
+  function streamHostsConfigBannerMessage() {
+    var isLocal =
+      location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    if (isLocal) {
+      return (
+        "Add RESEARCHIUM_STREAM_API_KEY to your root .env file (must match API_KEY in Researchium_stream/.env), " +
+        "then restart npm start and npm run dev:api in Researchium_stream/."
+      );
+    }
+    return (
+      "Add RESEARCHIUM_STREAM_API_KEY to your .env file on Render (Settings \u2192 Environment Variables) then redeploy."
+    );
+  }
+
+  function showStreamHostsConfigBanner() {
+    var banner = document.getElementById("streamHostsConfigBanner");
+    if (!banner) return;
+    banner.textContent = streamHostsConfigBannerMessage();
+    banner.hidden = false;
+  }
+
+  function hideStreamHostsConfigBanner() {
+    var banner = document.getElementById("streamHostsConfigBanner");
+    if (!banner) return;
+    banner.hidden = true;
+    banner.textContent = "";
+  }
+
   function showLogin() {
     document.body.classList.remove("adm-dash-active");
     if (loginEl) loginEl.hidden = false;
@@ -979,6 +1007,7 @@
   async function loadStreamHostsTable() {
     var wrap = document.getElementById("streamHostsTableWrap");
     if (!wrap) return;
+    hideStreamHostsConfigBanner();
     wrap.innerHTML = '<p class="admin-muted">Loading…</p>';
     try {
       var r = await handleAuthResponse(
@@ -989,12 +1018,19 @@
         var errBody = await r.json().catch(function () {
           return {};
         });
+        if (errBody.error === "stream_api_key_not_configured") {
+          showStreamHostsConfigBanner();
+          wrap.innerHTML =
+            "<p class=\"admin-muted\">Stream hosts are unavailable until the API key is configured.</p>";
+          return;
+        }
         wrap.innerHTML =
           "<p class=\"admin-err\">" +
           esc(errBody.message || errBody.error || "Could not load stream hosts.") +
           "</p>";
         return;
       }
+      hideStreamHostsConfigBanner();
       var data = await r.json();
       var users = data.users || [];
       if (!users.length) {
@@ -1086,6 +1122,15 @@
       var errBody = await r0.json().catch(function () {
         return {};
       });
+      if (errBody.error === "stream_api_key_not_configured") {
+        showStreamHostsConfigBanner();
+        var hostsWrap = document.getElementById("streamHostsTableWrap");
+        if (hostsWrap) {
+          hostsWrap.innerHTML =
+            "<p class=\"admin-muted\">Stream hosts are unavailable until the API key is configured.</p>";
+        }
+        return;
+      }
       showToast(errBody.message || errBody.error || "Could not create host.", true);
       return;
     }
@@ -1105,7 +1150,14 @@
     });
     var r = await handleAuthResponse(r0);
     if (!r || !r.ok) {
-      showToast("Could not remove host.", true);
+      var delErr = await r0.json().catch(function () {
+        return {};
+      });
+      if (delErr.error === "stream_api_key_not_configured") {
+        showStreamHostsConfigBanner();
+        return;
+      }
+      showToast(delErr.message || delErr.error || "Could not remove host.", true);
       return;
     }
     showToast("Host removed.");

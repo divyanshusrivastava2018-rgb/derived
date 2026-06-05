@@ -1,6 +1,6 @@
 {
-  "gateApiBase": "",
-  "offlineScoring": false,
+  "gateApiBase": "https://derived.onrender.com",
+  "offlineScoring": true,
   "requireLiveApi": false,
-  "updatedAt": "2026-05-25T15:39:51.795Z"
+  "updatedAt": "2026-06-05T04:02:59.173Z"
 }

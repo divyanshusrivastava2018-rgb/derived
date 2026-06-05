@@ -6,13 +6,19 @@ const fs = require('fs');
 const path = require('path');
 
 const outFile = path.join(__dirname, '..', '..', 'public', 'data', 'runtime-config.json');
-const gateApiBase = String(process.env.GATE_API_BASE || process.env.RENDER_EXTERNAL_URL || '')
+let gateApiBase = String(process.env.GATE_API_BASE || process.env.RENDER_EXTERNAL_URL || '')
   .trim()
   .replace(/\/$/, '');
+
+if (!gateApiBase && process.env.NODE_ENV === 'production') {
+  gateApiBase = 'https://derived.onrender.com';
+}
 
 function resolveOfflineScoring() {
   if (process.env.GATE_OFFLINE_SCORING === '1') return true;
   if (process.env.GATE_OFFLINE_SCORING === '0') return false;
+  // Static Pages + remote API: allow offline mock scoring when live API is unreachable.
+  if (process.env.NODE_ENV === 'production' && gateApiBase) return true;
   if (process.env.NODE_ENV === 'production') return false;
   return !gateApiBase;
 }
