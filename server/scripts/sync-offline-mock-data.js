@@ -8,6 +8,12 @@ const mockTestCatalog = require('../lib/mockTestCatalog');
 const gateMcqBank = require('../lib/gateMcqBank');
 const { encodeAnswers, VERSION } = require('../lib/gateBundleCodec');
 
+const csirBankSrc = path.join(__dirname, '..', 'data', 'csir-net-mcq-bank.json');
+const csirBankDst = path.join(__dirname, '..', '..', 'public', 'data', 'csir-net-mcq-bank.json');
+if (fs.existsSync(csirBankSrc)) {
+  fs.copyFileSync(csirBankSrc, csirBankDst);
+}
+
 const outDir = path.join(__dirname, '..', '..', 'public', 'data');
 fs.mkdirSync(outDir, { recursive: true });
 

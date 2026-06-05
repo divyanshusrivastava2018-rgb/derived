@@ -132,7 +132,8 @@ function shuffle(arr) {
 
 function pickQuestions(topic, count) {
   const t = String(topic || '').trim();
-  const pool = MCQ_BANK[t] || getCategoryQuizPool(t);
+  const csirNetMcqBank = require('../lib/csirNetMcqBank');
+  const pool = MCQ_BANK[t] || csirNetMcqBank.getQuizPoolByName(t) || getCategoryQuizPool(t);
   const c = Math.max(1, Math.min(20, Number(count) || 10));
   if (pool.length >= c) return shuffle(pool).slice(0, c);
   const out = [];
@@ -170,13 +171,16 @@ router.get('/topics', (_req, res) => {
 
 router.get('/category/:slug', (req, res) => {
   const { getCategoryBySlug } = require('../lib/mockTestCatalog');
-  const cat = getCategoryBySlug(String(req.params.slug || '').trim());
+  const csirNetMcqBank = require('../lib/csirNetMcqBank');
+  const slug = String(req.params.slug || '').trim();
+  const cat = getCategoryBySlug(slug);
   if (!cat) return res.status(404).json({ error: 'Category not found' });
-  const pool = getCategoryQuizPool(cat.name);
+  const csirPool = csirNetMcqBank.getQuizPool(slug);
+  const pool = csirPool.length ? csirPool : getCategoryQuizPool(cat.name);
   res.json({
     slug: cat.slug,
     name: cat.name,
-    questionCount: Math.min(10, pool.length),
+    questionCount: Math.min(15, pool.length),
     quizTopic: cat.name
   });
 });

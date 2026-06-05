@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const gateMcqBank = require('./gateMcqBank');
+const csirNetMcqBank = require('./csirNetMcqBank');
 const { formatMathText, formatQuizItem } = require('./mathLatex');
 
 const CATEGORIES_FILE = path.join(__dirname, '..', '..', 'public', 'data', 'material-categories.json');
@@ -203,6 +204,9 @@ function dedupeQuestions(list) {
 }
 
 function getCategoryQuizPool(categoryName) {
+  const csirPool = csirNetMcqBank.getQuizPoolByName(categoryName);
+  if (csirPool.length) return csirPool;
+
   const dedicated = (CATEGORY_QUIZ[categoryName] || []).map((q) =>
     formatQuizItem({ question: q.question, options: q.options, answerIndex: q.answerIndex })
   );
@@ -274,13 +278,14 @@ function listMockTests() {
     if (cat.slug === 'gate-papers') return;
     const pdfCount = pdfCounts[cat.name] || 0;
     const quizPool = getCategoryQuizPool(cat.name);
-    const qCount = 10;
-    const marks = qCount;
+    const qCount = Math.min(15, Math.max(1, quizPool.length));
+    if (!qCount) return;
+    const marks = qCount * (cat.slug.startsWith('csir-') ? 2 : 1);
     tokens.push({
-      id: 'cat-' + cat.slug,
-      group: 'category',
-      groupLabel: 'PDF Study Categories',
-      title: cat.name + ' — Practice Mock',
+      id: cat.slug.startsWith('csir-') ? cat.slug : 'cat-' + cat.slug,
+      group: cat.slug.startsWith('csir-') ? 'csir-net' : 'category',
+      groupLabel: cat.slug.startsWith('csir-') ? 'CSIR NET JRF — Mathematical Sciences' : 'PDF Study Categories',
+      title: cat.name + (cat.slug.startsWith('csir-') ? ' — MCQ Practice' : ' — Practice Mock'),
       badge: cat.code + ' · ' + pdfCount + ' PDFs in library',
       code: cat.code,
       image: cat.image,
@@ -295,7 +300,7 @@ function listMockTests() {
     });
   });
 
-  return { tokens, groups: ['gate-year', 'category'] };
+  return { tokens, groups: ['gate-year', 'category', 'csir-net'] };
 }
 
 function getCategoryBySlug(slug) {

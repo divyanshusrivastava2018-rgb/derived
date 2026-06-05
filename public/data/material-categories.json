@@ -82,5 +82,59 @@
     "slug": "question-banks",
     "code": "QB",
     "image": "/images/materials/question-banks.svg"
+  },
+  {
+    "name": "CSIR NET Syllabus",
+    "slug": "csir-syllabus",
+    "code": "SYL",
+    "image": "/images/materials/syllabus-keys.svg"
+  },
+  {
+    "name": "Real Analysis",
+    "slug": "csir-real-analysis",
+    "code": "RA",
+    "image": "/images/materials/metric-spaces.svg"
+  },
+  {
+    "name": "Linear Algebra",
+    "slug": "csir-linear-algebra",
+    "code": "LA",
+    "image": "/images/materials/linear-algebra.svg"
+  },
+  {
+    "name": "Complex Analysis",
+    "slug": "csir-complex-analysis",
+    "code": "CA",
+    "image": "/images/materials/complex-analysis.svg"
+  },
+  {
+    "name": "Abstract Algebra",
+    "slug": "csir-abstract-algebra",
+    "code": "AA",
+    "image": "/images/materials/reference-books.svg"
+  },
+  {
+    "name": "Differential Equations",
+    "slug": "csir-differential-equations",
+    "code": "DE",
+    "image": "/images/materials/dips-notes.svg"
+  },
+  {
+    "name": "Numerical Analysis",
+    "slug": "csir-numerical-analysis",
+    "code": "NA",
+    "image": "/images/materials/numerical-analysis.svg"
+  },
+  {
+    "name": "Integral Equations & COV",
+    "slug": "csir-integral-equations",
+    "code": "IE",
+    "image": "/images/materials/topology.svg"
+  },
+  {
+    "name": "CSIR NET Mixed Practice",
+    "slug": "csir-net-mixed",
+    "code": "MIX",
+    "image": "/images/materials/question-banks.svg"
   }
 ]

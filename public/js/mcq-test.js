@@ -87,6 +87,7 @@
     var groups = [
       { key: "all", label: "All mocks" },
       { key: "gate-year", label: "GATE (year-wise)" },
+      { key: "csir-net", label: "CSIR NET JRF" },
       { key: "category", label: "PDF categories" }
     ];
     tabs.innerHTML = groups
@@ -125,17 +126,26 @@
     var gate = list.filter(function (t) {
       return t.group === "gate-year";
     });
+    var csir = list.filter(function (t) {
+      return t.group === "csir-net";
+    });
     var cat = list.filter(function (t) {
       return t.group === "category";
     });
     var html = "";
-    if (gate.length && activeFilter !== "category") {
+    if (gate.length && activeFilter !== "category" && activeFilter !== "csir-net") {
       html +=
         '<h2 class="mock-group-title">GATE Mathematics — Year-wise full mocks</h2><div class="mock-cards-row">' +
         gate.map(renderMockCard).join("") +
         "</div>";
     }
-    if (cat.length && activeFilter !== "gate-year") {
+    if (csir.length && activeFilter !== "gate-year" && activeFilter !== "category") {
+      html +=
+        '<h2 class="mock-group-title">CSIR NET JRF — Mathematical Sciences</h2><div class="mock-cards-row">' +
+        csir.map(renderMockCard).join("") +
+        "</div>";
+    }
+    if (cat.length && activeFilter !== "gate-year" && activeFilter !== "csir-net") {
       html +=
         '<h2 class="mock-group-title">Study material categories — Practice mocks</h2><div class="mock-cards-row">' +
         cat.map(renderMockCard).join("") +
@@ -146,7 +156,14 @@
     grid.querySelectorAll(".mock-card-cta[data-attempt-type='category-quiz']").forEach(function (a) {
       a.addEventListener("click", function (e) {
         e.preventDefault();
-        openCategoryQuiz(a.getAttribute("data-quiz-topic") || "", true);
+        openCategoryQuiz(
+          a.getAttribute("data-quiz-topic") || "",
+          true,
+          (function () {
+            var card = a.closest(".mock-card");
+            return card ? card.getAttribute("data-id") || "" : "";
+          })()
+        );
       });
     });
 
@@ -183,12 +200,41 @@
   var genBtn = document.getElementById("btnGenerateMcq");
   var submitBtn = document.getElementById("btnSubmitMcq");
   var currentTopic = "";
+  var currentCategorySlug = "";
   var currentQuestions = [];
   var currentTestId = "";
+  var offlineAnswers = null;
+  var csirBankPromise = null;
 
-  function openCategoryQuiz(topic, autoStart) {
+  function loadCsirBank() {
+    if (!csirBankPromise) {
+      csirBankPromise = fetch("/data/csir-net-mcq-bank.json", { cache: "no-store" })
+        .then(function (r) {
+          return r.ok ? r.json() : { categories: [] };
+        })
+        .catch(function () {
+          return { categories: [] };
+        });
+    }
+    return csirBankPromise;
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i];
+      a[i] = a[j];
+      a[j] = t;
+    }
+    return a;
+  }
+
+  function openCategoryQuiz(topic, autoStart, slug) {
     if (!quizPanel || !topic) return;
     currentTopic = topic;
+    currentCategorySlug = slug || "";
+    offlineAnswers = null;
     var titleEl = document.getElementById("quizPanelTitle");
     if (titleEl) titleEl.textContent = topic + " — Practice Mock";
     quizPanel.style.display = "block";
@@ -252,6 +298,35 @@
     }
   }
 
+  function generateOfflineQuiz() {
+    return loadCsirBank().then(function (bank) {
+      var cats = bank.categories || [];
+      var cat =
+        cats.find(function (c) {
+          return currentCategorySlug && c.slug === currentCategorySlug;
+        }) ||
+        cats.find(function (c) {
+          return c.name === currentTopic;
+        });
+      if (!cat || !cat.questions || !cat.questions.length) {
+        throw new Error("offline");
+      }
+      var picked = shuffle(cat.questions).slice(0, Math.min(10, cat.questions.length));
+      offlineAnswers = picked.map(function (q) {
+        return typeof q.answerIndex === "number" ? q.answerIndex : 0;
+      });
+      currentTestId = "";
+      currentQuestions = picked.map(function (q, i) {
+        return {
+          id: q.id || "q" + (i + 1),
+          question: q.text,
+          options: q.options || []
+        };
+      });
+      return { offline: true };
+    });
+  }
+
   function generateQuiz() {
     if (!currentTopic || !formEl) return;
     if (resultEl) resultEl.textContent = "";
@@ -264,6 +339,7 @@
       : fetch("/api/mcq/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
           body: JSON.stringify({ topic: currentTopic, count: 10 })
         }).then(function (r) {
           return r.json().then(function (j) {
@@ -275,22 +351,120 @@
     req
       .then(function (j) {
         currentTestId = j.testId || "";
+        offlineAnswers = null;
         currentQuestions = Array.isArray(j.questions) ? j.questions : [];
         renderQuestions(currentQuestions);
         if (submitBtn) submitBtn.disabled = currentQuestions.length === 0;
       })
       .catch(function () {
-        formEl.innerHTML = "<p>Could not load quiz. Is the server running?</p>";
-        if (submitBtn) submitBtn.disabled = true;
+        return generateOfflineQuiz()
+          .then(function () {
+            renderQuestions(currentQuestions);
+            if (submitBtn) submitBtn.disabled = currentQuestions.length === 0;
+          })
+          .catch(function () {
+            formEl.innerHTML =
+              "<p>Could not load quiz. Run <code>npm start</code>, then open <code>http://localhost:3000/mcq-test.html</code>.</p>";
+            if (submitBtn) submitBtn.disabled = true;
+          });
       });
   }
 
   function submitQuiz() {
-    if (!currentQuestions.length || !currentTestId) return;
+    if (!currentQuestions.length) return;
     var answers = currentQuestions.map(function (_q, idx) {
       var selected = formEl.querySelector('input[name="q' + idx + '"]:checked');
       return selected ? Number(selected.value) : -1;
     });
+
+    if (!currentTestId && offlineAnswers) {
+      var score = 0;
+      var correct = 0;
+      var wrong = 0;
+      var unattempted = 0;
+      var review = offlineAnswers.map(function (exp, idx) {
+        var ans = answers[idx];
+        var status = "skipped";
+        if (Number.isInteger(ans) && ans >= 0) {
+          if (ans === exp) {
+            status = "correct";
+            correct += 1;
+            score += 1;
+          } else {
+            status = "incorrect";
+            wrong += 1;
+          }
+        } else {
+          unattempted += 1;
+        }
+        return {
+          id: "q" + (idx + 1),
+          number: idx + 1,
+          sectionLabel: currentTopic,
+          text: currentQuestions[idx].question || "",
+          options: currentQuestions[idx].options || [],
+          status: status,
+          selected: ans >= 0 ? ans : -1,
+          correctIndex: exp,
+          marks: 1,
+          marksAwarded: status === "correct" ? 1 : 0
+        };
+      });
+      var total = offlineAnswers.length;
+      var percentage = total ? Math.round((score * 100) / total) : 0;
+      if (resultEl) {
+        resultEl.innerHTML =
+          "Score: " +
+          esc(String(score)) +
+          " / " +
+          esc(String(total)) +
+          " (" +
+          esc(String(percentage)) +
+          "%) · offline practice";
+      }
+      try {
+        sessionStorage.setItem(
+          "researchium_mock_analysis",
+          JSON.stringify({
+            type: "quiz",
+            title: (currentTopic || "Practice") + " — Mock",
+            completedAt: new Date().toISOString(),
+            backUrl: "/mcq-test.html#mock-test-series",
+            summary: {
+              score: score,
+              maxMarks: total,
+              correct: correct,
+              wrong: wrong,
+              unattempted: unattempted,
+              total: total,
+              attempted: correct + wrong,
+              percentage: percentage
+            },
+            sections: [
+              {
+                key: "practice",
+                label: currentTopic,
+                total: total,
+                correct: correct,
+                wrong: wrong,
+                skipped: unattempted,
+                accuracy: percentage
+              }
+            ],
+            review: review
+          })
+        );
+        if (resultEl) {
+          resultEl.innerHTML +=
+            ' · <a href="/mock-analysis.html">View detailed analysis</a>';
+        }
+      } catch (_) {
+        /* ignore */
+      }
+      return;
+    }
+
+    if (!currentTestId) return;
     var req = window.ResearchiumApi && window.ResearchiumApi.post
       ? window.ResearchiumApi.post("/api/mcq/submit", {
           testId: currentTestId,
@@ -381,13 +555,20 @@
   var params = new URLSearchParams(window.location.search);
   var catSlug = params.get("category");
   if (catSlug) {
-    fetch("/api/mcq/category/" + encodeURIComponent(catSlug))
+    fetch("/api/mcq/category/" + encodeURIComponent(catSlug), { credentials: "same-origin" })
       .then(function (r) {
         return r.json();
       })
       .then(function (j) {
-        if (j.quizTopic) openCategoryQuiz(j.quizTopic, true);
+        if (j.quizTopic) openCategoryQuiz(j.quizTopic, true, catSlug);
       })
-      .catch(function () {});
+      .catch(function () {
+        loadCsirBank().then(function (bank) {
+          var cat = (bank.categories || []).find(function (c) {
+            return c.slug === catSlug;
+          });
+          if (cat) openCategoryQuiz(cat.name, true, catSlug);
+        });
+      });
   }
 })();

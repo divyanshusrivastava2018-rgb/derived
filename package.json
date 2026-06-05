@@ -19,6 +19,7 @@
     "sync:physics": "node server/scripts/import-demo-playlist.js physics",
     "sync:mathematics": "node server/scripts/import-demo-playlist.js mathematics",
     "import:math-science": "node server/scripts/import-mathematical-science-materials.js",
+    "import:csir-net": "node server/scripts/import-csir-net-jrf-mcqs.js",
     "sync:mock-offline": "node server/scripts/sync-offline-mock-data.js",
     "migrate:gate-answers": "node server/scripts/split-gate-mcq-answers.js",
     "prepare:gate": "node server/scripts/ensure-gate-answers.js",

@@ -19,6 +19,9 @@ public/data/gate-mcq-solutions.json
 # Local source PDFs (copies live under public/study-materials/)
 MATHEMATICAL SCIENCE*/
 **/MATHEMATICAL SCIENCE */
+CSIR-NET JRF*/
+**/CSIR-NET JRF*/
+public/study-materials/csir-net-jrf/
 
 # GitHub file size limit (100 MB)
 **/gate-solved-paper.pdf
