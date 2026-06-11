@@ -4,39 +4,42 @@
 (function () {
   "use strict";
 
-  var HERO_SLIDES = [
+  var HERO_BANNERS = [
     {
-      badge: "Trusted learning",
-      title: "Built for serious exam & research aspirants",
-      lead: "Courses, live classes, GATE & CSIR mocks, and study PDFs — one platform for your prep journey.",
-      stat: "2,500+",
-      statLabel: "active learners",
-      cta: { href: "/pricing.html", label: "Get Subscription" },
-      secondary: { href: "/courses.html", label: "Browse courses" },
-      img: "/images/hero-students.png",
-      alt: "Students learning online"
+      img: "/images/banners/banner-unlock-potential.png",
+      alt: "Unlock Your Potential — Master Science and Mathematics for India's top exams",
+      href: "/pricing.html",
+      hint: "Start learning"
     },
     {
-      badge: "Live & recorded",
-      title: "Learn live. Revise anytime.",
-      lead: "Join scheduled doubt labs and replay sessions on your schedule.",
-      stat: "Weekly",
-      statLabel: "live slots",
-      cta: { href: "/live-classes.html", label: "View live schedule" },
-      secondary: { href: "/watch.html", label: "Watch library" },
-      img: "/images/hero-students.png",
-      alt: "Live class learning"
+      img: "/images/banners/banner-science.png",
+      alt: "Life Sciences, Physical Sciences and Chemical Sciences",
+      href: "/csir-net.html",
+      hint: "Explore science"
     },
     {
-      badge: "Mock tests",
-      title: "Practice like the real exam",
-      lead: "GATE Mathematics mocks, topic quizzes, and category-wise practice tests with instant scoring.",
-      stat: "50+",
-      statLabel: "mock papers",
-      cta: { href: "/mcq-test.html", label: "Start mock test" },
-      secondary: { href: "/gate-exam.html", label: "GATE exam mode" },
-      img: "/images/hero-students.png",
-      alt: "Exam practice"
+      img: "/images/banners/banner-mathematics.png",
+      alt: "Real Analysis, Linear Algebra, Abstract Algebra and more",
+      href: "/study-materials.html",
+      hint: "Math materials"
+    },
+    {
+      img: "/images/banners/banner-gate.png",
+      alt: "Crack GATE 2025 — Physics, Chemistry, Maths, Life Sciences",
+      href: "/gate-exam.html",
+      hint: "Explore GATE"
+    },
+    {
+      img: "/images/banners/banner-iit-jam.png",
+      alt: "IIT-JAM 2025 — Gateway to IIT and IISc M.Sc.",
+      href: "/study-materials.html",
+      hint: "IIT-JAM prep"
+    },
+    {
+      img: "/images/banners/banner-roadmap.png",
+      alt: "One Platform, Three Milestones — Foundation, Practice, Revision",
+      href: "/mcq-test.html",
+      hint: "View roadmap"
     }
   ];
 
@@ -86,73 +89,75 @@
     return d.innerHTML;
   }
 
+  function buildHeroSlideMarkup(s, i) {
+    return (
+      '<div class="yo-hero__slide' +
+      (i === 0 ? " is-active" : "") +
+      '" data-slide="' +
+      i +
+      '">' +
+      '<div class="yo-hero__slide-bg">' +
+      '<img class="yo-hero__slide-img" src="' +
+      esc(s.img) +
+      '" alt="' +
+      esc(s.alt) +
+      '" width="1200" height="400" loading="' +
+      (i === 0 ? "eager" : "lazy") +
+      '" decoding="async" /></div>' +
+      '<div class="yo-hero__caption">' +
+      '<span class="yo-label">' +
+      esc(s.hint) +
+      "</span>" +
+      "<h1>" +
+      esc(s.alt.split("—")[0].trim()) +
+      "</h1>" +
+      '<p class="yo-hero__lead">' +
+      esc(s.alt.split("—").slice(1).join("—").trim() || "Start preparing on Researchium") +
+      "</p>" +
+      '<div class="yo-hero__actions">' +
+      '<a href="' +
+      esc(s.href) +
+      '" class="yo-btn-primary">' +
+      esc(s.hint) +
+      " →</a></div></div></div>"
+    );
+  }
+
   function initHeroCarousel() {
     var root = document.getElementById("yoHeroSlides");
     var dotsRoot = document.getElementById("yoHeroDots");
     if (!root) return;
 
-    root.innerHTML = HERO_SLIDES.map(function (s, i) {
-      return (
-        '<div class="yo-hero__slide' +
-        (i === 0 ? " is-active" : "") +
-        '" data-slide="' +
-        i +
-        '">' +
-        '<div class="yo-hero__inner">' +
-        '<div class="yo-hero__content">' +
-        '<span class="yo-hero__badge">' +
-        esc(s.badge) +
-        "</span>" +
-        "<h1>" +
-        esc(s.title) +
-        "</h1>" +
-        '<p class="yo-hero__lead">' +
-        esc(s.lead) +
-        "</p>" +
-        '<p class="yo-hero__stat"><strong>' +
-        esc(s.stat) +
-        "</strong> " +
-        esc(s.statLabel) +
-        "</p>" +
-        '<div class="yo-hero__actions">' +
-        '<a href="' +
-        esc(s.cta.href) +
-        '" class="yo-btn-primary">' +
-        esc(s.cta.label) +
-        "</a>" +
-        '<a href="' +
-        esc(s.secondary.href) +
-        '" class="yo-btn-outline">' +
-        esc(s.secondary.label) +
-        "</a></div></div>" +
-        '<div class="yo-hero__visual"><img src="' +
-        esc(s.img) +
-        '" alt="' +
-        esc(s.alt) +
-        '" width="420" height="400" loading="' +
-        (i === 0 ? "eager" : "lazy") +
-        '" /></div></div></div>'
-      );
-    }).join("");
-
-    if (dotsRoot) {
-      dotsRoot.innerHTML = HERO_SLIDES.map(function (_, i) {
-        return (
-          '<button type="button" class="yo-hero__dot' +
-          (i === 0 ? " is-active" : "") +
-          '" data-dot="' +
-          i +
-          '" aria-label="Slide ' +
-          (i + 1) +
-          '"></button>'
-        );
-      }).join("");
+    var slides = root.querySelectorAll(".yo-hero__slide");
+    if (!slides.length) {
+      root.innerHTML = HERO_BANNERS.map(buildHeroSlideMarkup).join("");
+      slides = root.querySelectorAll(".yo-hero__slide");
     }
 
-    var slides = root.querySelectorAll(".yo-hero__slide");
+    if (dotsRoot && !dotsRoot.children.length) {
+      dotsRoot.innerHTML = Array.prototype.map
+        .call(slides, function (_, i) {
+          return (
+            '<button type="button" class="yo-hero__dot' +
+            (i === 0 ? " is-active" : "") +
+            '" data-dot="' +
+            i +
+            '" aria-label="Slide ' +
+            (i + 1) +
+            '"></button>'
+          );
+        })
+        .join("");
+    }
+
+    slides = root.querySelectorAll(".yo-hero__slide");
     var dots = dotsRoot ? dotsRoot.querySelectorAll(".yo-hero__dot") : [];
     var idx = 0;
     var timer;
+
+    slides.forEach(function (el, i) {
+      if (el.classList.contains("is-active")) idx = i;
+    });
 
     function show(n) {
       idx = (n + slides.length) % slides.length;
@@ -173,9 +178,10 @@
 
     function resetTimer() {
       clearInterval(timer);
+      if (slides.length < 2) return;
       timer = setInterval(function () {
         show(idx + 1);
-      }, 6000);
+      }, 4000);
     }
 
     resetTimer();

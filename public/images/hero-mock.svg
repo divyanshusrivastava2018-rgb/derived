@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="800" viewBox="0 0 840 800" role="img" aria-label="Exam practice and mock tests">
+  <defs>
+    <linearGradient id="mbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#ede9fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="840" height="800" rx="32" fill="url(#mbg)"/>
+  <rect x="140" y="140" width="560" height="520" rx="20" fill="#fff" opacity="0.92"/>
+  <rect x="180" y="190" width="200" height="16" rx="8" fill="#7c3aed" opacity="0.7"/>
+  <rect x="180" y="230" width="480" height="10" rx="5" fill="#e2e8f0"/>
+  <rect x="180" y="260" width="420" height="10" rx="5" fill="#e2e8f0"/>
+  <rect x="180" y="310" width="36" height="36" rx="8" fill="#7c3aed"/>
+  <path d="M192 328 l8 8 16-16" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <rect x="230" y="318" width="300" height="20" rx="6" fill="#f1f5f9"/>
+  <rect x="180" y="370" width="36" height="36" rx="8" fill="#e2e8f0"/>
+  <rect x="230" y="380" width="280" height="16" rx="6" fill="#f1f5f9"/>
+  <rect x="180" y="430" width="36" height="36" rx="8" fill="#e2e8f0"/>
+  <rect x="230" y="440" width="320" height="16" rx="6" fill="#f1f5f9"/>
+  <rect x="180" y="490" width="36" height="36" rx="8" fill="#e2e8f0"/>
+  <rect x="230" y="500" width="260" height="16" rx="6" fill="#f1f5f9"/>
+  <rect x="180" y="570" width="160" height="48" rx="24" fill="#fbbf24"/>
+  <text x="260" y="602" text-anchor="middle" fill="#1e1b4b" font-size="18" font-weight="700" font-family="system-ui,sans-serif">Submit</text>
+  <circle cx="680" cy="200" r="60" fill="#10b981" opacity="0.15"/>
+  <text x="680" y="195" text-anchor="middle" fill="#059669" font-size="28" font-weight="800" font-family="system-ui,sans-serif">92%</text>
+  <text x="680" y="220" text-anchor="middle" fill="#059669" font-size="13" font-weight="600" font-family="system-ui,sans-serif">Score</text>
+</svg>

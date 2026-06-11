@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" role="img" aria-label="Students learning on mobile and desktop">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#5b21b6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ede9fe"/>
+      <stop offset="100%" stop-color="#c4b5fd"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="480" fill="url(#bg)"/>
+  <circle cx="320" cy="200" r="180" fill="url(#glow)"/>
+  <rect x="120" y="130" width="280" height="190" rx="16" fill="#312e81" opacity="0.55"/>
+  <rect x="140" y="150" width="240" height="150" rx="8" fill="url(#screen)"/>
+  <rect x="160" y="170" width="80" height="8" rx="4" fill="#7c3aed" opacity="0.7"/>
+  <rect x="160" y="190" width="120" height="6" rx="3" fill="#a78bfa" opacity="0.5"/>
+  <rect x="160" y="210" width="100" height="6" rx="3" fill="#a78bfa" opacity="0.4"/>
+  <rect x="160" y="240" width="60" height="24" rx="12" fill="#fbbf24"/>
+  <rect x="380" y="220" width="110" height="200" rx="18" fill="#1e1b4b" opacity="0.85"/>
+  <rect x="392" y="240" width="86" height="150" rx="6" fill="url(#screen)"/>
+  <circle cx="435" cy="405" r="10" fill="#4c1d95"/>
+  <ellipse cx="250" cy="360" rx="90" ry="18" fill="#000" opacity="0.15"/>
+  <circle cx="250" cy="310" r="42" fill="#fde68a"/>
+  <circle cx="250" cy="300" r="34" fill="#fcd34d"/>
+  <rect x="210" y="340" width="80" height="70" rx="20" fill="#7c3aed"/>
+  <rect x="225" y="355" width="50" height="40" rx="8" fill="#a78bfa" opacity="0.5"/>
+</svg>

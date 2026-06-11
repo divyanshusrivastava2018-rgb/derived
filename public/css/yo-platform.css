@@ -11,25 +11,26 @@
   }
 }
 
-/* —— Hero carousel —— */
+/* —— Hero carousel (static HTML + JS auto-rotate) —— */
 .yo-hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 42%, #7c3aed 100%);
+  background: linear-gradient(135deg, #1a0a3c 0%, #6b21a8 50%, #7c3aed 100%);
   color: #fff;
-  min-height: 420px;
+  min-height: 320px;
 }
 
 .yo-hero__slides {
   position: relative;
-  min-height: 420px;
+  width: 100%;
+  min-height: 320px;
 }
 
 .yo-hero__slide {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  min-height: 320px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
@@ -41,21 +42,25 @@
   pointer-events: auto;
 }
 
-.yo-hero__inner {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 3.5rem 1.5rem 4rem;
-  display: grid;
-  gap: 2rem;
-  align-items: center;
+.yo-hero__slide-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 
-@media (min-width: 900px) {
-  .yo-hero__inner {
-    grid-template-columns: 1.1fr 0.9fr;
-    padding: 4rem 2rem 4.5rem;
-  }
+.yo-hero__slide-img {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.yo-hero__slide.is-active:hover .yo-hero__slide-img {
+  transform: scale(1.03);
 }
 
 .yo-hero__badge {
@@ -144,18 +149,6 @@
 
 .yo-btn-outline:hover {
   background: rgba(255, 255, 255, 0.12);
-}
-
-.yo-hero__visual {
-  display: flex;
-  justify-content: center;
-}
-
-.yo-hero__visual img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .yo-hero__dots {
@@ -465,6 +458,8 @@ a.yo-benefit-pill:hover {
 }
 
 .yo-app-mock {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(160deg, #4c1d95, #7c3aed);
   border-radius: 20px;
   padding: 2rem;
@@ -476,10 +471,114 @@ a.yo-benefit-pill:hover {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  cursor: default;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.yo-app-mock--hoverimg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(30, 27, 75, 0.55) 0%,
+    rgba(76, 29, 149, 0.4) 45%,
+    rgba(124, 58, 237, 0.25) 100%
+  );
+  z-index: 1;
+  transition: opacity 0.4s ease, background 0.4s ease;
+}
+
+.yo-app-mock__media {
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+  transform: scale(1.02);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.yo-app-mock__hover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.yo-app-mock__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 220px;
+}
+
+.yo-app-mock__summary {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+  max-width: 18rem;
+  line-height: 1.5;
+}
+
+.yo-app-mock__hint {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 0.25rem;
 }
 
 .yo-app-mock__icon {
   font-size: 4rem;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .yo-app-mock--hoverimg:hover,
+  .yo-app-mock--hoverimg:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(76, 29, 149, 0.35);
+    outline: none;
+  }
+
+  .yo-app-mock--hoverimg:hover::before,
+  .yo-app-mock--hoverimg:focus-visible::before {
+    opacity: 0.55;
+    background: linear-gradient(
+      160deg,
+      rgba(30, 27, 75, 0.45) 0%,
+      rgba(76, 29, 149, 0.3) 50%,
+      rgba(124, 58, 237, 0.15) 100%
+    );
+  }
+
+  .yo-app-mock--hoverimg:hover .yo-app-mock__media,
+  .yo-app-mock--hoverimg:focus-visible .yo-app-mock__media {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .yo-app-mock--hoverimg:hover .yo-app-mock__icon,
+  .yo-app-mock--hoverimg:focus-visible .yo-app-mock__icon {
+    transform: scale(1.08);
+  }
+
+  .yo-app-mock--hoverimg:hover .yo-app-mock__hint,
+  .yo-app-mock--hoverimg:focus-visible .yo-app-mock__hint {
+    color: #fde68a;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-app-mock__media,
+  .yo-hero__slide-img,
+  .yo-app-mock--hoverimg {
+    transition-duration: 0.01ms;
+  }
 }
 
 /* —— YouTube channels —— */
@@ -511,11 +610,114 @@ a.yo-benefit-pill:hover {
   border-radius: 14px;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.25s ease;
 }
 
 .yo-yt-card:hover {
   box-shadow: var(--shadow-card);
+}
+
+.yo-yt-card--hoverimg {
+  position: relative;
+  overflow: hidden;
+  min-height: 96px;
+}
+
+.yo-yt-card--hoverimg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 42%, #7c3aed 100%);
+  opacity: 0.88;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.yo-yt-card__media {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  transform: scale(1.04);
+  transition: opacity 0.45s ease, transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.yo-yt-card__hover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.yo-yt-card__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.yo-yt-card__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.yo-yt-card__text h3,
+.yo-yt-card--hoverimg h3 {
+  color: #fff;
+}
+
+.yo-yt-card__text p,
+.yo-yt-card--hoverimg p {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.yo-yt-card__hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .yo-yt-card--hoverimg:hover,
+  .yo-yt-card--hoverimg:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(76, 29, 149, 0.3);
+    outline: none;
+  }
+
+  .yo-yt-card--hoverimg:hover::before,
+  .yo-yt-card--hoverimg:focus-visible::before {
+    opacity: 0.45;
+  }
+
+  .yo-yt-card--hoverimg:hover .yo-yt-card__media,
+  .yo-yt-card--hoverimg:focus-visible .yo-yt-card__media {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .yo-yt-card--hoverimg:hover .yo-yt-card__avatar,
+  .yo-yt-card--hoverimg:focus-visible .yo-yt-card__avatar {
+    transform: scale(1.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  .yo-yt-card--hoverimg:hover .yo-yt-card__hint,
+  .yo-yt-card--hoverimg:focus-visible .yo-yt-card__hint {
+    color: #fde68a;
+  }
 }
 
 .yo-yt-card__logo {

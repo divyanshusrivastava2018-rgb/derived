@@ -23,11 +23,11 @@
 
 .footer-logo-img {
   display: block;
-  height: 40px;
+  height: 44px;
   width: auto;
-  max-width: 220px;
+  max-width: 240px;
   object-fit: contain;
-  background: #fff;
+  background: transparent;
 }
 
 .page-hero {
@@ -2624,4 +2624,176 @@ body[data-page="courses"] .admin-catalog-hint a {
 }
 .blog-mini-grid .blog-card {
   border-left-width: 4px;
+}
+
+/* ── Hero slide caption overlay ── */
+.yo-hero__caption {
+  position: relative;
+  z-index: 2;
+  padding: 3.5rem 2rem;
+  max-width: 600px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(90deg, rgba(10, 4, 30, 0.78) 0%, rgba(10, 4, 30, 0.35) 55%, transparent 100%);
+  box-sizing: border-box;
+}
+
+.yo-hero__caption h1 {
+  color: #ffffff;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  margin: 0.5rem 0;
+  line-height: 1.2;
+}
+
+.yo-hero__caption .yo-label {
+  color: #c4b5fd;
+}
+
+.yo-hero__caption .yo-hero__lead {
+  color: #e9d5ff;
+  font-size: 1rem;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.yo-hero__slide-img[src=""],
+.yo-hero__slide-img:not([src]) {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .yo-hero,
+  .yo-hero__slides,
+  .yo-hero__slide,
+  .yo-hero__caption {
+    min-height: 280px;
+  }
+
+  .yo-hero__caption {
+    padding: 2rem 1.25rem;
+    max-width: 100%;
+    background: linear-gradient(180deg, rgba(10, 4, 30, 0.82) 0%, rgba(10, 4, 30, 0.45) 100%);
+  }
+
+  .yo-hero__slide-img {
+    min-height: 280px;
+  }
+}
+
+/* ── Exam banner grid (exam-banners section) ── */
+.yo-exam-banner {
+  position: relative;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  aspect-ratio: 16 / 5;
+  background: linear-gradient(135deg, #1a0a3c 0%, #6b21a8 55%, #7c3aed 100%);
+}
+
+.yo-exam-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.yo-exam-banner:hover img,
+.yo-exam-banner:focus-visible img {
+  transform: scale(1.04);
+}
+
+.yo-exam-banner__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(90deg, rgba(10, 4, 30, 0.72) 0%, rgba(10, 4, 30, 0.15) 100%);
+  pointer-events: none;
+}
+
+.yo-exam-banner__tag {
+  display: inline-block;
+  background: rgba(124, 58, 237, 0.85);
+  color: #e9d5ff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+}
+
+.yo-exam-banner__overlay h3 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+}
+
+.yo-exam-banner__cta {
+  color: #c4b5fd;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.yo-exam-banner:hover .yo-exam-banner__cta,
+.yo-exam-banner:focus-visible .yo-exam-banner__cta {
+  color: #ffffff;
+}
+
+#exam-banners .yo-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.yo-exam-banner:nth-child(1) {
+  background: linear-gradient(135deg, #1a0a3c 0%, #6b21a8 100%);
+}
+
+.yo-exam-banner:nth-child(2) {
+  background: linear-gradient(135deg, #042d2a 0%, #0f6e56 100%);
+}
+
+.yo-exam-banner:nth-child(3) {
+  background: linear-gradient(135deg, #1c0a00 0%, #92400e 100%);
+}
+
+.yo-exam-banner:nth-child(4) {
+  background: linear-gradient(135deg, #13082e 0%, #4c1d95 100%);
+}
+
+.yo-exam-banner img[src=""],
+.yo-exam-banner img:not([src]) {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  #exam-banners .yo-banner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .yo-exam-banner__overlay h3 {
+    font-size: 1rem;
+  }
+
+  .yo-exam-banner__overlay {
+    padding: 1rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-exam-banner img {
+    transition-duration: 0.01ms;
+  }
 }

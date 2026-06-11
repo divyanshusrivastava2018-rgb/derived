@@ -6,13 +6,13 @@ const fs = require("fs");
 const path = require("path");
 
 const publicDir = path.join(__dirname, "../../public");
-const LOGO_VER = "header5";
+const LOGO_VER = "header6";
 const FALLBACK =
   '<header id="site-header" class="site-header-mount">' +
   '<a href="/" class="site-nav__brand site-nav__brand--preload" aria-label="Researchium home">' +
   '<img src="/images/researchium-logo.png?v=' +
   LOGO_VER +
-  '" alt="Researchium" class="site-nav__logo-img" width="714" height="202" decoding="async" fetchpriority="high" />' +
+  '" alt="Researchium" class="site-nav__logo-img" width="1024" height="210" decoding="async" fetchpriority="high" />' +
   "</a></header>";
 const CHROME_SYNC = '<script src="/js/researchium-chrome.js"></script>';
 const EMPTY_MOUNT = /<header id="site-header" class="site-header-mount"><\/header>/g;

@@ -46,16 +46,16 @@
   padding: 6px 0;
 }
 
-/* Logo asset 714×202 — show full wordmark width, not cropped */
+/* Logo asset 1024×210 — shield + Researchium wordmark */
 .site-nav__logo-img {
   display: block;
-  height: clamp(36px, 5.5vw, 58px);
+  height: clamp(38px, 5.5vw, 56px);
   width: auto;
   max-width: 100%;
-  aspect-ratio: 714 / 202;
+  aspect-ratio: 1024 / 210;
   object-fit: contain;
   object-position: left center;
-  background: #fff;
+  background: transparent;
 }
 
 @media (min-width: 768px) {

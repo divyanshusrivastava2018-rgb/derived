@@ -6,8 +6,9 @@
 
   var PAGE = document.body.getAttribute("data-page") || "";
   var LOGO_PNG = "/images/researchium-logo.png";
-  var LOGO_VER = "header5";
-  var LOGO_ALT = "Researchium";
+  var LOGO_FAVICON = "/images/researchium-favicon.png";
+  var LOGO_VER = "header6";
+  var LOGO_ALT = "Researchium — Exam prep, science and mathematics";
 
   function logoUrl() {
     return LOGO_PNG + "?v=" + LOGO_VER;
@@ -21,7 +22,7 @@
       LOGO_ALT +
       '" class="' +
       className +
-      '" width="714" height="202" decoding="async" fetchpriority="high" />'
+      '" width="1024" height="210" decoding="async" fetchpriority="high" />'
     );
   }
 
@@ -30,7 +31,7 @@
     var link = document.createElement("link");
     link.rel = "icon";
     link.type = "image/png";
-    link.href = logoUrl();
+    link.href = LOGO_FAVICON + "?v=" + LOGO_VER;
     link.setAttribute("data-rm-icon", "1");
     document.head.appendChild(link);
     var preload = document.createElement("link");

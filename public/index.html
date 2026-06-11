@@ -1,334 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Researchium — Learn. Research. Grow.</title>
-    <meta name="description" content="Researchium offers curated courses, live classes, mock tests, and study materials for exam prep and research careers." />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://www.derived.co.in/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Researchium — Learn. Research. Grow." />
-    <meta property="og:description" content="Courses, live classes, GATE &amp; CSIR mocks, and study PDFs on one platform." />
-    <meta property="og:url" content="https://www.derived.co.in/" />
-    <meta property="og:site_name" content="Researchium" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" type="image/png" href="/images/researchium-logo.png?v=header5" />
-    <link rel="preload" href="/images/researchium-logo.png?v=header5" as="image" />
-    <link rel="preload" href="/css/app.css" as="style" />
-    <link rel="stylesheet" href="/css/app.css" />
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"EducationalOrganization","name":"Researchium","url":"https://www.derived.co.in/"}
-    </script>
-  </head>
-  <body data-page="home" data-cms-page="home" class="platform-home">
-    <header id="site-header" class="site-header-mount"><a href="/" class="site-nav__brand site-nav__brand--preload" aria-label="Researchium home"><img src="/images/researchium-logo.png?v=header5" alt="Researchium" class="site-nav__logo-img" width="714" height="202" decoding="async" fetchpriority="high" /></a></header>
-    <script src="/js/researchium-chrome.js"></script>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Researchium — Learn. Research. Grow.</title>
+<meta name="description" content="Researchium offers curated courses, live classes, mock tests, and study materials for CSIR NET, GATE, and IIT-JAM exam prep."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.derived.co.in/"/>
+<link rel="icon" href="/images/researchium-favicon.png" type="image/png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/researchium-home.css"/>
+</head>
+<body class="rm-home">
 
-    <nav class="yo-quickstrip" aria-label="Quick links">
-      <div class="yo-quickstrip__inner">
-        <a href="/pricing.html">Subscription Plans</a>
-        <a href="/mcq-test.html">Mock Tests</a>
-        <a href="/study-materials.html">Free Study Material</a>
-        <a href="/live-classes.html">Live Classes</a>
-        <a href="/csir-net.html">CSIR UGC NET</a>
-        <a href="/blog.html">Blog</a>
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#8B5CF6" stroke-width="1.8"/>
+        <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#7C3AED" stroke-width="1.8" transform="rotate(60 16 16)"/>
+        <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#6D28D9" stroke-width="1.5" transform="rotate(120 16 16)"/>
+        <circle cx="16" cy="16" r="3" fill="#7C3AED"/>
+        <circle cx="26" cy="16" r="1.8" fill="#A78BFA"/>
+      </svg>
+      <span class="logo-text">Research<em>ium</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/courses.html">Courses</a></li>
+      <li><a href="/live-classes.html">Live Classes</a></li>
+      <li><a href="/mcq-test.html">Mock Tests</a></li>
+      <li><a href="/study-materials.html">Study Material</a></li>
+      <li><a href="/csir-net.html">CSIR NET</a></li>
+      <li><a href="/blog.html">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/signin.html" class="nav-signin">Sign in</a>
+      <a href="/pricing.html" class="btn btn-p">Get started</a>
+    </div>
+    <button type="button" class="ham" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="strip">
+  <div class="strip-inner">
+    <a href="/pricing.html">📋 Plans</a>
+    <span class="strip-sep">·</span>
+    <a href="/mcq-test.html">📝 Mock Tests</a>
+    <span class="strip-sep">·</span>
+    <a href="/study-materials.html">📄 Free Study Material</a>
+    <span class="strip-sep">·</span>
+    <a href="/live-classes.html">▶ Live Classes</a>
+    <span class="strip-sep">·</span>
+    <a href="/csir-net.html">🔬 CSIR UGC NET</a>
+    <span class="strip-sep">·</span>
+    <a href="/blog.html">✍ Blog</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-blob1"></div>
+  <div class="hero-blob2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        <span>India's #1 Science Exam Platform</span>
       </div>
-    </nav>
-
-    <main>
-      <!-- Hero carousel -->
-      <section class="yo-hero" aria-label="Featured">
-        <div class="yo-hero__slides" id="yoHeroSlides"></div>
-        <div class="yo-hero__dots" id="yoHeroDots" aria-hidden="true"></div>
-      </section>
-
-      <!-- Live classes -->
-      <section class="yo-section yo-section--white" id="live-now">
-        <div class="yo-wrap">
-          <div class="yo-head yo-head--left">
-            <span class="yo-label">Happening now</span>
-            <h2>Live classes &amp; sessions</h2>
-            <p>Join educators for doubt labs, syllabus coverage, and exam strategy.</p>
-          </div>
-          <div class="yo-live-row" id="yoLiveRow">
-            <p class="loading-banner">Loading schedule…</p>
-          </div>
-          <p style="margin-top:1.25rem;text-align:center">
-            <a href="/live-classes.html" class="yo-link">Full live schedule →</a>
-          </p>
+      <h1>Crack <span class="grad-text">CSIR NET,<br/>GATE &amp; IIT-JAM</span><br/>with confidence.</h1>
+      <p class="hero-sub">Live classes, syllabus-aligned mock tests, and curated study material — built by educators who've been there.</p>
+      <div class="hero-actions">
+        <a href="/pricing.html" class="btn btn-p btn-lg btn-arrow">Start preparing free</a>
+        <a href="/courses.html" class="btn btn-g btn-lg">Browse courses</a>
+      </div>
+      <div class="hero-social-proof">
+        <div class="avatars">
+          <span>AK</span><span>RS</span><span>MP</span><span>VR</span><span>+</span>
         </div>
-      </section>
-
-      <!-- Explore products -->
-      <section class="yo-section yo-section--muted" id="explore-products">
-        <div class="yo-wrap">
-          <div class="yo-head">
-            <span class="yo-label">Explore</span>
-            <h2>Everything you need to prepare</h2>
-            <p>PDFs, mocks, live classes, and quizzes — pick your path.</p>
-          </div>
-          <div class="yo-products">
-            <a href="/study-materials.html" class="yo-product-card">
-              <div class="yo-product-card__icon yo-product-card__icon--pdf" aria-hidden="true">📄</div>
-              <h3>Study PDFs</h3>
-              <p>Download topic-wise notes and previous-year material.</p>
-              <span class="yo-product-card__btn">View library →</span>
-            </a>
-            <a href="/mcq-test.html" class="yo-product-card">
-              <div class="yo-product-card__icon yo-product-card__icon--mock" aria-hidden="true">📝</div>
-              <h3>Mock tests</h3>
-              <p>GATE, JEE, UPSC-style quizzes with instant feedback.</p>
-              <span class="yo-product-card__btn">Attempt mock →</span>
-            </a>
-            <a href="/live-classes.html" class="yo-product-card">
-              <div class="yo-product-card__icon yo-product-card__icon--live" aria-hidden="true">▶</div>
-              <h3>Live classes</h3>
-              <p>See upcoming sessions and replay on demand.</p>
-              <span class="yo-product-card__btn">View schedule →</span>
-            </a>
-            <a href="/mcq-test.html" class="yo-product-card">
-              <div class="yo-product-card__icon yo-product-card__icon--quiz" aria-hidden="true">✓</div>
-              <h3>Practice quizzes</h3>
-              <p>Short topic tests to sharpen accuracy daily.</p>
-              <span class="yo-product-card__btn">Start quiz →</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Benefits band -->
-      <section class="yo-section yo-section--white" id="features">
-        <div class="yo-wrap">
-          <div class="yo-benefits-band">
-            <div>
-              <div class="yo-head yo-head--left" style="margin-bottom:1.5rem">
-                <span class="yo-label">Why Researchium</span>
-                <h2 id="yoBenefitsHeadline">Join thousands practising daily</h2>
-                <p id="yoBenefitsSubhead">Live + recorded learning, structured materials, and exam-ready mocks.</p>
-              </div>
-                            <div class="yo-benefits-grid" id="yoBenefitsGrid" aria-live="polite">
-                <p class="loading-banner">Loading features…</p>
-              </div>
-              <p style="margin-top:1.5rem">
-                <a href="/pricing.html" class="yo-btn-primary">Start your preparation</a>
-              </p>
-            </div>
-            <div class="yo-app-mock" id="yoLearnAnywhere" aria-hidden="true">
-              <div class="yo-app-mock__icon">📱</div>
-              <p><strong id="yoLearnAnywhereTitle">Learn anywhere</strong></p>
-              <p id="yoLearnAnywhereSummary" style="font-size:0.875rem;opacity:0.9">Courses, mocks &amp; materials on desktop and mobile.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Popular courses -->
-      <section class="yo-section yo-section--muted">
-        <div class="yo-wrap">
-          <div class="yo-head-row">
-            <div class="yo-head yo-head--left" style="margin-bottom:0">
-              <span class="yo-label">Catalog</span>
-              <h2>Popular courses</h2>
-              <p>Hand-picked from your live course library.</p>
-            </div>
-            <a href="/courses.html" class="yo-link">View all →</a>
-          </div>
-          <div class="yo-courses-grid" id="yoCoursesGrid">
-            <p class="loading-banner">Loading courses…</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- CSIR NET highlight -->
-      <section class="yo-section yo-section--white" id="csir-net-home">
-        <div class="yo-wrap">
-          <div class="yo-head-row">
-            <div class="yo-head yo-head--left" style="margin-bottom:0">
-              <span class="yo-label">CSIR UGC NET</span>
-              <h2>Focused NET preparation</h2>
-              <p id="etCsirHomeLead">Live batches, syllabus-aligned mocks, and AI doubt support for all five science streams.</p>
-            </div>
-            <a href="/csir-net.html" class="yo-link">Explore program →</a>
-          </div>
-          <div class="yo-benefits-grid" style="max-width:720px">
-            <div class="yo-benefit-pill"><span>👥</span> <span id="etCsirStatLearners">50K+</span> learners</div>
-            <div class="yo-benefit-pill"><span>👨‍🏫</span> <span id="etCsirStatEducators">500+</span> educators</div>
-            <div class="yo-benefit-pill"><span>📚</span> 5 NET subjects</div>
-            <div class="yo-benefit-pill"><span>🔬</span> JRF &amp; Lectureship paths</div>
-          </div>
-          <p style="margin-top:1.5rem;text-align:center">
-            <a href="/csir-net.html" class="yo-btn-primary">Start CSIR NET prep</a>
-            <a href="/pricing.html" class="yo-btn-outline" style="margin-left:0.75rem;color:var(--yo-primary);border-color:var(--yo-primary)">View plans</a>
-          </p>
-        </div>
-      </section>
-
-      <!-- YouTube -->
-      <section class="yo-section yo-section--muted" id="youtube-channel">
-        <div class="yo-wrap">
-          <div class="yo-head">
-            <span class="yo-label">YouTube</span>
-            <h2>Catch us on YouTube</h2>
-            <p>Free lessons and playlists synced with our course catalog.</p>
-          </div>
-          <div class="yo-yt-grid">
-            <a
-              class="yo-yt-card"
-              href="https://www.youtube.com/@MathswithDivyanshuSir"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="yo-yt-card__logo" aria-hidden="true">▶</div>
-              <div>
-                <h3>Scholar Science</h3>
-                <p>JEE, NEET &amp; science — @MathswithDivyanshuSir</p>
-              </div>
-            </a>
-            <a class="yo-yt-card" href="/live-classes.html">
-              <div class="yo-yt-card__logo" aria-hidden="true">📺</div>
-              <div>
-                <h3>Live playlists</h3>
-                <p>Replay class recordings on Researchium</p>
-              </div>
-            </a>
-            <a class="yo-yt-card" href="/watch.html">
-              <div class="yo-yt-card__logo" aria-hidden="true">🎬</div>
-              <div>
-                <h3>Video library</h3>
-                <p>Course videos &amp; curated watch lists</p>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Success stories -->
-      <section class="yo-section yo-section--white">
-        <div class="yo-wrap">
-          <div class="yo-head">
-            <span class="yo-label">Community</span>
-            <h2>What learners say</h2>
-            <p>Feedback from students using Researchium every day.</p>
-          </div>
-          <div class="yo-stories-track" id="yoStoriesTrack"></div>
-        </div>
-      </section>
-
-      <!-- How it works -->
-      <section class="yo-section yo-section--muted">
-        <div class="yo-wrap">
-          <div class="yo-head">
-            <span class="yo-label">Get started</span>
-            <h2>How to learn with Researchium</h2>
-          </div>
-          <div class="yo-steps">
-            <div class="yo-step">
-              <div class="yo-step__num">1</div>
-              <h3>Choose your goal</h3>
-              <p>JEE, GATE, CSIR NET, UPSC, or research skills.</p>
-            </div>
-            <div class="yo-step">
-              <div class="yo-step__num">2</div>
-              <h3>Pick a plan</h3>
-              <p>Free catalog or subscription for live &amp; pro content.</p>
-            </div>
-            <div class="yo-step">
-              <div class="yo-step__num">3</div>
-              <h3>Enroll securely</h3>
-              <p>Complete checkout from the pricing page.</p>
-            </div>
-            <div class="yo-step">
-              <div class="yo-step__num">4</div>
-              <h3>Open your courses</h3>
-              <p>Access materials, mocks, and live links in one dashboard.</p>
-            </div>
-            <div class="yo-step">
-              <div class="yo-step__num">5</div>
-              <h3>Start learning</h3>
-              <p>Watch, practise, and track progress toward your exam.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section class="yo-section yo-section--white" id="faq">
-        <div class="yo-wrap">
-          <div class="yo-head">
-            <span class="yo-label">FAQ</span>
-            <h2>Common questions</h2>
-          </div>
-          <div class="yo-faq">
-            <details>
-              <summary>What is Researchium?</summary>
-              <div class="yo-faq__body">
-                Researchium is an online learning platform for exam preparation and research skills — courses, live
-                classes, study PDFs, and mock tests in one place.
-              </div>
-            </details>
-            <details>
-              <summary>Who can use Researchium?</summary>
-              <div class="yo-faq__body">
-                Aspirants preparing for JEE, NEET, GATE, CSIR UGC NET, UPSC, and learners building research or coding
-                skills benefit from our catalog.
-              </div>
-            </details>
-            <details>
-              <summary>What is included in a subscription?</summary>
-              <div class="yo-faq__body">
-                Plans may include live class access, premium course uploads, mock test packs, and downloadable study
-                materials. See <a href="/pricing.html">pricing</a> for current tiers.
-              </div>
-            </details>
-            <details>
-              <summary>Are mock tests included?</summary>
-              <div class="yo-faq__body">
-                Yes — topic quizzes, category mocks, and GATE Mathematics full papers with timed exam mode and scoring.
-              </div>
-            </details>
-            <details>
-              <summary>How do I contact support?</summary>
-              <div class="yo-faq__body">
-                Use the <a href="/signin.html">contact form</a> or CSIR NET page for program-specific questions. We
-                respond by email when SMTP is configured on the server.
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <!-- Final CTA -->
-      <section class="yo-hero" style="min-height:auto">
-        <div class="yo-wrap" style="padding:3rem 1rem;text-align:center">
-          <h2 style="color:#fff;font-size:1.75rem;margin-bottom:0.75rem">Ready to start learning?</h2>
-          <p class="yo-hero__lead" style="margin:0 auto 1.5rem">Browse free courses or unlock Pro for live classes and premium uploads.</p>
-          <div class="yo-hero__actions" style="justify-content:center">
-            <a href="/pricing.html" class="yo-btn-primary">Get Subscription</a>
-            <a href="/courses.html" class="yo-btn-outline">Browse courses</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer site-footer-extended">
-      <div id="site-footer-main"></div>
-      <div class="yo-wrap">
-        <div class="footer-bar">
-          <span>© 2026 Researchium Learning Pvt. Ltd. All rights reserved.</span>
-          <div class="footer-bar-links">
-            <a href="/about.html">Privacy</a>
-            <a href="/about.html">Terms</a>
-          </div>
+        <div>
+          <span class="proof-stars">★★★★★</span>
+          <p class="proof-text">Trusted by <strong><span id="rmProofLearners">50,000+</span></strong> learners across India</p>
         </div>
       </div>
-    </footer>
+    </div>
+    <div class="hero-visual">
+      <div style="position:relative">
+        <div class="hv-window">
+          <div class="hv-bar">
+            <div class="hv-dots">
+              <div class="hv-dot" style="background:#FF5F57"></div>
+              <div class="hv-dot" style="background:#FFBD2E"></div>
+              <div class="hv-dot" style="background:#28CA41"></div>
+            </div>
+            <div class="hv-url">researchium.derived.co.in/dashboard</div>
+          </div>
+          <div class="hv-body">
+            <div class="hv-progress-card">
+              <div class="hvc-head">
+                <div>
+                  <div class="hvc-title">CSIR NET · Life Sciences</div>
+                  <div style="font-size:.72rem;color:var(--ink3);margin-top:2px">Cell Biology &amp; Genetics</div>
+                </div>
+                <div class="hvc-badge">72% done</div>
+              </div>
+              <div class="hvc-bar-row">
+                <div class="hvc-bar-label"><span>Cell Biology</span><span>88%</span></div>
+                <div class="hvc-track"><div class="hvc-fill" style="width:88%"></div></div>
+              </div>
+              <div class="hvc-bar-row">
+                <div class="hvc-bar-label"><span>Biochemistry</span><span>74%</span></div>
+                <div class="hvc-track"><div class="hvc-fill" style="width:74%"></div></div>
+              </div>
+              <div class="hvc-bar-row">
+                <div class="hvc-bar-label"><span style="color:var(--ink2)">Ecology</span><span style="color:var(--amber)">51%</span></div>
+                <div class="hvc-track"><div class="hvc-fill hvc-fill-warn" style="width:51%"></div></div>
+              </div>
+              <div class="hvc-bar-row">
+                <div class="hvc-bar-label"><span>Genetics</span><span>82%</span></div>
+                <div class="hvc-track"><div class="hvc-fill" style="width:82%"></div></div>
+              </div>
+            </div>
+            <div class="hv-mini-row">
+              <div class="hv-mini"><div class="hv-mini-label">Mocks done</div><div class="hv-mini-val">8</div></div>
+              <div class="hv-mini"><div class="hv-mini-label">Avg score</div><div class="hv-mini-val">74%</div></div>
+              <div class="hv-mini"><div class="hv-mini-label">Streak 🔥</div><div class="hv-mini-val">14d</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="hv-float hv-float-a">
+          <div class="hv-float-label">Today's mock</div>
+          <div class="hv-float-val">+11% ↑</div>
+          <div style="font-size:.7rem;color:var(--ink3);margin-top:2px">Score improved</div>
+        </div>
+        <div class="hv-float hv-float-b">
+          <div class="hv-live">Live now</div>
+          <div style="font-size:.72rem;color:var(--ink3);margin-top:2px">312 watching</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script defer src="/js/researchium-core.js"></script>
-    <script defer src="/js/cms-hero.js"></script>
-    <script defer src="/js/home-platform.js"></script>
-    <script defer src="/js/gtag-lazy.js"></script>
-  </body>
+<div class="stats">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val"><span id="rmBandLearners">50K</span><span>+</span></div><div class="stat-lbl">Active learners</div></div>
+    <div class="stat"><div class="stat-val"><span id="rmBandEducators">500</span><span>+</span></div><div class="stat-lbl">Expert educators</div></div>
+    <div class="stat"><div class="stat-val">200<span>+</span></div><div class="stat-lbl">Mock tests</div></div>
+    <div class="stat"><div class="stat-val">15<span>yrs</span></div><div class="stat-lbl">PYQ coverage</div></div>
+  </div>
+</div>
+
+<section class="sec" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Your exam roadmap</div>
+      <h2 class="title">One platform. Every milestone.</h2>
+      <p class="desc">Click your exam to start with curated content and expert guidance.</p>
+    </div>
+    <div class="banners">
+      <a href="/csir-net.html" class="banner b1">
+        <div class="banner-bg"></div>
+        <div class="banner-over">
+          <div class="banner-pill">CSIR UGC NET</div>
+          <div class="banner-title">Life · Physical · Chemical Sciences</div>
+          <div class="banner-sub">JRF &amp; Lectureship · 5 science streams · AI doubt support</div>
+        </div>
+        <div class="banner-go">→</div>
+      </a>
+      <a href="/gate-exam.html" class="banner b2">
+        <div class="banner-bg"></div>
+        <div class="banner-over">
+          <div class="banner-pill">GATE 2025</div>
+          <div class="banner-title">Physics · Chemistry · Mathematics</div>
+          <div class="banner-sub">200+ mocks · 15 years PYQs · Expert faculty</div>
+        </div>
+        <div class="banner-go">→</div>
+      </a>
+      <a href="/study-materials.html" class="banner b3">
+        <div class="banner-bg"></div>
+        <div class="banner-over">
+          <div class="banner-pill">IIT-JAM 2025</div>
+          <div class="banner-title">Gateway to IIT &amp; IISc M.Sc.</div>
+          <div class="banner-sub">Physics · Chemistry · Maths · Biotech · Geology</div>
+        </div>
+        <div class="banner-go">→</div>
+      </a>
+      <a href="/mcq-test.html" class="banner b4">
+        <div class="banner-bg"></div>
+        <div class="banner-over">
+          <div class="banner-pill">Mathematics</div>
+          <div class="banner-title">Real Analysis · Algebra · Calculus</div>
+          <div class="banner-sub">GATE MA · IIT-JAM MA · CSIR MS</div>
+        </div>
+        <div class="banner-go">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="sec-head sec-head--c">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Explore</div>
+      <h2 class="title">Everything you need to prepare</h2>
+      <p class="desc">PDFs, mocks, live classes, and quizzes — one platform, every resource.</p>
+    </div>
+    <div class="ptiles">
+      <a href="/study-materials.html" class="ptile">
+        <div class="ptile-icon ti-pdf">📄</div>
+        <h3>Study PDFs</h3>
+        <p>Topic-wise notes and previous-year material crafted by top educators.</p>
+        <span class="ptile-link">View library →</span>
+      </a>
+      <a href="/mcq-test.html" class="ptile">
+        <div class="ptile-icon ti-mock">📝</div>
+        <h3>Mock Tests</h3>
+        <p>GATE, CSIR, IIT-JAM style quizzes with instant feedback and solutions.</p>
+        <span class="ptile-link">Attempt mock →</span>
+      </a>
+      <a href="/live-classes.html" class="ptile">
+        <div class="ptile-icon ti-live">▶</div>
+        <h3>Live Classes</h3>
+        <p>Join live sessions and replay recordings at your own pace, anytime.</p>
+        <span class="ptile-link">View schedule →</span>
+      </a>
+      <a href="/mcq-test.html" class="ptile">
+        <div class="ptile-icon ti-quiz">✓</div>
+        <h3>Practice Quizzes</h3>
+        <p>Short topic tests to sharpen accuracy and track daily improvement.</p>
+        <span class="ptile-link">Start quiz →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="rm-sec-head">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Happening now</div>
+        <h2 class="title">Live classes &amp; sessions</h2>
+      </div>
+      <a href="/live-classes.html" class="rm-link">Full schedule →</a>
+    </div>
+    <div class="live-grid" id="rmLiveGrid">
+      <div class="lcard">
+        <div class="lcard-top"><span class="live-pill">Live</span><span class="lcard-time">11:00 AM – 1:00 PM</span></div>
+        <div class="lcard-sub">CSIR NET · Life Sciences</div>
+        <div class="lcard-title">Cell Biology: Signal Transduction &amp; Receptor Mechanisms</div>
+        <div class="lcard-who">Dr. Priya Sharma · 312 students watching</div>
+        <a href="/live-classes.html" class="lcard-btn">Join class →</a>
+      </div>
+      <div class="lcard">
+        <div class="lcard-top"><span class="live-pill">Live</span><span class="lcard-time">12:30 PM – 2:30 PM</span></div>
+        <div class="lcard-sub">GATE · Mathematics</div>
+        <div class="lcard-title">Linear Algebra: Eigenvalues, Eigenvectors &amp; Diagonalisation</div>
+        <div class="lcard-who">Prof. Divyanshu Verma · 198 students</div>
+        <a href="/live-classes.html" class="lcard-btn">Join class →</a>
+      </div>
+      <div class="lcard">
+        <div class="lcard-top"><span class="soon-pill">Upcoming</span><span class="lcard-time">3:00 PM today</span></div>
+        <div class="lcard-sub">IIT-JAM · Chemistry</div>
+        <div class="lcard-title">Organic Chemistry: Named Reactions &amp; Mechanism Mastery</div>
+        <div class="lcard-who">Dr. Anil Kapoor</div>
+        <a href="/live-classes.html" class="lcard-btn">Set reminder →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="feat-layout">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Why Researchium</div>
+        <h2 class="title">Built for serious exam aspirants</h2>
+        <p class="desc" style="margin-bottom:2.25rem">Every feature is designed around one goal: getting you selected.</p>
+        <div class="feat-list">
+          <div class="feat-row"><div class="feat-icon fi1">🎯</div><div><h4>Exam-aligned curriculum</h4><p>Mapped to the exact syllabus of CSIR NET, GATE, and IIT-JAM — nothing irrelevant, nothing missing.</p></div></div>
+          <div class="feat-row"><div class="feat-icon fi2">🤖</div><div><h4>AI doubt support</h4><p>Instant answers to your science and maths doubts, available 24/7 between live classes.</p></div></div>
+          <div class="feat-row"><div class="feat-icon fi3">📊</div><div><h4>Progress analytics</h4><p>Track mock scores, weak topics, and week-over-week improvement in your personal dashboard.</p></div></div>
+          <div class="feat-row"><div class="feat-icon fi4">📱</div><div><h4>Learn anywhere</h4><p>Full access on desktop and mobile — download PDFs, watch recordings, attempt mocks on the go.</p></div></div>
+        </div>
+        <p style="margin-top:2.25rem"><a href="/pricing.html" class="btn btn-p btn-lg">Start your preparation</a></p>
+      </div>
+      <div>
+        <div class="feat-mock" style="position:relative">
+          <div class="fm-topbar">
+            <div class="fm-dots">
+              <div class="fm-dot" style="background:#FF5F57"></div>
+              <div class="fm-dot" style="background:#FFBD2E"></div>
+              <div class="fm-dot" style="background:#28CA41"></div>
+            </div>
+            <span class="fm-label">Performance dashboard</span>
+          </div>
+          <div class="fm-body">
+            <div class="fm-section">CSIR NET Life Sciences · Mock analysis</div>
+            <div class="fm-row">
+              <div class="fm-row-head"><span>Cell Biology</span><span>88%</span></div>
+              <div class="fm-track"><div class="fm-fill" style="width:88%"></div></div>
+            </div>
+            <div class="fm-row">
+              <div class="fm-row-head"><span>Biochemistry</span><span>74%</span></div>
+              <div class="fm-track"><div class="fm-fill" style="width:74%"></div></div>
+            </div>
+            <div class="fm-row">
+              <div class="fm-row-head"><span>Ecology</span><span style="color:var(--amber)">51%</span></div>
+              <div class="fm-track"><div class="fm-fill fm-fill-w" style="width:51%"></div></div>
+            </div>
+            <div class="fm-row">
+              <div class="fm-row-head"><span>Genetics</span><span>82%</span></div>
+              <div class="fm-track"><div class="fm-fill" style="width:82%"></div></div>
+            </div>
+            <div class="fm-cards">
+              <div class="fm-card"><div class="fm-card-l">Mocks done</div><div class="fm-card-v">8</div></div>
+              <div class="fm-card"><div class="fm-card-l">Avg score</div><div class="fm-card-v">74%</div></div>
+              <div class="fm-card"><div class="fm-card-l">Batch rank</div><div class="fm-card-v">#12</div></div>
+              <div class="fm-card"><div class="fm-card-l">Study streak</div><div class="fm-card-v">14d 🔥</div></div>
+            </div>
+          </div>
+          <div class="fm-badge">
+            <div class="fm-badge-l">Week-on-week</div>
+            <div class="fm-badge-v">+11%</div>
+            <div class="fm-badge-s">improvement in mock scores</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="rm-sec-head">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Catalog</div>
+        <h2 class="title">Popular courses</h2>
+      </div>
+      <a href="/courses.html" class="rm-link">View all →</a>
+    </div>
+    <div class="cgrid" id="rmCoursesGrid">
+      <a href="/courses.html" class="ccard">
+        <div class="ccard-thumb ct1">🔬</div>
+        <div class="ccard-body">
+          <div class="ccard-tag">CSIR NET · Life Sciences</div>
+          <div class="ccard-title">Complete Life Sciences Preparation 2025</div>
+          <div class="ccard-meta"><span>⭐ 4.9</span><span>2,400 students</span><span>6 months</span></div>
+        </div>
+        <div class="ccard-foot">
+          <span class="ccard-price">₹2,499 <s>₹4,999</s></span>
+          <span class="ccard-enroll">Enroll →</span>
+        </div>
+      </a>
+      <a href="/courses.html" class="ccard">
+        <div class="ccard-thumb ct2">🧮</div>
+        <div class="ccard-body">
+          <div class="ccard-tag">GATE · Mathematics</div>
+          <div class="ccard-title">GATE Mathematics — Full Syllabus Mastery</div>
+          <div class="ccard-meta"><span>⭐ 4.8</span><span>1,820 students</span><span>5 months</span></div>
+        </div>
+        <div class="ccard-foot">
+          <span class="ccard-price">₹1,999 <s>₹3,999</s></span>
+          <span class="ccard-enroll">Enroll →</span>
+        </div>
+      </a>
+      <a href="/courses.html" class="ccard">
+        <div class="ccard-thumb ct3">⚗️</div>
+        <div class="ccard-body">
+          <div class="ccard-tag">IIT-JAM · Chemistry</div>
+          <div class="ccard-title">IIT-JAM Chemistry — Organic, Inorganic &amp; Physical</div>
+          <div class="ccard-meta"><span>⭐ 4.7</span><span>980 students</span><span>4 months</span></div>
+        </div>
+        <div class="ccard-foot">
+          <span class="ccard-price">₹1,799 <s>₹3,499</s></span>
+          <span class="ccard-enroll">Enroll →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="sec-head sec-head--c">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Community</div>
+      <h2 class="title">What learners say</h2>
+      <p class="desc">Honest feedback from students preparing every day on Researchium.</p>
+    </div>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-text">"The mock tests are the closest thing to the real CSIR NET paper I've found online. Detailed solutions after each test helped me plug gaps I didn't know I had."</p>
+        <div class="tcard-author">
+          <div class="tcard-ava">AK</div>
+          <div><div class="tcard-name">Anjali Kumar</div><div class="tcard-exam">CSIR NET Life Sciences — JRF qualified</div></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-text">"Prof. Divyanshu's linear algebra sessions are gold. I finally understood eigenvalue decomposition after struggling for months. Live doubt sessions make all the difference."</p>
+        <div class="tcard-author">
+          <div class="tcard-ava">RS</div>
+          <div><div class="tcard-name">Rahul Singh</div><div class="tcard-exam">GATE Mathematics — AIR 84</div></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-text">"Started with the free PDFs and was hooked. Content quality matches expensive offline coaching, but I could study on my own schedule from Jaipur."</p>
+        <div class="tcard-author">
+          <div class="tcard-ava">MP</div>
+          <div><div class="tcard-name">Meera Patel</div><div class="tcard-exam">IIT-JAM Chemistry — IIT Bombay</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head sec-head--c">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Get started</div>
+      <h2 class="title">How to learn with Researchium</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><h3>Choose your goal</h3><p>CSIR NET, GATE, IIT-JAM, or research skills.</p></div>
+      <div class="step"><div class="step-n">2</div><h3>Pick a plan</h3><p>Free catalog or Pro for live &amp; premium content.</p></div>
+      <div class="step"><div class="step-n">3</div><h3>Enroll securely</h3><p>Complete checkout on the pricing page.</p></div>
+      <div class="step"><div class="step-n">4</div><h3>Open your courses</h3><p>Materials, mocks, and live links in one place.</p></div>
+      <div class="step"><div class="step-n">5</div><h3>Start learning</h3><p>Watch, practise, and track daily progress.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="sec-head sec-head--c">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>FAQ</div>
+      <h2 class="title">Common questions</h2>
+    </div>
+    <div class="faq-wrap">
+      <details open>
+        <summary>What is Researchium?<span class="sum-btn">+</span></summary>
+        <div class="faq-body">Researchium is an online learning platform for science exam preparation — courses, live classes, study PDFs, and mock tests for CSIR NET, GATE, IIT-JAM, JEE, NEET, and UPSC aspirants in one place.</div>
+      </details>
+      <details>
+        <summary>Is any content free?<span class="sum-btn">+</span></summary>
+        <div class="faq-body">Yes — the free tier includes topic-wise study PDFs, sample mock tests, and select video lectures. Subscribe to unlock live classes, full mock series, and premium course uploads.</div>
+      </details>
+      <details>
+        <summary>What is included in a subscription?<span class="sum-btn">+</span></summary>
+        <div class="faq-body">Plans include live class access, premium course uploads, full mock test packs, and downloadable study materials. See the <a href="/pricing.html">pricing page</a> for current tiers.</div>
+      </details>
+      <details>
+        <summary>Are the mock tests similar to the real exam?<span class="sum-btn">+</span></summary>
+        <div class="faq-body">Yes — topic quizzes, category mocks, and full papers with timed exam mode, scoring, and detailed explanations after each attempt, covering GATE, CSIR NET, and IIT-JAM patterns.</div>
+      </details>
+      <details>
+        <summary>How do I contact support?<span class="sum-btn">+</span></summary>
+        <div class="faq-body">Use the contact form on the <a href="/signin.html">sign-in page</a> or the CSIR NET page for program-specific questions. We respond by email within 24 hours.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<div class="cta-sec">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="eyebrow" style="justify-content:center;background:rgba(255,255,255,.12);color:#E9D5FF;border:none">Ready to begin?</div>
+    <h2>Start your preparation today.</h2>
+    <p>Browse free courses, or unlock Pro for live classes, full mock series, and premium study material.</p>
+    <div class="cta-btns">
+      <a href="/pricing.html" class="btn btn-w btn-lg">Get Subscription</a>
+      <a href="/courses.html" class="btn btn-lg" style="background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.25)">Browse courses</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#8B5CF6" stroke-width="1.8"/>
+          <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#7C3AED" stroke-width="1.8" transform="rotate(60 16 16)"/>
+          <ellipse cx="16" cy="16" rx="10" ry="3.8" stroke="#6D28D9" stroke-width="1.5" transform="rotate(120 16 16)"/>
+          <circle cx="16" cy="16" r="3" fill="#7C3AED"/>
+        </svg>
+        <span class="logo-text" style="font-size:1rem">Research<em>ium</em></span>
+      </a>
+      <p>India's platform for science exam prep. Live classes, mock tests, and study material for CSIR NET, GATE &amp; IIT-JAM.</p>
+      <div class="footer-socials">
+        <a href="https://www.youtube.com/@MathswithDivyanshuSir" class="fsoc" aria-label="YouTube" target="_blank" rel="noopener noreferrer">▶</a>
+        <a href="#" class="fsoc" aria-label="Telegram">✈</a>
+        <a href="#" class="fsoc" aria-label="Instagram">◉</a>
+        <a href="#" class="fsoc" aria-label="Twitter">𝕏</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Exams</h4>
+      <ul>
+        <li><a href="/csir-net.html">CSIR UGC NET</a></li>
+        <li><a href="/gate-exam.html">GATE</a></li>
+        <li><a href="/study-materials.html">IIT-JAM</a></li>
+        <li><a href="/mcq-test.html">Mock Tests</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="/courses.html">Courses</a></li>
+        <li><a href="/live-classes.html">Live Classes</a></li>
+        <li><a href="/study-materials.html">Study PDFs</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about.html">About us</a></li>
+        <li><a href="/pricing.html">Pricing</a></li>
+        <li><a href="/about.html">Privacy Policy</a></li>
+        <li><a href="/about.html">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>© 2026 Researchium Learning Pvt. Ltd. All rights reserved.</span>
+    <div class="footer-bar-links">
+      <a href="/about.html">Privacy</a>
+      <a href="/about.html">Terms</a>
+      <a href="/signin.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/home-light.js" defer></script>
+<script src="/js/gtag-lazy.js" defer></script>
+</body>
 </html>
