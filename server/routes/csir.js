@@ -1,6 +1,7 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const csirData = require('../lib/csirData');
+const publicSiteStats = require('../lib/publicSiteStats');
 const csirLeadsStore = require('../lib/csirLeadsStore');
 const contactMail = require('../lib/contactMail');
 const doubtAssistant = require('../lib/doubtAssistant');
@@ -45,7 +46,7 @@ router.get('/site/public', (_req, res) => {
 });
 
 router.get('/goal/stats', (_req, res) => {
-  res.json(csirData.goalStats());
+  res.json(publicSiteStats.build());
 });
 
 router.get('/subjects', (_req, res) => {

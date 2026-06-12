@@ -158,13 +158,19 @@ const faqs = [
 ];
 
 function goalStats() {
-  return {
-    learners: '15K+',
-    educators: 500,
-    successRate: '98%',
-    rating: '4.9★',
-    subjects: subjects.length
-  };
+  try {
+    return require('./publicSiteStats').build();
+  } catch {
+    return {
+      learners: '15K+',
+      educators: educators.length,
+      mockTests: 0,
+      pyqYears: 0,
+      successRate: '98%',
+      rating: '4.9★',
+      subjects: subjects.length
+    };
+  }
 }
 
 module.exports = {

@@ -80,7 +80,7 @@
         </div>
         <div>
           <span class="proof-stars">★★★★★</span>
-          <p class="proof-text">Trusted by <strong><span id="rmProofLearners">50,000+</span></strong> learners across India</p>
+          <p class="proof-text">Trusted by <strong><span id="rmProofLearners">2,505+</span></strong> learners across India</p>
         </div>
       </div>
     </div>
@@ -143,11 +143,11 @@
 </section>
 
 <div class="stats">
-  <div class="stats-row">
-    <div class="stat"><div class="stat-val"><span id="rmBandLearners">50K</span><span>+</span></div><div class="stat-lbl">Active learners</div></div>
-    <div class="stat"><div class="stat-val"><span id="rmBandEducators">500</span><span>+</span></div><div class="stat-lbl">Expert educators</div></div>
-    <div class="stat"><div class="stat-val">200<span>+</span></div><div class="stat-lbl">Mock tests</div></div>
-    <div class="stat"><div class="stat-val">15<span>yrs</span></div><div class="stat-lbl">PYQ coverage</div></div>
+  <div class="stats-row reveal" id="statsRow">
+    <div class="stat"><div class="stat-val" data-stat="learners" data-suffix="+">0<span>+</span></div><div class="stat-lbl">Active learners</div></div>
+    <div class="stat"><div class="stat-val" data-stat="educators">0</div><div class="stat-lbl">Expert educators</div></div>
+    <div class="stat"><div class="stat-val" data-stat="mocks">0</div><div class="stat-lbl">Mock tests</div></div>
+    <div class="stat"><div class="stat-val" data-stat="pyqYears" data-suffix="yrs">0<span>yrs</span></div><div class="stat-lbl">PYQ coverage</div></div>
   </div>
 </div>
 
@@ -173,7 +173,7 @@
         <div class="banner-over">
           <div class="banner-pill">GATE 2025</div>
           <div class="banner-title">Physics · Chemistry · Mathematics</div>
-          <div class="banner-sub">200+ mocks · 15 years PYQs · Expert faculty</div>
+          <div class="banner-sub"><span id="rmGateBannerMocks">31</span> mocks · <span id="rmGateBannerPyq">9</span> years PYQs · Expert faculty</div>
         </div>
         <div class="banner-go">→</div>
       </a>
@@ -535,6 +535,7 @@
   </div>
 </footer>
 
+<script src="/js/home-stats.js" defer></script>
 <script src="/js/home-light.js" defer></script>
 <script src="/js/gtag-lazy.js" defer></script>
 </body>
