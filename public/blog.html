@@ -216,6 +216,7 @@
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .blog-card:hover {
@@ -313,37 +314,74 @@
             }
         }
 
-        #blogModal.modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 1rem;
-        }
-        #blogModal .modal-content {
-            background: #fff;
-            border-radius: 20px;
-            max-width: 700px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
+        /* Modal / Blog detail page styles (opened in new tab) */
+        .blog-detail-page {
+            max-width: 820px;
+            margin: 2rem auto;
             padding: 1.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .blog-detail-page .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .blog-detail-page .back-link:hover {
+            text-decoration: underline;
+        }
+        .blog-detail-page .blog-full-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 0.5rem 0 1.2rem 0;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        .blog-detail-page .blog-full-body {
+            line-height: 1.8;
+            color: #222;
+        }
+        .blog-detail-page .blog-full-body p {
+            margin: 1rem 0;
+        }
+        .blog-detail-page .video-wrapper {
             position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 1.5rem 0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
         }
-        #blogModal .modal-close {
+        .blog-detail-page .video-wrapper iframe {
             position: absolute;
-            top: 0.75rem;
-            right: 1rem;
-            font-size: 1.75rem;
-            cursor: pointer;
-            color: #999;
-            line-height: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
-        #blogModal .modal-close:hover {
-            color: #333;
+        .blog-detail-page .blog-title-large {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #1a1a3e;
+            margin-bottom: 0.5rem;
+        }
+        .blog-detail-page .blog-category-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -413,17 +451,323 @@
         </div>
     </footer>
 
-    <!-- Blog Modal for Full Post View -->
-    <div id="blogModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <div id="modalBody"></div>
-        </div>
-    </div>
-
-        <script defer src="/js/researchium-core.js"></script>
+    <script defer src="/js/researchium-core.js"></script>
     <script defer src="/js/cms-hero.js"></script>
     <script defer src="/js/blog-page.js"></script>
     <script defer src="/js/gtag-lazy.js"></script>
+
+    <script>
+        (function() {
+            // --- BLOG DATA (with the new post and extra content) ---
+            const blogPosts = [
+                // NEW POST (target)
+                {
+                    id: 'matrices-2026',
+                    title: '15+ Types of Matrices & Properties | Linear Algebra for CSIR NET & GATE 2026',
+                    category: 'Education',
+                    excerpt: 'Master matrix types, properties, and applications for CSIR NET & GATE 2026. Includes special matrices, rank, inverse, and a full video walkthrough.',
+                    date: '2026-01-20',
+                    fullContent: `
+                        <h2>15+ Types of Matrices & Properties | Linear Algebra for CSIR NET & GATE 2026</h2>
+                        <p><strong>Linear algebra is the backbone of mathematical sciences.</strong> For aspirants of CSIR NET, GATE, and other competitive exams, understanding matrices is non‑negotiable. In this comprehensive guide, we cover <strong>15+ types of matrices</strong>—from the fundamental to the advanced—along with their properties, applications, and tricks to solve problems faster.</p>
+                        
+                        <p>Whether you're revising for the 2026 session or building your foundation, this post (and the accompanying video) will help you master:</p>
+                        <ul>
+                            <li>Square, diagonal, scalar, and identity matrices</li>
+                            <li>Symmetric, skew‑symmetric, and orthogonal matrices</li>
+                            <li>Hermitian and unitary matrices (for complex entries)</li>
+                            <li>Idempotent, nilpotent, and involutory matrices</li>
+                            <li>Row echelon, reduced row echelon, and rank of a matrix</li>
+                            <li>Inverse, adjoint, and determinant properties</li>
+                            <li>Special matrices: permutation, stochastic, and Toeplitz</li>
+                        </ul>
+
+                        <p>Our expert instructor breaks down each type with examples, shortcuts, and common exam pitfalls. The video below is a full live session that covers the entire syllabus in one place.</p>
+
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/WepNqCX49BA" title="15+ Types of Matrices & Properties | Linear Algebra for CSIR NET & GATE 2026" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+
+                        <h3>Why this matters for CSIR NET & GATE 2026</h3>
+                        <p>Matrix theory appears in multiple sections: linear equations, eigenvalues, diagonalization, and more. A solid grasp of matrix types and properties can save you 5‑7 marks in the exam. We've also included a downloadable cheat sheet (in the video description) to help you revise on the go.</p>
+
+                        <p><strong>Key properties you must know:</strong></p>
+                        <ul>
+                            <li>Trace of a matrix: sum of diagonal elements, invariant under similarity.</li>
+                            <li>Determinant: product of eigenvalues, non‑zero for invertible matrices.</li>
+                            <li>Rank: maximum number of linearly independent rows/columns.</li>
+                            <li>Nullity: dimension of null space, linked to rank via rank‑nullity theorem.</li>
+                        </ul>
+
+                        <p>Watch the video, take notes, and practice with the problems provided. For more resources, check our <a href="/courses.html">courses</a> section.</p>
+
+                        <p style="margin-top: 1.5rem;"><strong>📌 Don't forget to subscribe and hit the bell icon for more exam‑oriented content.</strong></p>
+
+                        <h3>📚 Additional Resources</h3>
+                        <p>We've curated a list of practice problems and previous year questions (PYQs) from CSIR NET and GATE. You can download the PDF from the link below.</p>
+                        <ul>
+                            <li><a href="#">Download practice problem set (PDF)</a></li>
+                            <li><a href="#">Access the full playlist on Linear Algebra</a></li>
+                        </ul>
+                        <p>Also, check out our <a href="/courses.html">Matrix Algebra course</a> for a structured 8‑week program with live sessions, assignments, and doubt‑clearing.</p>
+                    `
+                },
+                // other existing posts (dummy data)
+                {
+                    id: 'lit-review-tips',
+                    title: 'How to Write a Literature Review in 5 Steps',
+                    category: 'Research',
+                    excerpt: 'A step‑by‑step guide to structuring a literature review that impresses your supervisor. Includes examples and common mistakes to avoid.',
+                    date: '2026-01-15',
+                    fullContent: '<h2>How to Write a Literature Review in 5 Steps</h2><p>Detailed content about literature review...</p>'
+                },
+                {
+                    id: 'quant-methods',
+                    title: 'Qualitative vs Quantitative Methods: Choose the Right Approach',
+                    category: 'Research',
+                    excerpt: 'Not sure whether to use interviews or surveys? We break down the pros, cons, and when to use each method in your research.',
+                    date: '2026-01-10',
+                    fullContent: '<h2>Qualitative vs Quantitative Methods</h2><p>Detailed content about research methods...</p>'
+                },
+                {
+                    id: 'career-pathways',
+                    title: 'Career Pathways After a PhD in Sciences',
+                    category: 'Career',
+                    excerpt: 'Explore options beyond academia: industry, policy, consulting, and entrepreneurship. Real stories from PhD graduates.',
+                    date: '2025-12-28',
+                    fullContent: '<h2>Career Pathways After a PhD</h2><p>Detailed content about career pathways...</p>'
+                },
+                {
+                    id: 'ai-tools',
+                    title: 'AI Tools for Academic Writing in 2026',
+                    category: 'Technology',
+                    excerpt: 'From grammar checkers to reference managers, discover how AI can streamline your writing and citation process.',
+                    date: '2025-12-20',
+                    fullContent: '<h2>AI Tools for Academic Writing</h2><p>Detailed content about AI tools...</p>'
+                }
+            ];
+
+            // --- helper: open blog detail in a new tab (or same tab if you prefer) ---
+            function openBlogDetail(postId) {
+                const post = blogPosts.find(p => p.id === postId);
+                if (!post) return;
+
+                // Build a full HTML page for the blog detail (opened in a new tab)
+                const detailHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>${post.title} – Researchium</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com" />
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+                    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+                    <style>
+                        body { margin:0; background:#f5f7fa; font-family: 'Plus Jakarta Sans', sans-serif; }
+                        .blog-detail-page {
+                            max-width: 820px;
+                            margin: 2rem auto;
+                            padding: 1.5rem;
+                            background: #fff;
+                            border-radius: 24px;
+                            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+                        }
+                        .back-link {
+                            display: inline-block;
+                            margin-bottom: 1.5rem;
+                            color: #667eea;
+                            font-weight: 600;
+                            text-decoration: none;
+                        }
+                        .back-link:hover { text-decoration: underline; }
+                        .blog-full-meta {
+                            display: flex;
+                            gap: 1rem;
+                            flex-wrap: wrap;
+                            align-items: center;
+                            margin: 0.5rem 0 1.2rem 0;
+                            color: #555;
+                            font-size: 0.95rem;
+                        }
+                        .blog-full-body { line-height: 1.8; color: #222; }
+                        .blog-full-body p { margin: 1rem 0; }
+                        .video-wrapper {
+                            position: relative;
+                            padding-bottom: 56.25%;
+                            height: 0;
+                            margin: 1.5rem 0;
+                            border-radius: 16px;
+                            overflow: hidden;
+                            background: #000;
+                        }
+                        .video-wrapper iframe {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            border: 0;
+                        }
+                        .blog-title-large {
+                            font-size: 2.2rem;
+                            font-weight: 800;
+                            line-height: 1.2;
+                            color: #1a1a3e;
+                            margin-bottom: 0.5rem;
+                        }
+                        .blog-category-badge {
+                            display: inline-block;
+                            padding: 4px 14px;
+                            background: linear-gradient(135deg, #667eea20, #764ba220);
+                            color: #667eea;
+                            border-radius: 20px;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                        }
+                        .blog-full-body ul { padding-left: 1.5rem; }
+                        .blog-full-body a { color: #667eea; text-decoration: none; }
+                        .blog-full-body a:hover { text-decoration: underline; }
+                        .footer-note { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; color: #999; font-size: 0.9rem; text-align: center; }
+                        @media (max-width: 600px) {
+                            .blog-detail-page { margin: 1rem; padding: 1rem; }
+                            .blog-title-large { font-size: 1.8rem; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="blog-detail-page">
+                        <a href="#" onclick="window.close(); return false;" class="back-link">← Close this tab</a>
+                        <h1 class="blog-title-large">${post.title}</h1>
+                        <div class="blog-full-meta">
+                            <span class="blog-category-badge">${post.category}</span>
+                            <span>📅 ${post.date}</span>
+                        </div>
+                        <div class="blog-full-body">
+                            ${post.fullContent}
+                        </div>
+                        <div class="footer-note">© 2026 Researchium · All rights reserved.</div>
+                    </div>
+                </body>
+                </html>
+                `;
+
+                // Open in a new tab
+                const newTab = window.open('', '_blank');
+                if (newTab) {
+                    newTab.document.write(detailHtml);
+                    newTab.document.close();
+                } else {
+                    // fallback: open in same tab (if popup blocked)
+                    document.write(detailHtml);
+                    document.close();
+                }
+            }
+
+            // --- render blog cards ---
+            function renderBlogPosts(filter = 'all') {
+                const blogContainer = document.getElementById('blogContainer');
+                if (!blogContainer) return;
+                const filtered = filter === 'all' 
+                    ? blogPosts 
+                    : blogPosts.filter(p => p.category === filter);
+                
+                if (filtered.length === 0) {
+                    blogContainer.innerHTML = `<div class="no-data">No posts in this category yet.</div>`;
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(post => {
+                    html += `
+                        <div class="blog-card" data-id="${post.id}">
+                            <div class="blog-card-content">
+                                <span class="blog-category">${post.category}</span>
+                                <h3 class="blog-title">${post.title}</h3>
+                                <p class="blog-excerpt">${post.excerpt}</p>
+                                <div class="blog-meta">
+                                    <span class="blog-date">${post.date}</span>
+                                    <span class="read-more-btn" style="color:#667eea;font-weight:600;">Read more →</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                blogContainer.innerHTML = html;
+
+                // Attach click event to each blog card (open detail in new tab)
+                document.querySelectorAll('.blog-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // if the click is on the "Read more" span or anywhere on the card, open detail
+                        const id = this.dataset.id;
+                        if (id) openBlogDetail(id);
+                    });
+                });
+            }
+
+            // --- filter logic ---
+            const filterBtns = document.querySelectorAll('.blog-filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.dataset.blogFilter;
+                    renderBlogPosts(filter);
+                });
+            });
+
+            // --- initial render ---
+            renderBlogPosts('all');
+
+            // --- news simulation (placeholder) ---
+            const newsContainer = document.getElementById('newsContainer');
+            if (newsContainer) {
+                const newsData = [
+                    { title: 'Researchium launches new course on Matrix Algebra', date: '2026-01-18', badge: 'current', text: 'Enroll now for a comprehensive 8‑week program with live sessions.' },
+                    { title: 'CSIR NET 2026 exam pattern announced', date: '2026-01-10', badge: 'current', text: 'The new pattern includes more emphasis on linear algebra and statistics.' },
+                    { title: 'Free webinar: "Writing a Research Proposal"', date: '2025-12-20', badge: 'archive', text: 'Watch the recording on our YouTube channel.' }
+                ];
+                function renderNews(filter = 'all') {
+                    let filtered = newsData;
+                    if (filter === 'current') filtered = newsData.filter(n => n.badge === 'current');
+                    else if (filter === 'archive') filtered = newsData.filter(n => n.badge === 'archive');
+                    if (filtered.length === 0) {
+                        newsContainer.innerHTML = `<div class="no-data">No news items in this category.</div>`;
+                        return;
+                    }
+                    let html = '';
+                    filtered.forEach(item => {
+                        const badgeClass = item.badge === 'current' ? 'badge-current' : 'badge-archive';
+                        html += `
+                            <div class="news-card">
+                                <div class="news-card-header">
+                                    <span class="news-badge ${badgeClass}">${item.badge === 'current' ? '🔥 Current' : '📦 Archive'}</span>
+                                    <div class="news-date">📅 ${item.date}</div>
+                                    <h3 class="news-title">${item.title}</h3>
+                                </div>
+                                <div class="news-content">
+                                    <p class="news-text">${item.text}</p>
+                                    <a href="#" class="read-more-btn" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">Read more →</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    newsContainer.innerHTML = html;
+                }
+                renderNews('current');
+
+                // news tabs
+                document.querySelectorAll('.news-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        const filter = this.dataset.newsFilter;
+                        renderNews(filter);
+                    });
+                });
+            }
+
+        })();
+    </script>
 </body>
 </html>
