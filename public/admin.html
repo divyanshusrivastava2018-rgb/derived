@@ -1,553 +1,732 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard — Researchium</title>
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="/css/app.css" />
-    <link rel="stylesheet" href="/css/wp-admin.css" />
-    <link rel="stylesheet" href="/css/admin-dashboard.css" />
-  </head>
-  <body class="wp-admin-page" data-page="admin">
-    <!-- Login (WordPress-style) -->
-    <div id="admin-login" class="wp-login-wrap">
-      <div class="wp-login-card admin-login-card">
-        <div class="wp-logo">
-          <img src="/images/researchium-logo.png?v=header6" alt="Researchium" class="wp-logo-img" decoding="async" />
-          <span>Site administration</span>
+    <title>Researchium · Admin + Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <style>
+        /* ---------- global reset & variables ---------- */
+        * { box-sizing: border-box; margin: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f5f6fa;
+            color: #1a1a3e;
+        }
+        :root {
+            --purple: #667eea;
+            --purple-dark: #764ba2;
+            --ink: #1a1a3e;
+            --muted: #666;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* ---------- shared components ---------- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(102,126,234,.35); }
+        .btn-ghost {
+            background: #fff;
+            border: 2px solid #e5e7ef;
+            color: var(--ink);
+        }
+        .btn-ghost:hover { border-color: var(--purple); color: var(--purple); }
+        .btn-danger {
+            background: #fff;
+            border: 2px solid #fca5a5;
+            color: #dc2626;
+        }
+        .btn-danger:hover { background: #fef2f2; }
+        .btn-sm { padding: 8px 14px; font-size: 12px; }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+        .field { margin-bottom: 16px; }
+        .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e5e7ef;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color .2s;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+        .field textarea { resize: vertical; min-height: 100px; }
+        .required { color: #dc2626; }
+
+        /* ---------- toast ---------- */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--ink);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all .25s;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* ---------- login ---------- */
+        #loginScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .login-box {
+            background: #fff;
+            padding: 40px 36px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.25);
+        }
+        .login-box h1 { font-size: 22px; margin: 0 0 6px; }
+        .login-box p { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+        .error-msg { color: #dc2626; font-size: 13px; margin-top: 10px; display: none; }
+        .note { margin-top: 18px; font-size: 12px; color: #999; }
+
+        /* ---------- dashboard ---------- */
+        #dashboard { display: none; }
+        .admin-header {
+            background: #fff;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .admin-header h1 { font-size: 18px; margin: 0; }
+        .admin-header .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+        .admin-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 900px) {
+            .admin-wrap { grid-template-columns: 420px 1fr; align-items: start; }
+        }
+        .form-actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+        .post-list { display: flex; flex-direction: column; gap: 14px; }
+        .post-row {
+            border: 1px solid #eee;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .post-row-main { min-width: 0; }
+        .post-cat {
+            display: inline-block;
+            padding: 3px 10px;
+            background: linear-gradient(135deg,#667eea20,#764ba220);
+            color: var(--purple);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .post-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+        .post-meta { font-size: 12px; color: #999; }
+        .post-excerpt { font-size: 13px; color: var(--muted); margin-top: 8px; max-width: 520px; }
+        .post-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .empty-state { text-align: center; color: #999; padding: 40px 10px; font-size: 14px; }
+
+        /* ---------- blog preview (public) ---------- */
+        .public-blog-section {
+            background: #fafafa;
+            padding: 60px 0;
+        }
+        .public-blog-header { text-align: center; margin-bottom: 40px; }
+        .public-blog-header h2 { font-size: 36px; margin-bottom: 10px; }
+        .blog-filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .blog-filter-btn {
+            padding: 8px 20px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .blog-filter-btn:hover { border-color: #667eea; color: #667eea; }
+        .blog-filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-color: transparent;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .blog-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+            transition: transform .25s, box-shadow .25s;
+            display: flex;
+            flex-direction: column;
+        }
+        .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.12); }
+        .blog-card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea30, #764ba230);
+        }
+        .blog-card-content { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+        .blog-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg,#667eea20,#764ba220);
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+        .blog-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1a1a3e; }
+        .blog-excerpt { color: #666; line-height: 1.6; margin-bottom: 16px; flex: 1; }
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: auto;
+        }
+        .blog-date { color: #999; font-size: 13px; }
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            transition: gap .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+        }
+        .read-more-btn:hover { gap: 10px; }
+
+        /* modal */
+        #blogModal.modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 1rem;
+        }
+        #blogModal .modal-content {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+        #blogModal .modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+        #blogModal .modal-close:hover { color: #333; }
+        .modal-body-text { white-space: pre-wrap; line-height: 1.8; color: #444; }
+        .modal-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg,#667eea20,#764ba220);
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .modal-date { color: #999; font-size: 13px; margin-bottom: 16px; }
+        .modal-body-text img { max-width: 100%; border-radius: 14px; margin: 16px 0; }
+
+        .no-data { text-align: center; padding: 60px 20px; color: #999; font-size: 18px; }
+        .loading-spinner { text-align: center; padding: 60px; color: #999; }
+
+        @media (max-width: 600px) {
+            .admin-header { flex-wrap: wrap; gap: 10px; }
+            .post-row { flex-direction: column; }
+            .post-actions { flex-direction: row; flex-wrap: wrap; }
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="loginScreen">
+    <div class="login-box">
+        <h1>Admin Login</h1>
+        <p>Sign in to manage Researchium blog posts.</p>
+        <div class="field">
+            <label for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="current-password" />
         </div>
-        <h1>Log in</h1>
-        <p id="adminLoginInfo" class="wp-login-lead admin-login-info">
-          Sign in with your administrator account.
-        </p>
-        <form id="adminLoginForm" class="admin-form">
-          <label class="admin-label" for="adminUsername">Username</label>
-          <input
-            type="text"
-            id="adminUsername"
-            class="admin-input"
-            autocomplete="username"
-            required
-            autofocus
-          />
-          <label class="admin-label" for="adminPassword">Password</label>
-          <div class="admin-password-row">
-            <input
-              type="password"
-              id="adminPassword"
-              class="admin-input admin-input-flex"
-              autocomplete="current-password"
-              required
-            />
-            <button
-              type="button"
-              id="adminTogglePw"
-              class="admin-btn-toggle-pw"
-              aria-pressed="false"
-              aria-label="Show password"
-            >
-              Show
-            </button>
-          </div>
-          <label class="admin-check admin-open-studio-check">
-            <input type="checkbox" id="adminOpenStudio" checked />
-            Go to Stream Studio after sign-in
-          </label>
-          <button type="submit" class="btn-gold admin-login-btn" id="adminLoginSubmit">Log in</button>
-          <p id="adminLoginErr" class="admin-err" role="alert" aria-live="assertive" hidden></p>
-        </form>
-        <p class="wp-login-back admin-hint"><a href="/">← Back to site</a></p>
-      </div>
+        <button class="btn btn-primary" id="loginBtn">Log in</button>
+        <p class="error-msg" id="loginError">Incorrect password. Try again.</p>
+        <p class="note">Demo-only password gate (client-side). For production, replace with server-side auth.</p>
+    </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div id="dashboard">
+    <div class="admin-header">
+        <div>
+            <h1>Researchium · Blog Admin</h1>
+            <div class="sub">Create, edit and publish blog posts</div>
+        </div>
+        <button class="btn btn-ghost" id="logoutBtn">Log out</button>
     </div>
 
-    <!-- Dashboard app -->
-    <div id="wpAdminApp" class="adm-layout" hidden>
-      <aside class="adm-sidebar" id="admSidebar" aria-label="Admin menu">
-        <div class="adm-sidebar-head">
-          <a href="/admin.html" class="adm-logo">
-            <img src="/images/researchium-logo.png?v=header6" alt="Researchium" class="adm-logo-img" decoding="async" />
-          </a>
-          <button type="button" class="adm-toggle-btn" id="admSidebarToggle" title="Collapse menu" aria-label="Toggle menu">
-            <i class="ti ti-layout-sidebar-left-collapse"></i>
-          </button>
-        </div>
-        <div class="adm-nav-section">
-          <div class="adm-nav-label">Main</div>
-          <button type="button" class="adm-nav-item is-active" data-tab="overview" data-title="Dashboard">
-            <i class="ti ti-layout-dashboard"></i><span class="adm-nav-text">Overview</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="leads" data-title="People">
-            <i class="ti ti-users"></i><span class="adm-nav-text">People</span>
-            <span class="adm-nav-badge" id="admLeadsBadge" hidden></span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="videos" data-title="Courses">
-            <i class="ti ti-book"></i><span class="adm-nav-text">Courses</span>
-          </button>
-        </div>
-        <div class="adm-nav-section">
-          <div class="adm-nav-label">Content</div>
-          <button type="button" class="adm-nav-item" data-tab="blog" data-title="Posts">
-            <i class="ti ti-article"></i><span class="adm-nav-text">Posts</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="liveyt" data-title="Live &amp; media">
-            <i class="ti ti-broadcast"></i><span class="adm-nav-text">Live &amp; media</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="streamstudio" data-title="Stream hosts">
-            <i class="ti ti-video"></i><span class="adm-nav-text">Stream hosts</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="pages" data-title="Pages">
-            <i class="ti ti-file-text"></i><span class="adm-nav-text">Pages</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="news" data-title="News">
-            <i class="ti ti-speakerphone"></i><span class="adm-nav-text">News</span>
-          </button>
-          <button type="button" class="adm-nav-item" data-tab="materials" data-title="Materials">
-            <i class="ti ti-folder"></i><span class="adm-nav-text">Materials</span>
-          </button>
-        </div>
-        <div class="adm-nav-section">
-          <div class="adm-nav-label">Site</div>
-          <a href="/" class="adm-nav-item" target="_blank" rel="noopener">
-            <i class="ti ti-external-link"></i><span class="adm-nav-text">View site</span>
-          </a>
-          <a href="/csir-admin.html" class="adm-nav-item" target="_blank" rel="noopener">
-            <i class="ti ti-inbox"></i><span class="adm-nav-text">CSIR inbox</span>
-          </a>
-        </div>
-        <div class="adm-sidebar-foot">
-          <div>Admin · <a href="https://www.derived.co.in/" target="_blank" rel="noopener">derived.co.in</a></div>
-        </div>
-      </aside>
-
-      <div class="adm-main">
-        <header class="adm-topbar">
-          <div class="adm-topbar-search" role="search">
-            <i class="ti ti-search"></i>
-            <span>Search content, people…</span>
-          </div>
-          <div class="adm-topbar-right">
-            <button type="button" class="adm-icon-btn" id="admNotifBtn" title="Notifications" aria-label="Notifications">
-              <i class="ti ti-bell"></i>
-              <span class="adm-notif-dot" id="admNotifDot" hidden></span>
-            </button>
-            <button type="button" class="adm-btn adm-btn-primary" id="admNewCourseBtn">
-              <i class="ti ti-plus"></i>New course
-            </button>
-            <div class="adm-avatar-wrap">
-              <div class="adm-avatar" id="admAvatarInitials">AD</div>
-              <div>
-                <div class="adm-avatar-name" id="wpAdminUserLabel">Administrator</div>
-                <div class="adm-avatar-role">Site admin</div>
-              </div>
-            </div>
-            <button type="button" id="adminLogout" class="adm-btn adm-btn-ghost">Log out</button>
-          </div>
-        </header>
-
-        <div id="admNotifPanel" class="adm-notif-panel">
-          <div class="adm-notif-head">
-            <span>Notifications</span>
-            <button type="button" class="adm-btn adm-btn-ghost" style="padding:4px 10px;font-size:11px" id="admNotifClose">Close</button>
-          </div>
-          <div id="admNotifList"></div>
-        </div>
-
-        <div class="adm-content admin-shell">
-          <div class="wp-content-header" aria-hidden="true">
-            <h1 id="wpPageTitle">Dashboard</h1>
-            <p class="wp-breadcrumb" id="wpBreadcrumb">Home › Dashboard</p>
-          </div>
-
-          <section id="admin-dash" class="admin-dash">
-            <div id="panel-overview" class="admin-panel">
-              <div class="adm-page-header">
-                <div>
-                  <h1>Dashboard overview</h1>
-                  <p id="admOverviewSub">Welcome back · derived.co.in</p>
+    <div class="admin-wrap">
+        <!-- Form -->
+        <div class="card">
+            <h2 id="formTitle">New Post</h2>
+            <form id="postForm">
+                <input type="hidden" id="postId" />
+                <div class="field">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" id="postTitle" required placeholder="e.g. How to Write a Literature Review" />
                 </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <button type="button" class="adm-btn adm-btn-ghost" id="admRefreshDash"><i class="ti ti-refresh"></i> Refresh</button>
-                </div>
-              </div>
-
-              <div class="adm-stats-grid">
-                <div class="adm-stat-card">
-                  <div class="adm-stat-top">
-                    <span class="adm-stat-label">Learners (est.)</span>
-                    <span class="adm-stat-icon adm-si-blue"><i class="ti ti-users"></i></span>
-                  </div>
-                  <div class="adm-stat-val" id="admStatLearners">—</div>
-                  <div class="adm-stat-delta">Public homepage metric</div>
-                </div>
-                <div class="adm-stat-card">
-                  <div class="adm-stat-top">
-                    <span class="adm-stat-label">Courses</span>
-                    <span class="adm-stat-icon adm-si-purple"><i class="ti ti-book"></i></span>
-                  </div>
-                  <div class="adm-stat-val" id="admStatCourses">—</div>
-                  <div class="adm-stat-delta"><span id="admStatBlog">0</span> posts · <span id="admStatNews">0</span> news</div>
-                </div>
-                <div class="adm-stat-card">
-                  <div class="adm-stat-top">
-                    <span class="adm-stat-label">Contact leads</span>
-                    <span class="adm-stat-icon adm-si-green"><i class="ti ti-mail"></i></span>
-                  </div>
-                  <div class="adm-stat-val" id="admStatLeads">—</div>
-                  <div class="adm-stat-delta adm-delta-up" id="admStatLeadsDelta">—</div>
-                </div>
-                <div class="adm-stat-card">
-                  <div class="adm-stat-top">
-                    <span class="adm-stat-label">Email signups</span>
-                    <span class="adm-stat-icon adm-si-teal"><i class="ti ti-user-plus"></i></span>
-                  </div>
-                  <div class="adm-stat-val" id="admStatSignups">—</div>
-                  <div class="adm-stat-delta"><span id="admStatMaterials">0</span> study PDFs</div>
-                </div>
-              </div>
-
-              <div class="adm-grid-13">
-                <div class="adm-card">
-                  <div class="adm-card-header">
-                    <div>
-                      <div class="adm-card-title">Platform activity</div>
-                      <div class="adm-card-sub">Leads, signups &amp; courses — last 6 months</div>
-                    </div>
-                    <div class="adm-tab-bar">
-                      <button type="button" class="adm-tab-btn is-active" data-enroll-chart="bar">Bar</button>
-                      <button type="button" class="adm-tab-btn" data-enroll-chart="line">Line</button>
-                    </div>
-                  </div>
-                  <div class="adm-chart-box"><canvas id="admEnrollChart"></canvas></div>
-                </div>
-                <div class="adm-card">
-                  <div class="adm-card-header"><div class="adm-card-title">Course categories</div></div>
-                  <div class="adm-donut-wrap">
-                    <div style="width:120px;height:120px;flex-shrink:0"><canvas id="admDonutChart"></canvas></div>
-                    <div class="adm-donut-legend" id="admDonutLegend"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="adm-grid-2">
-                <div class="adm-card">
-                  <div class="adm-card-header">
-                    <div class="adm-card-title">Recent contacts</div>
-                    <button type="button" class="adm-card-action" data-goto="leads">View all →</button>
-                  </div>
-                  <div class="adm-table-wrap">
-                    <table class="adm-table">
-                      <thead><tr><th>Name</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
-                      <tbody id="admRecentLeadsBody"></tbody>
-                    </table>
-                  </div>
-                </div>
-                <div class="adm-card">
-                  <div class="adm-card-header"><div class="adm-card-title">Recent activity</div></div>
-                  <div id="admActivityFeed"></div>
-                </div>
-              </div>
-
-              <div class="adm-card" style="margin-bottom:20px">
-                <div class="adm-card-header"><div class="adm-card-title">Top courses</div></div>
-                <div class="adm-course-mini" id="admTopCourses"></div>
-              </div>
-
-              <h2 style="font-size:1rem;font-weight:600;margin-bottom:0.75rem">Quick actions</h2>
-              <div class="adm-quick-actions">
-                <button type="button" class="adm-quick-action" data-goto="blog"><i class="ti ti-article"></i> New post</button>
-                <button type="button" class="adm-quick-action" data-goto="videos"><i class="ti ti-book"></i> Add course</button>
-                <button type="button" class="adm-quick-action" data-goto="news"><i class="ti ti-speakerphone"></i> Add news</button>
-                <button type="button" class="adm-quick-action" data-goto="materials"><i class="ti ti-folder"></i> Add material</button>
-                <button type="button" class="adm-quick-action" data-goto="leads"><i class="ti ti-users"></i> View people</button>
-                <button type="button" class="adm-quick-action" data-goto="pages"><i class="ti ti-file-text"></i> Edit pages</button>
-              </div>
-            </div>
-
-            <div id="panel-blog" class="admin-panel" hidden>
-              <div class="admin-panel-head">
-                <h2>Blog posts</h2>
-                <button type="button" id="btnNewPost" class="btn-gold">+ New post</button>
-              </div>
-              <div id="blogTableWrap" class="admin-table-wrap"></div>
-            </div>
-
-            <div id="panel-videos" class="admin-panel" hidden>
-              <div class="admin-panel-head"><h2>Course catalog</h2></div>
-              <div class="admin-two-col">
-                <div class="admin-card">
-                  <h3>Add course</h3>
-                  <div class="tab-btn-row">
-                    <button type="button" class="tab-btn active" data-ctab="youtube">YouTube</button>
-                    <button type="button" class="tab-btn" data-ctab="upload">Upload</button>
-                    <button type="button" class="tab-btn" data-ctab="external">External</button>
-                  </div>
-                  <form id="adminCourseForm" class="admin-form">
-                    <label class="admin-label">Title</label>
-                    <input type="text" id="admTitle" class="admin-input" required />
-                    <div class="admin-row2">
-                      <div>
-                        <label class="admin-label">Category</label>
-                        <select id="admCat" class="admin-input">
-                          <option>JEE / NEET</option>
-                          <option>Coding &amp; AI</option>
-                          <option>UPSC / SSC</option>
-                          <option>Research &amp; Science</option>
-                          <option>Finance &amp; MBA</option>
-                          <option>Other</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label class="admin-label">Level</label>
-                        <select id="admLvl" class="admin-input">
-                          <option>Beginner</option>
-                          <option>Intermediate</option>
-                          <option>Advanced</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="admin-row2">
-                      <div>
-                        <label class="admin-label">Language</label>
-                        <select id="admLang" class="admin-input">
-                          <option>English</option>
-                          <option>Hindi</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label class="admin-label">Price (₹, 0 = free)</label>
-                        <input type="number" id="admPrice" class="admin-input" min="0" value="0" />
-                      </div>
-                    </div>
-                    <label class="admin-label">Instructor</label>
-                    <input type="text" id="admInst" class="admin-input" />
-                    <label class="admin-label">Duration</label>
-                    <input type="text" id="admDur" class="admin-input" placeholder="Self-paced" />
-                    <label class="admin-label">Description</label>
-                    <textarea id="admDesc" class="admin-textarea" rows="3"></textarea>
-                    <div id="adm-tab-youtube">
-                      <label class="admin-label">YouTube URL</label>
-                      <input type="url" id="admYtUrl" class="admin-input" placeholder="https://www.youtube.com/watch?v=…" />
-                    </div>
-                    <div id="adm-tab-upload" class="u-hidden">
-                      <label class="admin-label">Course file (video or PDF)</label>
-                      <input type="file" id="admFile" accept="video/mp4,video/webm,video/quicktime,application/pdf" />
-                      <label class="admin-label">Thumbnail (optional)</label>
-                      <input type="file" id="admThumb" accept="image/jpeg,image/png,image/webp,image/gif" />
-                    </div>
-                    <div id="adm-tab-external" class="u-hidden">
-                      <label class="admin-label">External URL (https)</label>
-                      <input type="url" id="admExtUrl" class="admin-input" />
-                    </div>
-                    <button type="submit" class="btn-gold">Publish course</button>
-                  </form>
-                </div>
-                <div class="admin-card">
-                  <div class="admin-panel-head">
-                    <h3>Published courses</h3>
-                    <button type="button" id="btnClearAllCourses" class="btn-card-danger">Clear all</button>
-                  </div>
-                  <div id="adminCourseList" class="admin-course-list"></div>
-                </div>
-              </div>
-              <div class="admin-card admin-playlist-card" style="margin-top:1.25rem">
-                <h3>Import YouTube playlist</h3>
-                <p class="admin-muted">Requires <code>YOUTUBE_API_KEY</code> on the server.</p>
-                <label class="admin-label">Playlist URL</label>
-                <input type="url" id="importPlaylistUrl" class="admin-input" placeholder="https://www.youtube.com/playlist?list=…" />
-                <div class="admin-row2">
-                  <div>
-                    <label class="admin-label">Category (blank = auto)</label>
-                    <select id="importCategory" class="admin-input">
-                      <option value="">Auto from title</option>
-                      <option>JEE / NEET</option>
-                      <option>Coding &amp; AI</option>
-                      <option>UPSC / SSC</option>
-                      <option>Research &amp; Science</option>
-                      <option>Finance &amp; MBA</option>
-                      <option>Other</option>
+                <div class="field">
+                    <label>Category <span class="required">*</span></label>
+                    <select id="postCategory" required>
+                        <option value="Research">Research</option>
+                        <option value="Education">Education</option>
+                        <option value="Career">Career</option>
+                        <option value="Technology">Technology</option>
                     </select>
-                  </div>
-                  <div>
-                    <label class="admin-label">Level</label>
-                    <select id="importLevel" class="admin-input">
-                      <option>Beginner</option>
-                      <option>Intermediate</option>
-                      <option>Advanced</option>
-                    </select>
-                  </div>
                 </div>
-                <div class="admin-row2">
-                  <div>
-                    <label class="admin-label">Language</label>
-                    <select id="importLang" class="admin-input">
-                      <option>English</option>
-                      <option>Hindi</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="admin-label">Price (₹)</label>
-                    <input type="number" id="importPrice" class="admin-input" min="0" value="0" />
-                  </div>
+                <div class="field">
+                    <label>Excerpt <span class="required">*</span></label>
+                    <textarea id="postExcerpt" required placeholder="Short 1-2 line summary" style="min-height:70px;"></textarea>
                 </div>
-                <label class="admin-label">Instructor</label>
-                <input type="text" id="importInst" class="admin-input" />
-                <label class="admin-check"><input type="checkbox" id="chkImportCourses" checked /> Add videos to course catalog</label>
-                <label class="admin-check"><input type="checkbox" id="chkSyncPlayer" /> Sync on-page YouTube player</label>
-                <button type="button" id="btnImportPlaylist" class="btn-gold">Import playlist</button>
-                <p id="importPlaylistResult" class="admin-muted" hidden></p>
-              </div>
-            </div>
-
-            <div id="panel-streamstudio" class="admin-panel" hidden>
-              <div class="admin-panel-head">
-                <h2>Stream studio hosts</h2>
-                <a href="/stream-studio/studio-lobby.html?manual=1" class="adm-btn adm-btn-ghost" target="_blank" rel="noopener">Open studio</a>
-              </div>
-              <div id="streamHostsConfigBanner" class="admin-err" role="alert" hidden></div>
-              <p class="admin-muted" style="margin: 0 0 1rem">
-                Create sign-in accounts for educators. Self-registration on the studio login page is disabled.
-                Requires <code>RESEARCHIUM_STREAM_API_KEY</code> and stream API running (<code>npm run dev:api</code> in
-                <code>Researchium_stream/</code>).
-              </p>
-              <form id="streamHostForm" class="admin-form admin-card" style="margin-bottom: 1rem">
-                <label class="admin-label" for="streamHostName">Full name</label>
-                <input type="text" id="streamHostName" class="admin-input" required placeholder="Dr. Jane Smith" />
-                <label class="admin-label" for="streamHostEmail">Email</label>
-                <input type="email" id="streamHostEmail" class="admin-input" required placeholder="host@example.com" />
-                <label class="admin-label" for="streamHostInstitution">Institution (optional)</label>
-                <input type="text" id="streamHostInstitution" class="admin-input" placeholder="University name" />
-                <label class="admin-label" for="streamHostPassword">Password</label>
-                <input type="password" id="streamHostPassword" class="admin-input" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
-                <button type="submit" class="btn-gold">Create host account</button>
-              </form>
-              <div id="streamHostsTableWrap" class="admin-table-wrap adm-table-wrap">
-                <p class="admin-muted">Loading…</p>
-              </div>
-            </div>
-
-            <div id="panel-liveyt" class="admin-panel" hidden>
-              <div class="admin-panel-head"><h2>Live schedule &amp; YouTube player</h2></div>
-              <div class="admin-two-col">
-                <div class="admin-card">
-                  <h3>Live schedule rows</h3>
-                  <div id="scheduleEditor" class="schedule-editor"></div>
-                  <button type="button" id="btnAddSchedule" class="btn-ghost">+ Add row</button>
+                <div class="field">
+                    <label>Full Content <span class="required">*</span></label>
+                    <textarea id="postContent" required placeholder="Full post content"></textarea>
                 </div>
-                <div class="admin-card">
-                  <h3>On-page player (JSON)</h3>
-                  <label class="admin-label">Heading</label>
-                  <input type="text" id="ytHeading" class="admin-input" />
-                  <label class="admin-label">Subheading</label>
-                  <input type="text" id="ytSub" class="admin-input" />
-                  <label class="admin-label">Videos JSON</label>
-                  <textarea id="ytVideosJson" class="admin-textarea admin-monospace" rows="8"></textarea>
+                <div class="field">
+                    <label>Cover Image URL</label>
+                    <input type="url" id="postImage" placeholder="https://... (optional)" />
                 </div>
-              </div>
-              <button type="button" id="btnSaveLiveYt" class="btn-gold" style="margin-top:1rem">Save live &amp; player</button>
-            </div>
-
-            <div id="panel-pages" class="admin-panel" hidden>
-              <div class="admin-panel-head">
-                <h2>Page hero copy</h2>
-                <button type="button" id="btnSavePages" class="btn-gold">Save page copy</button>
-              </div>
-              <div id="pageCopyEditor" class="page-copy-editor admin-card"></div>
-            </div>
-
-            <div id="panel-news" class="admin-panel" hidden>
-              <div class="admin-panel-head">
-                <h2>News announcements</h2>
-                <button type="button" id="btnNewNews" class="btn-gold">+ New item</button>
-              </div>
-              <form id="newsAdminForm" class="admin-form admin-card" style="margin-bottom: 1rem">
-                <input type="hidden" id="newsEditId" />
-                <label class="admin-label" for="newsFieldTitle">Title</label>
-                <input type="text" id="newsFieldTitle" class="admin-input" required />
-                <label class="admin-label" for="newsFieldContent">Content</label>
-                <textarea id="newsFieldContent" class="admin-textarea" rows="4" required></textarea>
-                <label class="admin-label" for="newsFieldStatus">Status</label>
-                <select id="newsFieldStatus" class="admin-input">
-                  <option value="current">Current</option>
-                  <option value="archive">Archive</option>
-                </select>
-                <button type="submit" class="btn-gold">Save news</button>
-                <button type="button" id="btnCancelNews" class="btn-ghost">Clear form</button>
-              </form>
-              <div id="newsTableWrap" class="admin-table-wrap"></div>
-            </div>
-
-            <div id="panel-materials" class="admin-panel" hidden>
-              <div class="admin-panel-head">
-                <h2>Study materials (PDFs)</h2>
-                <button type="button" id="btnNewMaterial" class="btn-gold">+ New PDF</button>
-              </div>
-              <form id="materialAdminForm" class="admin-form admin-card" style="margin-bottom: 1rem">
-                <input type="hidden" id="materialEditId" />
-                <label class="admin-label" for="materialFieldTitle">Title</label>
-                <input type="text" id="materialFieldTitle" class="admin-input" required />
-                <label class="admin-label" for="materialFieldUrl">File URL (site path)</label>
-                <input type="text" id="materialFieldUrl" class="admin-input" placeholder="/study-materials/example.pdf" required />
-                <button type="submit" class="btn-gold">Save material</button>
-                <button type="button" id="btnCancelMaterial" class="btn-ghost">Clear form</button>
-              </form>
-              <div id="materialsTableWrap" class="admin-table-wrap"></div>
-            </div>
-
-            <div id="panel-leads" class="admin-panel" hidden>
-              <div class="wp-people-toolbar">
-                <div>
-                  <h2 style="margin:0;font-size:1.125rem;font-weight:600">People</h2>
-                  <p class="admin-muted" style="margin:0.25rem 0 0">Team contacts &amp; learner sign-ups for your site.</p>
+                <div class="field">
+                    <label>Publish Date</label>
+                    <input type="date" id="postDate" />
                 </div>
-              </div>
-              <div class="wp-people-tabs" role="tablist">
-                <button type="button" class="wp-people-tab is-active" data-people-tab="contacts">Contacts</button>
-                <button type="button" class="wp-people-tab" data-people-tab="signups">Sign-ups</button>
-              </div>
-              <div id="peoplePanelContacts">
-                <p class="admin-muted" style="margin:0.75rem 0">Messages from CSIR NET and general contact forms.</p>
-                <div id="csirLeadsTableWrap"></div>
-              </div>
-              <div id="peoplePanelSignups" hidden>
-                <p class="admin-muted" style="margin:0.75rem 0">Emails collected from sign-in interest forms.</p>
-                <div id="memberInterestTableWrap"></div>
-              </div>
-            </div>
-          </section>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveBtn" style="flex:1;">Publish Post</button>
+                    <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none;">Cancel</button>
+                </div>
+            </form>
         </div>
-      </div>
+
+        <!-- Post list -->
+        <div class="card">
+            <h2>Published Posts (<span id="postCount">0</span>)</h2>
+            <div id="postList" class="post-list">
+                <div class="empty-state">Loading posts…</div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div id="blogModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="modal admin-modal">
-        <div class="modal-header">
-          <h2 id="blogModalTitle">Post</h2>
-          <button type="button" id="blogModalClose" class="modal-close" aria-label="Close">×</button>
+<!-- ==================== PUBLIC BLOG PREVIEW ==================== -->
+<section class="public-blog-section" id="publicBlogSection">
+    <div class="container">
+        <div class="public-blog-header">
+            <h2>📚 Blog Posts</h2>
+            <p>All posts published from the admin panel</p>
         </div>
-        <form id="blogModalForm" class="admin-form">
-          <input type="hidden" id="blogEditId" />
-          <label class="admin-label">Tag</label>
-          <input type="text" id="blogFieldTag" class="admin-input" />
-          <label class="admin-label">Title</label>
-          <input type="text" id="blogFieldTitle" class="admin-input" required />
-          <label class="admin-label">Excerpt</label>
-          <textarea id="blogFieldExcerpt" class="admin-textarea" rows="3"></textarea>
-          <label class="admin-label">Link (path or https URL)</label>
-          <input type="text" id="blogFieldHref" class="admin-input" value="/" />
-          <label class="admin-label">Sort order</label>
-          <input type="number" id="blogFieldOrder" class="admin-input" />
-          <label class="admin-label">Extra JSON (optional)</label>
-          <textarea id="blogEditExtras" class="admin-textarea admin-monospace" rows="3" placeholder="{}"></textarea>
-          <button type="submit" class="btn-gold">Save post</button>
-        </form>
-      </div>
+        <div class="blog-filters" id="blogFilters">
+            <button class="blog-filter-btn active" data-filter="all">All</button>
+            <button class="blog-filter-btn" data-filter="Research">Research</button>
+            <button class="blog-filter-btn" data-filter="Education">Education</button>
+            <button class="blog-filter-btn" data-filter="Career">Career</button>
+            <button class="blog-filter-btn" data-filter="Technology">Technology</button>
+        </div>
+        <div id="blogContainer" class="blog-grid">
+            <div class="loading-spinner">Loading posts…</div>
+        </div>
     </div>
+</section>
 
-    <div id="adminToast" class="admin-toast" hidden role="status"></div>
+<!-- ==================== BLOG MODAL ==================== -->
+<div id="blogModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
 
-    <script defer src="/js/researchium-core.js"></script>
-    <script defer src="/js/admin-dashboard.js"></script>
-    <script defer src="/js/admin-app.js"></script>
-  </body>
+<script>
+(function(){
+    // ---------- constants ----------
+    const ADMIN_PASSWORD = "admin123";
+    const STORAGE_KEY = "blog:posts";
+
+    // ---------- DOM refs ----------
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboard = document.getElementById('dashboard');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const passwordInput = document.getElementById('adminPassword');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const postForm = document.getElementById('postForm');
+    const postIdField = document.getElementById('postId');
+    const postTitle = document.getElementById('postTitle');
+    const postCategory = document.getElementById('postCategory');
+    const postExcerpt = document.getElementById('postExcerpt');
+    const postContent = document.getElementById('postContent');
+    const postImage = document.getElementById('postImage');
+    const postDate = document.getElementById('postDate');
+    const formTitle = document.getElementById('formTitle');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    const postList = document.getElementById('postList');
+    const postCount = document.getElementById('postCount');
+    const toast = document.getElementById('toast');
+
+    // public blog
+    const blogContainer = document.getElementById('blogContainer');
+    const blogFilters = document.getElementById('blogFilters');
+    const modal = document.getElementById('blogModal');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = modal.querySelector('.modal-close');
+
+    // ---------- utils ----------
+    function showToast(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(()=> toast.classList.remove('show'), 2200);
+    }
+
+    function escapeHtml(str){
+        const div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+    function formatDate(d){
+        try{
+            return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+        }catch(e){ return d; }
+    }
+
+    // ---------- storage (simulated with localStorage) ----------
+    function getAllPosts(){
+        try{
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        }catch(e){ return []; }
+    }
+
+    function saveAllPosts(posts){
+        try{
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            return true;
+        }catch(e){
+            showToast('Storage error — please try again.');
+            return false;
+        }
+    }
+
+    // ---------- admin: render ----------
+    function renderPosts(posts){
+        postCount.textContent = posts.length;
+        if(posts.length === 0){
+            postList.innerHTML = '<div class="empty-state">No posts yet. Create your first one.</div>';
+            return;
+        }
+        const sorted = [...posts].sort((a,b) => new Date(b.date) - new Date(a.date));
+        postList.innerHTML = sorted.map(p => `
+            <div class="post-row" data-id="${p.id}">
+                <div class="post-row-main">
+                    <span class="post-cat">${escapeHtml(p.category)}</span>
+                    <div class="post-title">${escapeHtml(p.title)}</div>
+                    <div class="post-meta">${formatDate(p.date)}</div>
+                    <div class="post-excerpt">${escapeHtml(p.excerpt)}</div>
+                </div>
+                <div class="post-actions">
+                    <button class="btn btn-ghost btn-sm edit-btn" data-id="${p.id}">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="${p.id}">Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        postList.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => startEdit(btn.dataset.id));
+        });
+        postList.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => deletePost(btn.dataset.id));
+        });
+    }
+
+    let currentPosts = [];
+
+    function loadAdminPosts(){
+        postList.innerHTML = '<div class="empty-state">Loading posts…</div>';
+        currentPosts = getAllPosts();
+        renderPosts(currentPosts);
+    }
+
+    // ---------- admin: form actions ----------
+    function resetForm(){
+        postForm.reset();
+        postIdField.value = '';
+        postDate.valueAsDate = new Date();
+        formTitle.textContent = 'New Post';
+        saveBtn.textContent = 'Publish Post';
+        cancelEditBtn.style.display = 'none';
+    }
+
+    function startEdit(id){
+        const post = currentPosts.find(p => String(p.id) === String(id));
+        if(!post) return;
+        postIdField.value = post.id;
+        postTitle.value = post.title;
+        postCategory.value = post.category;
+        postExcerpt.value = post.excerpt;
+        postContent.value = post.content;
+        postImage.value = post.image || '';
+        postDate.value = post.date ? post.date.slice(0,10) : '';
+        formTitle.textContent = 'Edit Post';
+        saveBtn.textContent = 'Save Changes';
+        cancelEditBtn.style.display = 'inline-flex';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    postForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveBtn.disabled = true;
+        const id = postIdField.value;
+        const data = {
+            id: id || Date.now().toString(),
+            title: postTitle.value.trim(),
+            category: postCategory.value,
+            excerpt: postExcerpt.value.trim(),
+            content: postContent.value.trim(),
+            image: postImage.value.trim(),
+            date: postDate.value || new Date().toISOString().slice(0,10),
+        };
+
+        if(id){
+            currentPosts = currentPosts.map(p => String(p.id) === String(id) ? data : p);
+        } else {
+            currentPosts.push(data);
+        }
+
+        const ok = saveAllPosts(currentPosts);
+        saveBtn.disabled = false;
+        if(ok){
+            showToast(id ? 'Post updated!' : 'Post published!');
+            renderPosts(currentPosts);
+            resetForm();
+            renderPublicPosts(); // refresh public view
+        }
+    });
+
+    async function deletePost(id){
+        if(!confirm('Delete this post?')) return;
+        currentPosts = currentPosts.filter(p => String(p.id) !== String(id));
+        const ok = saveAllPosts(currentPosts);
+        if(ok){
+            showToast('Post deleted.');
+            renderPosts(currentPosts);
+            renderPublicPosts();
+        }
+    }
+
+    // ---------- auth ----------
+    loginBtn.addEventListener('click', () => {
+        if(passwordInput.value === ADMIN_PASSWORD){
+            loginError.style.display = 'none';
+            loginScreen.style.display = 'none';
+            dashboard.style.display = 'block';
+            loadAdminPosts();
+        } else {
+            loginError.style.display = 'block';
+        }
+    });
+    passwordInput.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') loginBtn.click();
+    });
+    logoutBtn.addEventListener('click', () => {
+        dashboard.style.display = 'none';
+        loginScreen.style.display = 'flex';
+        passwordInput.value = '';
+    });
+
+    // ---------- public blog rendering ----------
+    let publicPosts = [];
+    let activeFilter = 'all';
+
+    function renderPublicPosts(){
+        const filtered = activeFilter === 'all'
+            ? publicPosts
+            : publicPosts.filter(p => p.category === activeFilter);
+        const sorted = [...filtered].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        if(sorted.length === 0){
+            blogContainer.innerHTML = '<div class="no-data">No blog posts yet. Check back soon!</div>';
+            return;
+        }
+
+        blogContainer.innerHTML = sorted.map(p => `
+            <div class="blog-card" data-id="${p.id}">
+                ${p.image ? `<img class="blog-card-image" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}" loading="lazy" />` : `<div class="blog-card-image" style="background:linear-gradient(135deg,#667eea30,#764ba230);"></div>`}
+                <div class="blog-card-content">
+                    <span class="blog-category">${escapeHtml(p.category)}</span>
+                    <h3 class="blog-title">${escapeHtml(p.title)}</h3>
+                    <p class="blog-excerpt">${escapeHtml(p.excerpt)}</p>
+                    <div class="blog-meta">
+                        <span class="blog-date">${formatDate(p.date)}</span>
+                        <button class="read-more-btn" data-id="${p.id}">Read More →</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        blogContainer.querySelectorAll('.read-more-btn').forEach(btn => {
+            btn.addEventListener('click', () => openPost(btn.dataset.id));
+        });
+    }
+
+    function loadPublicPosts(){
+        publicPosts = getAllPosts();
+        renderPublicPosts();
+    }
+
+    function openPost(id){
+        const post = publicPosts.find(p => String(p.id) === String(id));
+        if(!post) return;
+        modalBody.innerHTML = `
+            <span class="modal-category">${escapeHtml(post.category)}</span>
+            <h2>${escapeHtml(post.title)}</h2>
+            <div class="modal-date">${formatDate(post.date)}</div>
+            ${post.image ? `<img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" style="width:100%;border-radius:14px;margin:16px 0;" />` : ''}
+            <div class="modal-body-text">${escapeHtml(post.content)}</div>
+        `;
+        modal.style.display = 'flex';
+    }
+
+    modalClose.addEventListener('click', () => modal.style.display = 'none');
+    modal.addEventListener('click', (e) => {
+        if(e.target === modal) modal.style.display = 'none';
+    });
+
+    // filter buttons
+    blogFilters.addEventListener('click', (e) => {
+        const btn = e.target.closest('.blog-filter-btn');
+        if(!btn) return;
+        blogFilters.querySelectorAll('.blog-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderPublicPosts();
+    });
+
+    // ---------- init ----------
+    // set default date
+    postDate.valueAsDate = new Date();
+
+    // load public posts on page load
+    loadPublicPosts();
+
+    // expose refresh for admin after save
+    window.refreshPublicBlog = loadPublicPosts;
+
+    // also re-render public when admin saves (already called in form submit)
+    // but we also want to keep in sync if posts change outside (e.g. delete)
+    // we already call renderPublicPosts() after delete and save.
+
+    // override loadAdminPosts to also refresh public after load
+    const origLoadAdmin = loadAdminPosts;
+    loadAdminPosts = function(){
+        origLoadAdmin();
+        loadPublicPosts();
+    };
+    // re-bind admin load
+    // (already called on login)
+
+    console.log('Researchium Admin + Blog ready.');
+})();
+</script>
+</body>
 </html>
